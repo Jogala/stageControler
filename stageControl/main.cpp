@@ -9,7 +9,8 @@
 #include <conio.h>
 #include <stdio.h>
 #include <windows.h>
-#include "Pi_GCS2_DLL.h"
+//./ because I do not add the header to the project as I will not modify it, hence I have to give the relative path to the header.
+#include "./PI_stuff/Pi_GCS2_DLL.h" 
 int main(int argc, char* argv[])
 {
 	BOOL bRtoSuccess;
