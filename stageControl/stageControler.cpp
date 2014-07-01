@@ -105,7 +105,51 @@ void stageControler::moveTo(double coordArray[3]){
 	printf(">MOV 1 2.0 2 1.0 3 0.5\n\n");
 }
 
+void stageControler::waitUntilMoveFinished(){
+	BOOL bIsMoving[3];
+	bIsMoving[0] = TRUE;
+	while (bIsMoving[0] == TRUE)
+	{
+		////////////////////////////////////////////
+		// get the current possition of all axes. //
+		////////////////////////////////////////////
 
+		//Position[0] receives the position of the first axis in the string 'axes'.
+		//Position[1] receives the position of the second axis in the string 'axes'.
+		//Position[2] receives the position of the third axis in the string 'axes'.
+
+		// call the command to querry the current POSition of axes.
+		if (!PI_qPOS(ID, szAxes, Position))
+		{
+			iError = PI_GetError(ID);
+			PI_TranslateError(iError, szErrorMesage, 1024);
+			printf("POS?: ERROR %d: %s\n", iError, szErrorMesage);
+			PI_CloseConnection(ID);
+		}
+
+
+
+		////////////////////////////////////////
+		// Read the moving state of the axes. //
+		////////////////////////////////////////
+
+		// if 'axes' = NULL or 'axis' is empty a general moving state of all axes ist returnd in 'bIsMoving[0]'
+		// if 'bIsMoving[0]' = TRUE at least one axis of the controller ist still moving.
+		// if 'bIsMoving[0]' = FALSE no axis of the contrller is moving.
+
+		// if 'axes != NULL and 'axis' is not empty the moving state of every axis in 'axes' is returned in
+		// the arry bIsMoving.
+		if (!PI_IsMoving(ID, NULL /*axes = NULL*/, bIsMoving))
+		{
+			iError = PI_GetError(ID);
+			PI_TranslateError(iError, szErrorMesage, 1024);
+			printf("IsMoving: ERROR %d: %s\n", iError, szErrorMesage);
+			PI_CloseConnection(ID);
+		}
+
+		printf(">POS?: \nA = %g\nB = %g\nC = %g\n\n", Position[0], Position[1], Position[2]);
+	}
+};
 
 
 
