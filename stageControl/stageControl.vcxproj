@@ -14,10 +14,12 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="menu.cpp" />
     <ClCompile Include="rectangle.cpp" />
+    <ClCompile Include="stageControler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="menu.h" />
     <ClInclude Include="rectangle.h" />
+    <ClInclude Include="stageControler.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{80CA8065-F75F-425E-B2A1-E2BA8E13EC51}</ProjectGuid>
@@ -67,7 +69,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>E:\Joachim\Visual_Studio_C++\stageControl\stageControl\PI_stuff;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>.\PI_stuff;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>PI_GCS2_DLL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
