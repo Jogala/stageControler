@@ -10,6 +10,15 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="menu.cpp" />
+    <ClCompile Include="rectangle.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="menu.h" />
+    <ClInclude Include="rectangle.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{80CA8065-F75F-425E-B2A1-E2BA8E13EC51}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
