@@ -27,13 +27,10 @@ int main(int argc, char* argv[])
 	while (!(GetKeyState(0x51) & 0x8000) && !(GetKeyState(VK_ESCAPE) & 0x8000))
 	{
 		E545.moveTo(0, 0, 0);
-		E545.waitUntilMoveFinished();
 		E545.moveTo(200, 200, 200);
-		E545.waitUntilMoveFinished();
 		Sleep(1000);
 	}
 	E545.closeConnection();
-	getchar();
 
 	return 0;
 }

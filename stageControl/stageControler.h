@@ -52,7 +52,12 @@ public:
 	//// move to coordinates	(closed-loop)//
 	///////////////////////////////////////////
 	void moveTo(double xCoord, double yCoord, double zCoord);
-	void moveTo(double coordArray[3]);
+
+	///////////////////////////////////////////
+	//// set velocity			(closed-loop)//
+	///////////////////////////////////////////
+	void setVelocity(double xVelocity, double yVelocity, double zVelocity);
+
 
 	////////////////////////////////////////////////
 	//// Wait until the closed loop move is done. //

@@ -3,7 +3,7 @@
 
 void stageControler::establishConnection(){
 	ID = PI_ConnectRS232(1, 115200);
-	if (ID<0)
+	if (ID < 0)
 	{
 		iError = PI_GetError(ID);
 		PI_TranslateError(iError, szErrorMesage, 1024);
@@ -12,9 +12,9 @@ void stageControler::establishConnection(){
 }
 
 void stageControler::closeConnection(){
-	
-		PI_CloseConnection(ID);
-		std::cout << "Connection closed" <<std::endl;
+
+	PI_CloseConnection(ID);
+	std::cout << "Connection closed" << std::endl;
 }
 
 void stageControler::printNameOfConnectedAxis(){
@@ -44,7 +44,7 @@ void stageControler::switchChannelsOn(){
 	iVal[2] = 1;
 
 	// Call the ONLine mode command
-	if(!PI_ONL(ID, iChnl, iVal, 3/*number of piezo channel to change (array size)*/))
+	if (!PI_ONL(ID, iChnl, iVal, 3/*number of piezo channel to change (array size)*/))
 	{
 		iError = PI_GetError(ID);
 		PI_TranslateError(iError, szErrorMesage, 1024);
@@ -74,35 +74,26 @@ void stageControler::switchAllServosOn(){
 }
 
 void stageControler::moveTo(double xCoord, double yCoord, double zCoord){
-	
+
 	double coordArray[3];
 	// move all axes the corresponding position in 'Position'
-	coordArray[0] = xCoord; 
-	coordArray[1] = yCoord; 
-	coordArray[2] = zCoord; 
+	coordArray[0] = xCoord;
+	coordArray[1] = yCoord;
+	coordArray[2] = zCoord;
 
 	// call the MOV command (for closed servo loop).
-	if(!PI_MOV(ID, szAxes, coordArray))
+	if (PI_MOV(ID, szAxes, coordArray))
+	{
+		waitUntilMoveFinished();
+		printf(">MOV 1 2.0 2 1.0 3 0.5\n\n");
+	}
+	else
 	{
 		iError = PI_GetError(ID);
 		PI_TranslateError(iError, szErrorMesage, 1024);
 		printf("MOV: ERROR %d: %s\n", iError, szErrorMesage);
 		PI_CloseConnection(ID);
 	}
-	printf(">MOV 1 2.0 2 1.0 3 0.5\n\n");
-}
-
-void stageControler::moveTo(double coordArray[3]){
-
-	// call the MOV command (for closed servo loop).
-	if (!PI_MOV(ID, szAxes, coordArray))
-	{
-		iError = PI_GetError(ID);
-		PI_TranslateError(iError, szErrorMesage, 1024);
-		printf("MOV: ERROR %d: %s\n", iError, szErrorMesage);
-		PI_CloseConnection(ID);
-	}
-	printf(">MOV 1 2.0 2 1.0 3 0.5\n\n");
 }
 
 void stageControler::waitUntilMoveFinished(){
