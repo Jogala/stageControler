@@ -23,12 +23,26 @@ int main(int argc, char* argv[])
 	E545.printNameOfConnectedAxis();
 	E545.switchChannelsOn();
 	E545.switchAllServosOn();
+	E545.switchVelocityControlModeOn();
+	E545.switchDriftControlModeOn();
+	Sleep(1);
 
+	E545.minMaxTrigger(1, 50, 150);
+	E545.setVelocity(100, 100, 100);
+	E545.moveTo(0, 0, 0);
+
+	double xVelocity;
 	while (!(GetKeyState(0x51) & 0x8000) && !(GetKeyState(VK_ESCAPE) & 0x8000))
 	{
+		cout << "Velocity it will go to 200?" << endl;
+		cin >> xVelocity;
+		E545.setVelocity(xVelocity, 100, 100);
+		E545.moveTo(200, 0, 0);
+
+		cout << "Velocity it will go to 0?" << endl;
+		cin >> xVelocity;
+		E545.setVelocity(xVelocity, 100, 100);
 		E545.moveTo(0, 0, 0);
-		E545.moveTo(200, 200, 200);
-		Sleep(1000);
 	}
 	E545.closeConnection();
 

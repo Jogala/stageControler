@@ -9,8 +9,7 @@
 class stageControler
 {
 
-private: BOOL servosStatus[3];
-		 double Position[3];
+private: double Position[3];
 
 public:
 
@@ -63,6 +62,14 @@ public:
 	//// Wait until the closed loop move is done. //
 	////////////////////////////////////////////////
 	void waitUntilMoveFinished();
+
+	/////////////////////////////////////////////////////////////////////////
+	//// Both VCM and DCM have to be activated before using setVelocity	   //
+	/////////////////////////////////////////////////////////////////////////
+	void switchVelocityControlModeOn();
+	void switchDriftControlModeOn();
+
+	void minMaxTrigger(int xYorZaxis, double minimum, double maximum);
 	
 	
 	

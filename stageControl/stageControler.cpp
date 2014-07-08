@@ -3,6 +3,7 @@
 
 void stageControler::establishConnection(){
 	ID = PI_ConnectRS232(1, 115200);
+	std::cout << "ID = " << ID << std::endl;
 	if (ID < 0)
 	{
 		iError = PI_GetError(ID);
@@ -57,9 +58,10 @@ void stageControler::switchChannelsOn(){
 void stageControler::switchAllServosOn(){
 
 	// Switch on the Servo for all axes
-	servosStatus[0] = TRUE; // servo on for first axis in the string 'axes'.
-	servosStatus[1] = TRUE; // servo on for second axis in the string 'axes'.
-	servosStatus[2] = TRUE; // servo on for third axis in the string 'axes'.
+	BOOL servosStatus[3];
+	servosStatus[0] = 1; // servo on for first axis in the string 'axes'.
+	servosStatus[1] = 1; // servo on for second axis in the string 'axes'.
+	servosStatus[2] = 1; // servo on for third axis in the string 'axes'.
 
 	// call the SerVO mode command.
 	if (!PI_SVO(ID, szAxes, servosStatus))
@@ -119,7 +121,6 @@ void stageControler::waitUntilMoveFinished(){
 		}
 
 
-
 		////////////////////////////////////////
 		// Read the moving state of the axes. //
 		////////////////////////////////////////
@@ -142,10 +143,64 @@ void stageControler::waitUntilMoveFinished(){
 	}
 };
 
+void stageControler::switchVelocityControlModeOn(){
+	
+	BOOL boolVCO[3];
+	boolVCO[0] = 1;
+	boolVCO[1] = 1;
+	boolVCO[2] = 1;
+	PI_VCO(ID, szAxes, boolVCO);
+}
 
+void stageControler::switchDriftControlModeOn(){
+
+	BOOL boolDCO[3];
+	boolDCO[0] = 1;
+	boolDCO[1] = 1;
+	boolDCO[2] = 1;
+	PI_DCO(ID, szAxes, boolDCO);
+}
+
+void stageControler::setVelocity(double xVelocity, double yVelocity, double zVelocity){
+
+	double velocityArray[3];
+	velocityArray[0] = xVelocity;
+	velocityArray[1] = yVelocity;
+	velocityArray[2] = zVelocity;
+
+	PI_VEL(ID, szAxes, velocityArray);
+}
+
+void stageControler::minMaxTrigger(int whichAxis, double minimum, double maximum){
+
+	int piTriggerParameterArray[1];
+	int piTriggerOutputIdsArray[3];
+	double pdValueArray[1];
+
+	piTriggerOutputIdsArray[0] = 1;
+	piTriggerParameterArray[0] = 3;
+	pdValueArray[0] = 3;
+	std::cout<<PI_CTO(ID, piTriggerOutputIdsArray, piTriggerParameterArray, pdValueArray, 1)<<std::endl;
+
+	piTriggerOutputIdsArray[0] = 1;
+	piTriggerParameterArray[0] = 5;
+	pdValueArray[0] = minimum;
+	std::cout << PI_CTO(ID, piTriggerOutputIdsArray, piTriggerParameterArray, pdValueArray, 1) << std::endl;
+
+	piTriggerOutputIdsArray[0] = 1;
+	piTriggerParameterArray[0] = 6;
+	pdValueArray[0] = maximum;
+	std::cout << PI_CTO(ID, piTriggerOutputIdsArray, piTriggerParameterArray, pdValueArray, 1) << std::endl;
+
+
+
+}
 
 stageControler::stageControler()
 {
+
+
+
 }
 
 
