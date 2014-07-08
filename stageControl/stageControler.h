@@ -1,3 +1,4 @@
+#pragma once
 #include <stdio.h>
 #include <windows.h>
 #include <iostream>
@@ -10,9 +11,8 @@ class stageControler
 {
 
 private: double Position[3];
-
+		 
 public:
-
 	//Variables
 	int ID;
 	char szErrorMesage[1024];
@@ -50,7 +50,13 @@ public:
 	///////////////////////////////////////////
 	//// move to coordinates	(closed-loop)//
 	///////////////////////////////////////////
+	//uses waitUntilMoveFinished();          
 	void moveTo(double xCoord, double yCoord, double zCoord);
+
+	///////////////////////////////////////////
+	//// relative movement   	(closed-loop)//
+	///////////////////////////////////////////        
+	void move(double xDelta, double yDelta, double zDelta);
 
 	///////////////////////////////////////////
 	//// set velocity			(closed-loop)//
@@ -71,7 +77,7 @@ public:
 
 	void minMaxTrigger(int xYorZaxis, double minimum, double maximum);
 	
-	
+	void minMaxTrigger000();
 	
 	stageControler();
 	~stageControler();

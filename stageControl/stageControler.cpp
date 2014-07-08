@@ -1,6 +1,5 @@
 #include "stageControler.h"
 
-
 void stageControler::establishConnection(){
 	ID = PI_ConnectRS232(1, 115200);
 	std::cout << "ID = " << ID << std::endl;
@@ -87,7 +86,34 @@ void stageControler::moveTo(double xCoord, double yCoord, double zCoord){
 	if (PI_MOV(ID, szAxes, coordArray))
 	{
 		waitUntilMoveFinished();
-		printf(">MOV 1 2.0 2 1.0 3 0.5\n\n");
+		std::cout << "X : " << Position[0] << std::endl;
+		std::cout << "Y : " << Position[1] << std::endl;
+		std::cout << "Z : " << Position[2] << std::endl;
+		std::cout << "--------------" << std::endl;
+	}
+	else
+	{
+		iError = PI_GetError(ID);
+		PI_TranslateError(iError, szErrorMesage, 1024);
+		printf("MOV: ERROR %d: %s\n", iError, szErrorMesage);
+		PI_CloseConnection(ID);
+	}
+}
+
+void stageControler::move(double xDelta, double yDelta, double zDelta){
+	
+	double deltaArray[3];
+	deltaArray[0] = xDelta;
+	deltaArray[1] = yDelta;
+	deltaArray[2] = zDelta;
+
+	if (PI_MVR(ID, szAxes, deltaArray))
+	{
+		waitUntilMoveFinished();
+		std::cout << "X : " << Position[0] << std::endl;
+		std::cout << "Y : " << Position[1] << std::endl;
+		std::cout << "Z : " << Position[2] << std::endl;
+		std::cout << "--------------" << std::endl;
 	}
 	else
 	{
@@ -138,8 +164,6 @@ void stageControler::waitUntilMoveFinished(){
 			printf("IsMoving: ERROR %d: %s\n", iError, szErrorMesage);
 			PI_CloseConnection(ID);
 		}
-
-		printf(">POS?: \nA = %g\nB = %g\nC = %g\n\n", Position[0], Position[1], Position[2]);
 	}
 };
 
@@ -177,32 +201,39 @@ void stageControler::minMaxTrigger(int whichAxis, double minimum, double maximum
 	int piTriggerOutputIdsArray[3];
 	double pdValueArray[1];
 
-	piTriggerOutputIdsArray[0] = 1;
+	piTriggerOutputIdsArray[0] = whichAxis;
 	piTriggerParameterArray[0] = 3;
 	pdValueArray[0] = 3;
 	std::cout<<PI_CTO(ID, piTriggerOutputIdsArray, piTriggerParameterArray, pdValueArray, 1)<<std::endl;
 
-	piTriggerOutputIdsArray[0] = 1;
+	piTriggerOutputIdsArray[0] = whichAxis;
 	piTriggerParameterArray[0] = 5;
 	pdValueArray[0] = minimum;
-	std::cout << PI_CTO(ID, piTriggerOutputIdsArray, piTriggerParameterArray, pdValueArray, 1) << std::endl;
 
-	piTriggerOutputIdsArray[0] = 1;
+	bool tryAgain = 1;
+	if (tryAgain == 1){
+		tryAgain = !PI_CTO(ID, piTriggerOutputIdsArray, piTriggerParameterArray, pdValueArray, 1);
+		std::cout << !tryAgain << std::endl;
+	}
+	
+
+	piTriggerOutputIdsArray[0] = whichAxis;
 	piTriggerParameterArray[0] = 6;
 	pdValueArray[0] = maximum;
 	std::cout << PI_CTO(ID, piTriggerOutputIdsArray, piTriggerParameterArray, pdValueArray, 1) << std::endl;
 
+}
 
-
+void stageControler::minMaxTrigger000(){
+	minMaxTrigger(1, 0, 1);
+	minMaxTrigger(2, 0, 1);
+	minMaxTrigger(3, 0, 1);
 }
 
 stageControler::stageControler()
 {
 
-
-
 }
-
 
 stageControler::~stageControler()
 {

@@ -11,14 +11,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="auslagerung.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="menu.cpp" />
-    <ClCompile Include="rectangle.cpp" />
+    <ClCompile Include="cut.cpp" />
     <ClCompile Include="stageControler.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="menu.h" />
-    <ClInclude Include="rectangle.h" />
+    <ClInclude Include="Header.h" />
+    <ClInclude Include="cut.h" />
+    <ClInclude Include="moveStageUsingArrows.h" />
     <ClInclude Include="stageControler.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
