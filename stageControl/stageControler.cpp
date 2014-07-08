@@ -211,7 +211,7 @@ void stageControler::minMaxTrigger(int whichAxis, double minimum, double maximum
 	pdValueArray[0] = minimum;
 
 	bool tryAgain = 1;
-	if (tryAgain == 1){
+	while (tryAgain == 1){
 		tryAgain = !PI_CTO(ID, piTriggerOutputIdsArray, piTriggerParameterArray, pdValueArray, 1);
 		std::cout << !tryAgain << std::endl;
 	}
