@@ -14,13 +14,13 @@
     <ClCompile Include="auslagerung.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="cut.cpp" />
-    <ClCompile Include="stageControler.cpp" />
+    <ClCompile Include="stageController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header.h" />
     <ClInclude Include="cut.h" />
-    <ClInclude Include="moveStageUsingArrows.h" />
-    <ClInclude Include="stageControler.h" />
+    <ClInclude Include="moveStageUsingKeyboard.h" />
+    <ClInclude Include="stageController.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{80CA8065-F75F-425E-B2A1-E2BA8E13EC51}</ProjectGuid>

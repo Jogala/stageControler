@@ -11,7 +11,7 @@
 #include "Header.h"
 #include "./PI_stuff/Pi_GCS2_DLL.h" 
 #include "cut.h"
-#include "moveStageUsingArrows.h"
+#include "moveStageUsingKeyboard.h"
 using namespace std;
 
 bool checkForDouble(std::string const& s, double &d) {
@@ -21,54 +21,23 @@ bool checkForDouble(std::string const& s, double &d) {
 
 int main(int argc, char* argv[])
 {
+
+
+
 	//Initialization
-	stageControler E545;
-	E545.printNameOfConnectedAxis();
-	E545.establishConnection();
-	E545.printNameOfConnectedAxis();
-	E545.switchChannelsOn();
-	E545.switchAllServosOn();
-	E545.switchVelocityControlModeOn();
-	E545.switchDriftControlModeOn();
-	E545.setVelocity(50, 50, 50);
-	E545.moveTo(100, 100, 100);
+	stageController E545;
+	E545.initialize();
 
-	E545.setVelocity(10, 10, 10);
-	//cut cut(E545);
-	//cut.rectangle(20, 20);
+	//E545.setVelocity(40, 40, 40);
 
-
-
-	E545.minMaxTrigger(1, 90, 100);
-	//E545.minMaxTrigger(2, 90, 95);
-	bool EXIT=0;
-	double xVelocity;
-	double yVelocity;
-	string userIn;
-	while (!EXIT){
-		moveStageUsingArrows(E545);
-		cout << "xVelocity or exit with something else" << endl;
-		cout << "xVelocity = ";
-		cin >> userIn;
-		if (checkForDouble(userIn,xVelocity)){
-			cout << "yVelocity = ";
-			cin >> userIn;
-			if (checkForDouble(userIn, yVelocity)){
-				E545.setVelocity(xVelocity, yVelocity, 10);
-			}
-			else
-			{
-				EXIT = 1;
-			}
-		}
-		else{
-			EXIT = 1;
-		}
-	}
-
-
-
-
+	//string whatEver;
+	//cout << "for cut enter what ever" << endl;
+	//cin >> whatEver;
+	cut cut(E545);
+	cut.rectangle(20, 20);
+	//cout << "for leaving enter what ever" << endl;
+	//cin >> whatEver;
+	
 	E545.closeConnection();
 	return 0;
 }
