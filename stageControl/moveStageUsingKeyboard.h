@@ -19,7 +19,8 @@ void moveStageUsingKeyboard(stageController &E545){
 	while (!EXIT){
 
 		//http://msdn.microsoft.com/en-us/library/windows/desktop/dd375731%28v=vs.85%29.aspx
-		while (!(GetKeyState(0x51) & 0x8000) && !(GetKeyState(VK_ESCAPE) & 0x8000)){
+		while (!(GetKeyState(0x51) & 0x8000) && !(GetKeyState(VK_ESCAPE) & 0x8000))
+		{
 
 			//////////////////////////////////////////////
 			//				Positions					//
@@ -96,7 +97,7 @@ void moveStageUsingKeyboard(stageController &E545){
 
 			//s for stepSize
 			while ((GetKeyState(0x53) & 0x8000)){
-				
+
 				//Just clearing the current command line
 				const int KEYEVENT_KEYUP = 0x02;
 				keybd_event(VK_ESCAPE, 0, 0, 0);              // press the Esc key
@@ -113,6 +114,7 @@ void moveStageUsingKeyboard(stageController &E545){
 					cout << "yStepSize = ";
 					cin >> yStepSize;
 				}
+				Sleep(sleepValue);
 			}
 
 			//v for velocityStepSize
@@ -134,6 +136,7 @@ void moveStageUsingKeyboard(stageController &E545){
 					cout << "yVelocityStepSize = ";
 					cin >> yVelocityStepSize;
 				}
+				Sleep(sleepValue);
 			}
 
 			//print current position
@@ -156,12 +159,73 @@ void moveStageUsingKeyboard(stageController &E545){
 				{
 					E545.printVelocity();
 				}
+				Sleep(sleepValue);
+			}
+
+			
+			if ((GetKeyState(0x54) & 0x8000))
+			{
+
+				//Just clearing the current command line
+				const int KEYEVENT_KEYUP = 0x02;
+				keybd_event(VK_ESCAPE, 0, 0, 0);              // press the Esc key
+				keybd_event(VK_ESCAPE, 0, KEYEVENT_KEYUP, 0); // let up the Esc key
+			
+				char choice;
+				cout << "set trigger mode m or l for limits? " << endl;
+				cin >> choice;
+
+				if (choice == 'm'){
+					cout << "Which axis? ";
+					cin >> choice;
+					if (choice == 'x'){
+						E545.setTriggerMode(1, 3);
+					}
+					if (choice == 'y'){
+						E545.setTriggerMode(1, 3);
+					}
+					if (choice == 'z'){
+						E545.setTriggerMode(1, 3);
+					}
+				}
+
+				if (choice == 'l'){
+					double min;
+					double max;
+					cout << "Which axis? ";
+					cin >> choice;
+
+					if (choice == 'x'){
+						cout << "min = ";
+						cin >> min;
+						cout << "max = ";
+						cin >> max;
+						E545.minMaxTrigger(1,min, max);
+					}
+					if (choice == 'y'){
+						cout << "min = ";
+						cin >> min;
+						cout << "max = ";
+						cin >> max;
+						E545.minMaxTrigger(2, min, max);
+					}
+					if (choice == 'z'){
+						cout << "min = ";
+						cin >> min;
+						cout << "max = ";
+						cin >> max;
+						E545.minMaxTrigger(3, min, max);
+					}
+				}
+
+
+				
+				
 			}
 
 
-			EXIT = 1;
-
 		}
+		EXIT = 1;
 	}
 
 }

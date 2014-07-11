@@ -1,27 +1,40 @@
 #include "stageController.h"
 
 void stageController::initialize(){
-	establishConnection();
-	printNameOfConnectedAxis();
-	switchChannelsOn();
-	switchAllServosOn();
-	switchVelocityControlModeOn();
-	switchDriftControlModeOn();	
+
+	if (establishConnection())
+	{
+		printNameOfConnectedAxis();
+		if (switchChannelsOn())
+		{
+			if (switchAllServosOn())
+			{
+				if (switchVelocityControlModeOn())
+				{
+					if (switchDriftControlModeOn())
+					{
+						std::cout << "E545 ready" << std::endl;
+					}
+				}
+			}
+		}
+	}
 
 	setVelocity(50, 50, 50);
 	moveTo(100, 100, 100);
-	minMaxTrigger000();
-	moveTo(100, 100, 100);
-	
 }
-void stageController::establishConnection(){
+int stageController::establishConnection(){
 	ID = PI_ConnectRS232(1, 115200);
-	std::cout << "ID = " << ID << std::endl;
 	if (ID < 0)
 	{
 		iError = PI_GetError(ID);
 		PI_TranslateError(iError, szErrorMesage, 1024);
 		printf("ConnectRS232: ERROR %d: %s\n", iError, szErrorMesage);
+		return 0;
+	}
+	else{
+		std::cout << "ID = " << ID << " connection established" << std::endl;
+		return 1;
 	}
 }
 void stageController::closeConnection(){
@@ -30,7 +43,6 @@ void stageController::closeConnection(){
 	std::cout << "Connection closed" << std::endl;
 }
 void stageController::printNameOfConnectedAxis(){
-
 	if (!PI_qSAI(ID, szAxes, 16))
 	{
 		iError = PI_GetError(ID);
@@ -38,9 +50,14 @@ void stageController::printNameOfConnectedAxis(){
 		printf("SAI?: ERROR %d: %s\n", iError, szErrorMesage);
 		PI_CloseConnection(ID);
 	}
-	printf(">SAI?:\n%s\n", szAxes);
+	else
+	{
+		std::string connectedAxis(szAxes);
+		std::cout << "Connected Axis: " <<std::endl<< connectedAxis << std::endl;
+	}
+
 }
-void stageController::switchChannelsOn(){
+int stageController::switchChannelsOn(){
 	int iChnl[3];
 	int iVal[3];
 
@@ -61,14 +78,18 @@ void stageController::switchChannelsOn(){
 		PI_TranslateError(iError, szErrorMesage, 1024);
 		printf("ONL: ERROR %d: %s\n", iError, szErrorMesage);
 		PI_CloseConnection(ID);
+		return 0;
 	}
-	printf(">ONL 1 1 2 1 3 1\n\n");
+	else
+	{	
+		std::cout << "All channels online" << std::endl;
+		return 1;
+	}
 }
-
 //////////////////////////////////////////////////////
 //					Move							//
 //////////////////////////////////////////////////////
-void stageController::switchAllServosOn(){
+int stageController::switchAllServosOn(){
 
 	// Switch on the Servo for all axes
 	BOOL servosStatus[3];
@@ -83,8 +104,15 @@ void stageController::switchAllServosOn(){
 		PI_TranslateError(iError, szErrorMesage, 1024);
 		printf("SVO: ERROR %d: %s\n", iError, szErrorMesage);
 		PI_CloseConnection(ID);
+
+		return 0;
 	}
-	printf(">SVO A 1 B C 3 1\n\n");
+	else
+	{
+		std::cout << "All servos online" << std::endl;
+		return 1;
+	}
+
 
 }
 void stageController::moveTo(double xCoord, double yCoord, double zCoord){
@@ -133,7 +161,7 @@ void stageController::move(double xDelta, double yDelta, double zDelta){
 	position[2] = position[2] + deltaArray[2];
 
 	if ((0 <= position[0]) && (position[0] <= 200) &&
-		(0 <= position[1]) && (position[1] <= 200) && 
+		(0 <= position[1]) && (position[1] <= 200) &&
 		(0 <= position[2]) && (position[2] <= 200))
 	{
 
@@ -205,21 +233,39 @@ void stageController::getPositon(double position[3]){
 //////////////////////////////////////////////////////
 //					Velocity						//
 //////////////////////////////////////////////////////
-void stageController::switchVelocityControlModeOn(){
+int stageController::switchVelocityControlModeOn(){
 
 	BOOL boolVCO[3];
 	boolVCO[0] = 1;
 	boolVCO[1] = 1;
 	boolVCO[2] = 1;
-	PI_VCO(ID, szAxes, boolVCO);
+	if (!PI_VCO(ID, szAxes, boolVCO))
+	{
+		std::cout << "ERROR occured while trying to turn on velocity control mode" << std::endl;
+		return 0;
+	}
+	else
+	{
+		std::cout << "Velocity control mode ON for all channels" << std::endl;
+		return 1;
+	}
 }
-void stageController::switchDriftControlModeOn(){
+int stageController::switchDriftControlModeOn(){
 
 	BOOL boolDCO[3];
 	boolDCO[0] = 1;
 	boolDCO[1] = 1;
 	boolDCO[2] = 1;
-	PI_DCO(ID, szAxes, boolDCO);
+	if(!PI_DCO(ID, szAxes, boolDCO))
+	{
+		std::cout << "ERROR occured while trying to turn on drift control mode" << std::endl;
+		return 0;
+	}
+	else
+	{
+		std::cout << "Drift control mode ON for all channels" << std::endl;
+		return 1;
+	}
 }
 
 void stageController::setVelocity(double xVelocity, double yVelocity, double zVelocity){
@@ -246,7 +292,7 @@ void stageController::deltaVelocity(double xDeltaVelocity, double yDeltaVelocity
 	newVelocity[1] = yDeltaVelocity + cVelVal[1];
 	newVelocity[2] = zDeltaVelocity + cVelVal[2];
 
-	if ((0 <= newVelocity[0] <= 200) && (0 <= newVelocity[1] <= 200) && (0 <= newVelocity[2] <= 200))
+	if ((0 <= newVelocity[0]) && (newVelocity[0] <= 200) && (0 <= newVelocity[1]) && (newVelocity[1] <= 200) && (0 <= newVelocity[2]) && (newVelocity[2] <= 200))
 	{
 		setVelocity(newVelocity);
 	}
@@ -292,20 +338,18 @@ void stageController::minMaxTrigger(int whichAxis, double minimum, double maximu
 	bool tryAgain = 1;
 	while (tryAgain == 1){
 
-		piTriggerOutputIdsArray[0] = whichAxis;
-		piTriggerParameterArray[0] = 3;
-		pdValueArray[0] = 3;
-		std::cout << PI_CTO(ID, piTriggerOutputIdsArray, piTriggerParameterArray, pdValueArray, 1) << std::endl;
+		//piTriggerOutputIdsArray[0] = whichAxis;
+		//piTriggerParameterArray[0] = 3;
+		//pdValueArray[0] = 3;
+		//std::cout << PI_CTO(ID, piTriggerOutputIdsArray, piTriggerParameterArray, pdValueArray, 1) << std::endl;
 
 		piTriggerOutputIdsArray[0] = whichAxis;
 		piTriggerParameterArray[0] = 5;
 		pdValueArray[0] = minimum;
 
-
 		tryAgain = !PI_CTO(ID, piTriggerOutputIdsArray, piTriggerParameterArray, pdValueArray, 1);
 		std::cout << !tryAgain << std::endl;
-
-
+		
 
 		piTriggerOutputIdsArray[0] = whichAxis;
 		piTriggerParameterArray[0] = 6;
@@ -314,11 +358,19 @@ void stageController::minMaxTrigger(int whichAxis, double minimum, double maximu
 	}
 
 }
-void stageController::minMaxTrigger000(){
-	minMaxTrigger(1, 0, 1);
-	minMaxTrigger(2, 0, 1);
-	minMaxTrigger(3, 0, 1);
+void stageController::setTriggerMode(int whichAxis, int mode){
+	
+	int piTriggerParameterArray[1];
+	int piTriggerOutputIdsArray[3];
+	double pdValueArray[1];
+
+		piTriggerOutputIdsArray[0] = whichAxis;
+		piTriggerParameterArray[0] = 3;
+		pdValueArray[0] = mode;
+		std::cout << PI_CTO(ID, piTriggerOutputIdsArray, piTriggerParameterArray, pdValueArray, 1) << std::endl;
+	
 }
+
 
 //////////////////////////////////////////////////////
 //				Constructros						//
@@ -328,8 +380,5 @@ stageController::stageController()
 }
 stageController::~stageController()
 {
-	//minMaxTrigger000();
-	//setVelocity(50, 50, 50);
-	//moveTo(100, 100, 100);
-	//closeConnection();
+
 }
