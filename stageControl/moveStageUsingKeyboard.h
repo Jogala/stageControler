@@ -15,217 +15,220 @@ void moveStageUsingKeyboard(stageController &E545){
 
 	int sleepValue = 50;
 
-	bool EXIT = 0;
-	while (!EXIT){
+	std::cout << fixed;
+	std::cout << setprecision(3);
 
-		//http://msdn.microsoft.com/en-us/library/windows/desktop/dd375731%28v=vs.85%29.aspx
-		while (!(GetKeyState(0x51) & 0x8000) && !(GetKeyState(VK_ESCAPE) & 0x8000))
+	//http://msdn.microsoft.com/en-us/library/windows/desktop/dd375731%28v=vs.85%29.aspx
+	while (!(GetKeyState(0x51) & 0x8000) && !(GetKeyState(VK_ESCAPE) & 0x8000))
+	{
+
+		//////////////////////////////////////////////
+		//				Positions					//
+		//////////////////////////////////////////////
+
+		//left
+		while ((GetKeyState(0x25) & 0x8000))
+		{
+			E545.move(-1.0*xStepSize, 0, 0);
+			E545.printPosition();
+			Sleep(sleepValue);
+		}//left
+
+		//right
+		while ((GetKeyState(0x27) & 0x8000))
+		{
+			E545.move(1.0*xStepSize, 0, 0);
+			E545.printPosition();
+			Sleep(sleepValue);
+		}//right
+
+		//down
+		while ((GetKeyState(0x28) & 0x8000))
+		{
+			E545.move(0, -1.0*yStepSize, 0);
+			E545.printPosition();
+			Sleep(sleepValue);
+		}//down
+
+		//up
+		while ((GetKeyState(0x26) & 0x8000))
+		{
+			E545.move(0, 1.0*yStepSize, 0);
+			E545.printPosition();
+			Sleep(sleepValue);
+		}//up
+
+
+		//////////////////////////////////////////////
+		//				VELOCITIES					//
+		//////////////////////////////////////////////
+
+		//x-Achse Velocity +  == 4
+		while ((GetKeyState(0x64) & 0x8000))
+		{
+			E545.deltaVelocity(xVelocityStepSize, 0, 0);
+			E545.printVelocity();
+			Sleep(sleepValue);
+		}//4
+
+		//x-Achse Velocity - == 1
+		while ((GetKeyState(0x61) & 0x8000))
+		{
+			E545.deltaVelocity(-1.0*xVelocityStepSize, 0, 0);
+			E545.printVelocity();
+			Sleep(sleepValue);
+		}//1
+
+		//y-Achse Velocity +  == 5
+		while ((GetKeyState(0x65) & 0x8000))
+		{
+			E545.deltaVelocity(0, yVelocityStepSize, 0);
+			E545.printVelocity();
+			Sleep(sleepValue);
+
+		}//5
+
+		//y-Achse Velocity - ==2
+		while ((GetKeyState(0x62) & 0x8000))
+		{
+			E545.deltaVelocity(0, -1.0*yVelocityStepSize, 0);
+			E545.printVelocity();
+			Sleep(sleepValue);
+		}//2
+
+
+		//p print current position or velocity or limits
+		if ((GetKeyState(0x50) & 0x8000)){
+
+			//Just clearing the current command line
+			const int KEYEVENT_KEYUP = 0x02;
+			keybd_event(VK_ESCAPE, 0, 0, 0);              // press the Esc key
+			keybd_event(VK_ESCAPE, 0, KEYEVENT_KEYUP, 0); // let up the Esc key
+
+			char choice;
+			cout << "print (p)position, (v)velocities or (l)imits?" << endl;
+			cin >> choice;
+
+
+			if (choice == 'p')
+			{
+				E545.printPosition();
+			}
+
+			if (choice == 'v')
+			{
+				E545.printVelocity();
+			}
+
+			if (choice == 'l')
+			{
+				E545.printLimits();
+			}
+		}//if p
+
+		//////////////////////////////////////////////
+		//				step size					//
+		//////////////////////////////////////////////
+
+		//s for stepSize
+		if ((GetKeyState(0x53) & 0x8000)){
+
+			//Just clearing the current command line
+			const int KEYEVENT_KEYUP = 0x02;
+			keybd_event(VK_ESCAPE, 0, 0, 0);              // press the Esc key
+			keybd_event(VK_ESCAPE, 0, KEYEVENT_KEYUP, 0); // let up the Esc key
+
+			char choice;
+			cout << "Set stepSize press x or y" << endl;
+			cin >> choice;
+			if (choice == 'x'){
+				cout << "xStepSize = ";
+				cin >> xStepSize;
+			}
+			if (choice == 'y'){
+				cout << "yStepSize = ";
+				cin >> yStepSize;
+			}
+		}//s
+
+		//v for velocityStepSize
+		if ((GetKeyState(0x56) & 0x8000)){
+
+			//Just clearing the current command line
+			const int KEYEVENT_KEYUP = 0x02;
+			keybd_event(VK_ESCAPE, 0, 0, 0);              // press the Esc key
+			keybd_event(VK_ESCAPE, 0, KEYEVENT_KEYUP, 0); // let up the Esc key
+
+			char choice;
+			cout << "Set velocity stepSize press x or y" << endl;
+			cin >> choice;
+			if (choice == 'x'){
+				cout << "xVelocityStepSize = ";
+				cin >> xVelocityStepSize;
+			}
+			if (choice == 'y'){
+				cout << "yVelocityStepSize = ";
+				cin >> yVelocityStepSize;
+			}
+		}//v
+
+
+		//l sets limits for threshold triggering
+		if ((GetKeyState(0x4C) & 0x8000))
 		{
 
-			//////////////////////////////////////////////
-			//				Positions					//
-			//////////////////////////////////////////////
+			//Just clearing the current command line
+			const int KEYEVENT_KEYUP = 0x02;
+			keybd_event(VK_ESCAPE, 0, 0, 0);              // press the Esc key
+			keybd_event(VK_ESCAPE, 0, KEYEVENT_KEYUP, 0); // let up the Esc key
 
-			//left
-			while ((GetKeyState(0x25) & 0x8000))
-			{
-				E545.move(-1.0*xStepSize, 0, 0);
-				E545.printPosition();
-				Sleep(sleepValue);
+			char choice;
+			double min;
+			double max;
+
+			E545.setTriggerMode(1, 3);
+			E545.setTriggerMode(2, 3);
+			E545.setTriggerMode(3, 3);
+
+			cout << "set limits, press x or y" << endl;
+			cin >> choice;
+
+			if (choice == 'x'){
+				cout << "min = ";
+				cin >> min;
+				cout << "max = ";
+				cin >> max;
+				E545.setLimits(1, min, max);
 			}
-
-			//right
-			while ((GetKeyState(0x27) & 0x8000))
-			{
-				E545.move(1.0*xStepSize, 0, 0);
-				E545.printPosition();
-				Sleep(sleepValue);
+			if (choice == 'y'){
+				cout << "min = ";
+				cin >> min;
+				cout << "max = ";
+				cin >> max;
+				E545.setLimits(2, min, max);
 			}
-
-			//down
-			while ((GetKeyState(0x28) & 0x8000))
-			{
-				E545.move(0, -1.0*yStepSize, 0);
-				E545.printPosition();
-				Sleep(sleepValue);
+			if (choice == 'z'){
+				cout << "min = ";
+				cin >> min;
+				cout << "max = ";
+				cin >> max;
+				E545.setLimits(3, min, max);
 			}
+		}//l
 
-			//up
-			while ((GetKeyState(0x26) & 0x8000))
-			{
-				E545.move(0, 1.0*yStepSize, 0);
-				E545.printPosition();
-				Sleep(sleepValue);
-			}
+		//Enter Open Shutter 
 
+		if ((GetKeyState(0x0D) & 0x8000))
+		{
 
-			//////////////////////////////////////////////
-			//				VELOCITIES					//
-			//////////////////////////////////////////////
+			E545.openShutter();
+			keybd_event(VK_ESCAPE, 0, KEYEVENT_KEYUP, 0); // let up the Esc key
 
-			//x-Achse Velocity +  == 4
-			while ((GetKeyState(0x64) & 0x8000))
-			{
-				E545.deltaVelocity(xVelocityStepSize, 0, 0);
-				E545.printVelocity();
-				Sleep(sleepValue);
-			}
-			//x-Achse Velocity - == 1
-			while ((GetKeyState(0x61) & 0x8000))
-			{
-				E545.deltaVelocity(-1.0*xVelocityStepSize, 0, 0);
-				E545.printVelocity();
-				Sleep(sleepValue);
-			}
-
-			//y-Achse Velocity +  == 5
-			while ((GetKeyState(0x65) & 0x8000))
-			{
-				E545.deltaVelocity(0, yVelocityStepSize, 0);
-				E545.printVelocity();
-				Sleep(sleepValue);
-
-			}
-			//y-Achse Velocity - ==2
-			while ((GetKeyState(0x62) & 0x8000))
-			{
-				E545.deltaVelocity(0, -1.0*yVelocityStepSize, 0);
-				E545.printVelocity();
-				Sleep(sleepValue);
-			}
+		}//Enter
 
 
-			//s for stepSize
-			while ((GetKeyState(0x53) & 0x8000)){
-
-				//Just clearing the current command line
-				const int KEYEVENT_KEYUP = 0x02;
-				keybd_event(VK_ESCAPE, 0, 0, 0);              // press the Esc key
-				keybd_event(VK_ESCAPE, 0, KEYEVENT_KEYUP, 0); // let up the Esc key
-
-				char choice;
-				cout << "Set stepSize press x or y" << endl;
-				cin >> choice;
-				if (choice == 'x'){
-					cout << "xStepSize = ";
-					cin >> xStepSize;
-				}
-				if (choice == 'y'){
-					cout << "yStepSize = ";
-					cin >> yStepSize;
-				}
-				Sleep(sleepValue);
-			}
-
-			//v for velocityStepSize
-			while ((GetKeyState(0x56) & 0x8000)){
-
-				//Just clearing the current command line
-				const int KEYEVENT_KEYUP = 0x02;
-				keybd_event(VK_ESCAPE, 0, 0, 0);              // press the Esc key
-				keybd_event(VK_ESCAPE, 0, KEYEVENT_KEYUP, 0); // let up the Esc key
-
-				char choice;
-				cout << "Set velocity stepSize press x or y" << endl;
-				cin >> choice;
-				if (choice == 'x'){
-					cout << "xVelocityStepSize = ";
-					cin >> xVelocityStepSize;
-				}
-				if (choice == 'y'){
-					cout << "yVelocityStepSize = ";
-					cin >> yVelocityStepSize;
-				}
-				Sleep(sleepValue);
-			}
-
-			//print current position
-			while ((GetKeyState(0x50) & 0x8000)){
-
-				//Just clearing the current command line
-				const int KEYEVENT_KEYUP = 0x02;
-				keybd_event(VK_ESCAPE, 0, 0, 0);              // press the Esc key
-				keybd_event(VK_ESCAPE, 0, KEYEVENT_KEYUP, 0); // let up the Esc key
-
-				char choice;
-				cout << "print p or v?" << endl;
-				cin >> choice;
-				if (choice == 'p')
-				{
-					E545.printPosition();
-				}
-
-				if (choice == 'v')
-				{
-					E545.printVelocity();
-				}
-				Sleep(sleepValue);
-			}
-
-			
-			if ((GetKeyState(0x54) & 0x8000))
-			{
-
-				//Just clearing the current command line
-				const int KEYEVENT_KEYUP = 0x02;
-				keybd_event(VK_ESCAPE, 0, 0, 0);              // press the Esc key
-				keybd_event(VK_ESCAPE, 0, KEYEVENT_KEYUP, 0); // let up the Esc key
-			
-				char choice;
-				cout << "set trigger mode m or l for limits? " << endl;
-				cin >> choice;
-
-				if (choice == 'm'){
-					cout << "Which axis? ";
-					cin >> choice;
-					if (choice == 'x'){
-						E545.setTriggerMode(1, 3);
-					}
-					if (choice == 'y'){
-						E545.setTriggerMode(1, 3);
-					}
-					if (choice == 'z'){
-						E545.setTriggerMode(1, 3);
-					}
-				}
-
-				if (choice == 'l'){
-					double min;
-					double max;
-					cout << "Which axis? ";
-					cin >> choice;
-
-					if (choice == 'x'){
-						cout << "min = ";
-						cin >> min;
-						cout << "max = ";
-						cin >> max;
-						E545.minMaxTrigger(1,min, max);
-					}
-					if (choice == 'y'){
-						cout << "min = ";
-						cin >> min;
-						cout << "max = ";
-						cin >> max;
-						E545.minMaxTrigger(2, min, max);
-					}
-					if (choice == 'z'){
-						cout << "min = ";
-						cin >> min;
-						cout << "max = ";
-						cin >> max;
-						E545.minMaxTrigger(3, min, max);
-					}
-				}
 
 
-				
-				
-			}
+	}//while ESC is not pressed
 
-
-		}
-		EXIT = 1;
-	}
-
-}
+}//moveStageUsingKeyboard

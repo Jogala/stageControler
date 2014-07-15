@@ -13,6 +13,14 @@ void stageController::initialize(){
 				{
 					if (switchDriftControlModeOn())
 					{
+						setVelocity(50, 50, 50);
+						moveTo(100, 100, 100);
+						setTriggerMode(1, 3);
+						setTriggerMode(2, 3);
+						setTriggerMode(3, 3);
+						setLimits(1, 0, 0);
+						setLimits(2, 0, 0);
+						setLimits(3, 0, 0);
 						std::cout << "E545 ready" << std::endl;
 					}
 				}
@@ -20,10 +28,9 @@ void stageController::initialize(){
 		}
 	}
 
-	setVelocity(50, 50, 50);
-	moveTo(100, 100, 100);
+	
 }
-int stageController::establishConnection(){
+bool stageController::establishConnection(){
 	ID = PI_ConnectRS232(1, 115200);
 	if (ID < 0)
 	{
@@ -53,11 +60,11 @@ void stageController::printNameOfConnectedAxis(){
 	else
 	{
 		std::string connectedAxis(szAxes);
-		std::cout << "Connected Axis: " <<std::endl<< connectedAxis << std::endl;
+		std::cout << "Connected Axis: " << std::endl << connectedAxis << std::endl;
 	}
 
 }
-int stageController::switchChannelsOn(){
+bool stageController::switchChannelsOn(){
 	int iChnl[3];
 	int iVal[3];
 
@@ -81,7 +88,7 @@ int stageController::switchChannelsOn(){
 		return 0;
 	}
 	else
-	{	
+	{
 		std::cout << "All channels online" << std::endl;
 		return 1;
 	}
@@ -89,7 +96,7 @@ int stageController::switchChannelsOn(){
 //////////////////////////////////////////////////////
 //					Move							//
 //////////////////////////////////////////////////////
-int stageController::switchAllServosOn(){
+bool stageController::switchAllServosOn(){
 
 	// Switch on the Servo for all axes
 	BOOL servosStatus[3];
@@ -233,7 +240,7 @@ void stageController::getPositon(double position[3]){
 //////////////////////////////////////////////////////
 //					Velocity						//
 //////////////////////////////////////////////////////
-int stageController::switchVelocityControlModeOn(){
+bool stageController::switchVelocityControlModeOn(){
 
 	BOOL boolVCO[3];
 	boolVCO[0] = 1;
@@ -250,13 +257,13 @@ int stageController::switchVelocityControlModeOn(){
 		return 1;
 	}
 }
-int stageController::switchDriftControlModeOn(){
+bool stageController::switchDriftControlModeOn(){
 
 	BOOL boolDCO[3];
 	boolDCO[0] = 1;
 	boolDCO[1] = 1;
 	boolDCO[2] = 1;
-	if(!PI_DCO(ID, szAxes, boolDCO))
+	if (!PI_DCO(ID, szAxes, boolDCO))
 	{
 		std::cout << "ERROR occured while trying to turn on drift control mode" << std::endl;
 		return 0;
@@ -329,10 +336,10 @@ void stageController::printVelocity(){
 //////////////////////////////////////////////////////
 //				Trigger Digital Output				//
 //////////////////////////////////////////////////////
-void stageController::minMaxTrigger(int whichAxis, double minimum, double maximum){
+void stageController::setLimits(int whichAxis, double minimum, double maximum){
 
 	int piTriggerParameterArray[1];
-	int piTriggerOutputIdsArray[3];
+	int piTriggerOutputIdsArray[1];
 	double pdValueArray[1];
 
 	bool tryAgain = 1;
@@ -349,26 +356,56 @@ void stageController::minMaxTrigger(int whichAxis, double minimum, double maximu
 
 		tryAgain = !PI_CTO(ID, piTriggerOutputIdsArray, piTriggerParameterArray, pdValueArray, 1);
 		std::cout << !tryAgain << std::endl;
-		
+
 
 		piTriggerOutputIdsArray[0] = whichAxis;
 		piTriggerParameterArray[0] = 6;
 		pdValueArray[0] = maximum;
 		std::cout << PI_CTO(ID, piTriggerOutputIdsArray, piTriggerParameterArray, pdValueArray, 1) << std::endl;
 	}
-
 }
 void stageController::setTriggerMode(int whichAxis, int mode){
-	
+
 	int piTriggerParameterArray[1];
-	int piTriggerOutputIdsArray[3];
+	int piTriggerOutputIdsArray[1];
 	double pdValueArray[1];
 
-		piTriggerOutputIdsArray[0] = whichAxis;
-		piTriggerParameterArray[0] = 3;
-		pdValueArray[0] = mode;
-		std::cout << PI_CTO(ID, piTriggerOutputIdsArray, piTriggerParameterArray, pdValueArray, 1) << std::endl;
-	
+	piTriggerOutputIdsArray[0] = whichAxis;
+	piTriggerParameterArray[0] = 3;
+	pdValueArray[0] = mode;
+	std::cout << PI_CTO(ID, piTriggerOutputIdsArray, piTriggerParameterArray, pdValueArray, 1) << std::endl;
+
+}
+void stageController::openShutter(){
+	setLimits(1, 0, 200);	
+}
+void stageController::closeShutter(){
+	setLimits(1, 0, 200);
+}
+
+void stageController::getLimits(int whichAxis, double &min, double &max){
+	int piTriggerParameterArray[1];
+	int piTriggerOutputIdsArray[1];
+	double pdValueArray[1];
+
+	piTriggerOutputIdsArray[0] = whichAxis;
+	piTriggerParameterArray[0] = 5;
+	PI_qCTO(ID, piTriggerOutputIdsArray, piTriggerParameterArray, pdValueArray, 1);
+	min = pdValueArray[0];
+
+	piTriggerOutputIdsArray[0] = whichAxis;
+	piTriggerParameterArray[0] = 6;
+	PI_qCTO(ID, piTriggerOutputIdsArray, piTriggerParameterArray, pdValueArray, 1);
+	max = pdValueArray[0];
+}
+
+void stageController::printLimits(){
+
+	double xMin, xMax, yMin, yMax, zMin, zMax;
+	getLimits(1, xMin, xMax);
+	getLimits(2, yMin, yMax);
+	getLimits(3, zMin, zMax);
+	std::cout << xMin << " < x < " << xMax << std::endl << yMin << " < y < " << yMax << std::endl << zMin << " < z < " << zMax << std::endl;
 }
 
 

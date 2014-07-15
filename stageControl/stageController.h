@@ -26,7 +26,7 @@ public:
 	////////////////////////////////////////////////////////////////////
 	// connect to the E-517 over RS-232 (COM port 1, baudrate 38400). //
 	////////////////////////////////////////////////////////////////////
-	int establishConnection();
+	bool establishConnection();
 	//returns 0 in case of success, and 1 for failure
 
 	////////////////////
@@ -42,13 +42,13 @@ public:
 	/////////////////////////////////////////////////
 	//// Switch the piezo channels to online mode. //
 	/////////////////////////////////////////////////
-	int switchChannelsOn();
+	bool switchChannelsOn();
 	
 
 	///////////////////////////////////////////
 	//// close the servo loop (closed-loop). //
 	///////////////////////////////////////////
-	int switchAllServosOn();
+	bool switchAllServosOn();
 
 	///////////////////////////////////////////
 	//// move to coordinates	(closed-loop)//
@@ -87,11 +87,20 @@ public:
 	/////////////////////////////////////////////////////////////////////////
 	//// Both VCM and DCM have to be activated before using setVelocity	   //
 	/////////////////////////////////////////////////////////////////////////
-	int switchVelocityControlModeOn();
-	int switchDriftControlModeOn();
+	bool switchVelocityControlModeOn();
+	bool switchDriftControlModeOn();
 
-	void minMaxTrigger(int xYorZaxis, double minimum, double maximum);
 	void setTriggerMode(int axis, int mode);
+	void setLimits(int xYorZaxis, double min, double max);
+	void getLimits(int whichAxis, double &min, double &max);
+	void printLimits();
+
+	void getConfigOfTriggerOutput();
+
+	
+	void openShutter();
+	void closeShutter();
+	
 	
 	stageController();
 	~stageController();

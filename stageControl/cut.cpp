@@ -15,13 +15,13 @@ void cut::rectangle(double x, double y){
 		else
 		{
 			pointerToE545->moveTo(100 - 0.5*x - spacialDelayX, 100 + 0.5*y, 100);
-			pointerToE545->minMaxTrigger(1, 100 - 0.5*x, 100 + 0.5*x + del);
+			pointerToE545->setLimits(1, 100 - 0.5*x, 100 + 0.5*x + del);
 			pointerToE545->moveTo(100 + 0.5*x, 100 + 0.5*y, 100);
 			pointerToE545->moveTo(100 + 0.5*x, 100 - 0.5*y, 100);
-			pointerToE545->minMaxTrigger(1, 100 - 0.5*x-del, 100 + 0.5*x + del);
+			pointerToE545->setLimits(1, 100 - 0.5*x-del, 100 + 0.5*x + del);
 			pointerToE545->moveTo(100 - 0.5*x, 100 - 0.5*y, 100);
 			pointerToE545->moveTo(100 - 0.5*x, 100 + 0.5*y, 100);
-			pointerToE545->minMaxTrigger(1, 100 - 0.5*x-1, 100 + 0.5*y);
+			pointerToE545->setLimits(1, 100 - 0.5*x-1, 100 + 0.5*y);
 			pointerToE545->moveTo(100 - 0.5*x-spacialDelayX, 100 + 0.5*y, 100);
 		}
 }

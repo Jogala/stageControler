@@ -8,7 +8,7 @@
 
 
 
-//E545.minMaxTrigger(2, 50, 80);
+//E545.setLimits(2, 50, 80);
 //E545.setVelocity(100, 100, 100);
 //E545.moveTo(0, 0, 0);
 ////double xVelocity;
@@ -95,8 +95,8 @@
 
 
 
-	////E545.minMaxTrigger(1, 90, 100);
-	//E545.minMaxTrigger(2, 90, 100);
+	////E545.setLimits(1, 90, 100);
+	//E545.setLimits(2, 90, 100);
 	//bool EXIT=0;
 	//double xVelocity;
 	//double yVelocity;

@@ -26,9 +26,10 @@ int main(int argc, char* argv[])
 	stageController E545;
 	E545.initialize();
 
+
 	moveStageUsingKeyboard(E545);
 
-	string myString;
+	//string myString;
 
 	//E545.printPosition();
 	//while (1){
@@ -41,7 +42,7 @@ int main(int argc, char* argv[])
 
 	//	getchar();
 	//	E545.setTriggerMode(3, 3);
-	//	//E545.minMaxTrigger(2, 10, 10);
+	//	//E545.setLimits(2, 10, 10);
 	//	cout << "next" << endl;
 	//}
 	////E545.setVelocity(40, 40, 40);
