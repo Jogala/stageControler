@@ -46,6 +46,40 @@ double figures::getRectangleVelo()
 	return rectangleVelo;
 }
 
+void figures::setCircle(double R, double velo,int steps){
+	
+	circleRelCoord.resize(steps);
+	double x;
+	double y;
+	double deltaPhi = 2 * pi / steps;
+
+	vector<double>vec(2);
+	
+	double xOld, yOld;
+	xOld = R;
+	yOld = 0;
+
+	vec[0] = xOld;
+	vec[1] = yOld;
+
+	circleRelCoord[0] = vec;
+
+	for (int i = 1; i < steps; i++){
+
+		x = R*cos(deltaPhi*i);
+		y = R*sin(deltaPhi*i);
+
+		vec[0] = x - xOld;
+		vec[1] = y - yOld;
+
+		xOld = x;
+		yOld = y;
+
+		circleRelCoord[i] = vec;
+			
+	}
+}
+
 
 figures::figures()
 {
