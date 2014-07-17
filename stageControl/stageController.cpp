@@ -486,6 +486,29 @@ bool stageController::checkIfAnyLimit(){
 	}
 }
 
+template<int a, int b> void stageController::cutRel(double(&relCoord)[a][b],double velo){
+
+	if (b == 2){
+
+		double dummyArray[3];
+		getPositon(dummyArray);
+		for (int i = 0; i < a; i++){
+			dummyArray[0] = relCoord[i][0];
+			dummyArray[1] = relCoord[i][1];
+			move(dummyArray);
+		}
+
+	}
+
+	if (b == 3){
+
+	}
+
+}
+
+
+
+
 //////////////////////////////////////////////////////
 //				Constructros						//
 //////////////////////////////////////////////////////

@@ -15,6 +15,24 @@
 #include "figures.h"
 using namespace std;
 
+template<int a, int b> void cutRel(double(&relCoord)[a][b],double velo){
+
+	if (b == 2){
+		
+	
+		for (int i = 0; i < a; i++){
+			cout << relCoord[i][0] << endl;
+			cout << relCoord[i][1] << endl;
+		}
+
+	}
+
+	if (b == 3){
+
+	}
+
+}
+
 
 
 int main(int argc, char* argv[])
@@ -29,9 +47,20 @@ int main(int argc, char* argv[])
 
 	//E545.closeConnection();
 
-	figures myPoly;
-	myPoly.setRegPolygonRectangle(10, 20, 30);
-	myPoly.regPolygonRectangle();
+	figures f;
+	f.setRectangle(10, 10, 10,10);
+	
+
+	double arr[4][2];
+
+	for (int i = 0; i < 4; i++){
+		arr[i][0] = 1;
+		arr[i][1] = 2;
+	}
+
+	cutRel(f.rectangleRelCoordArray,f.getRectangleVelo());
+	
+
 
 
 

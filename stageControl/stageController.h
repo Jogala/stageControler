@@ -63,7 +63,7 @@ public:
 	//// relative movement   	(closed-loop)//
 	///////////////////////////////////////////        
 	void move(double xDelta, double yDelta, double zDelta);
-
+	
 	void printPosition();
 	void getPositon(double position[3]);
 
@@ -104,7 +104,10 @@ public:
 	
 	void openShutter();
 	void closeShutter();
+
+	template<int a, int b> void cutRel(double(&myarray)[a][b],double velo);
 	
+	void cutRel(double * pRelCoordArray);
 	
 	stageController();
 	~stageController();

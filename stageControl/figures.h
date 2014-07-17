@@ -10,11 +10,17 @@ class figures
 private: 
 	double pi = 3.1415926535897932384626;
 
-
 public:
 
-	void getRectangleRelCoord(double relCoord[2][4]);
-	void setRectangle(double a, double b, double phi0);
+	//rectangle
+	double rectangleRelCoordArray[4][2];
+	double rectangleVelo;
+	//void getRectangleRelCoord(double relCoord[4][2]);
+	void setRectangle(double a, double b, double phi0, double velo);
+	double getRectangleVelo();
+
+		
+
 	
 
 	figures();
