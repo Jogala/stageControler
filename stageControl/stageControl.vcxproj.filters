@@ -27,6 +27,12 @@
     <ClCompile Include="stageController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="usefulFunctions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="figures.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cut.h">
@@ -39,6 +45,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="stageController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="usefulFunctions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="figures.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

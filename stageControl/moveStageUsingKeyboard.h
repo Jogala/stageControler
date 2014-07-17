@@ -1,11 +1,31 @@
 #pragma once
 #include "Header.h"
+#include "usefulFunctions.h"
 #include "stageController.h"
+#include "cut.h"
 
 using namespace std;
 
+//ctrl+...
+//p				print
+//s				shutter
+//l				limits
+//t				moveTo (t)arget
+//f				cut (f)igure
+//enter			shutter OPEN CLOSE
+
+//4-1			velocity x Axis
+//5-2			velocity y Axis
+//6-3			velocity z Axis
+//left-right	postion x Axis
+//up-down		postion y Axis
+
+
 
 void moveStageUsingKeyboard(stageController &E545){
+
+	usefulFunctions useful;
+	cut cut(E545);
 
 	double xStepSize = 1;
 	double yStepSize = 1;
@@ -97,8 +117,12 @@ void moveStageUsingKeyboard(stageController &E545){
 		}//2
 
 
+		//////////////////////////////////////////////
+		//				Print   					//
+		//////////////////////////////////////////////
+
 		//p print current position or velocity or limits
-		if ((GetKeyState(0x50) & 0x8000)){
+		if ((GetKeyState(0x50) & 0x8000) && (GetKeyState(0x11) & 0x8000)){
 
 			//Just clearing the current command line
 			const int KEYEVENT_KEYUP = 0x02;
@@ -131,7 +155,7 @@ void moveStageUsingKeyboard(stageController &E545){
 		//////////////////////////////////////////////
 
 		//s for stepSize
-		if ((GetKeyState(0x53) & 0x8000)){
+		if ((GetKeyState(0x53) & 0x8000) && (GetKeyState(0x11) & 0x8000)){
 
 			//Just clearing the current command line
 			const int KEYEVENT_KEYUP = 0x02;
@@ -139,20 +163,25 @@ void moveStageUsingKeyboard(stageController &E545){
 			keybd_event(VK_ESCAPE, 0, KEYEVENT_KEYUP, 0); // let up the Esc key
 
 			char choice;
+			bool success = 0;
 			cout << "Set stepSize press x or y" << endl;
 			cin >> choice;
+
 			if (choice == 'x'){
+
 				cout << "xStepSize = ";
-				cin >> xStepSize;
+				useful.cinAndCheckForDoubleAndLimits(xStepSize);
+
 			}
+
 			if (choice == 'y'){
 				cout << "yStepSize = ";
-				cin >> yStepSize;
+				useful.cinAndCheckForDoubleAndLimits(yStepSize);
 			}
 		}//s
 
 		//v for velocityStepSize
-		if ((GetKeyState(0x56) & 0x8000)){
+		if ((GetKeyState(0x56) & 0x8000) && (GetKeyState(0x11) & 0x8000)){
 
 			//Just clearing the current command line
 			const int KEYEVENT_KEYUP = 0x02;
@@ -164,17 +193,17 @@ void moveStageUsingKeyboard(stageController &E545){
 			cin >> choice;
 			if (choice == 'x'){
 				cout << "xVelocityStepSize = ";
-				cin >> xVelocityStepSize;
+				useful.cinAndCheckForDoubleAndLimits(xVelocityStepSize);
 			}
 			if (choice == 'y'){
 				cout << "yVelocityStepSize = ";
-				cin >> yVelocityStepSize;
+				useful.cinAndCheckForDoubleAndLimits(yVelocityStepSize);
 			}
 		}//v
 
 
 		//l sets limits for threshold triggering
-		if ((GetKeyState(0x4C) & 0x8000))
+		if ((GetKeyState(0x4C) & 0x8000) && (GetKeyState(0x11) & 0x8000))
 		{
 
 			//Just clearing the current command line
@@ -195,38 +224,115 @@ void moveStageUsingKeyboard(stageController &E545){
 
 			if (choice == 'x'){
 				cout << "min = ";
-				cin >> min;
+				useful.cinAndCheckForDouble(min);
 				cout << "max = ";
-				cin >> max;
+				useful.cinAndCheckForDouble(max);
 				E545.setLimits(1, min, max);
 			}
 			if (choice == 'y'){
 				cout << "min = ";
-				cin >> min;
+				useful.cinAndCheckForDouble(min);
 				cout << "max = ";
-				cin >> max;
+				useful.cinAndCheckForDouble(max);
 				E545.setLimits(2, min, max);
 			}
 			if (choice == 'z'){
 				cout << "min = ";
-				cin >> min;
+				useful.cinAndCheckForDouble(min);
 				cout << "max = ";
-				cin >> max;
+				useful.cinAndCheckForDouble(max);
 				E545.setLimits(3, min, max);
 			}
 		}//l
 
-		//Enter Open Shutter 
 
-		if ((GetKeyState(0x0D) & 0x8000))
+		//Control + Enter = Open  or Close
+		if ((GetKeyState(0x0D) & 0x8000) && (GetKeyState(0x11) & 0x8000))
 		{
+			if (E545.checkIfAnyLimit()){
+				E545.closeShutter();
+			}
+			else
+			{
+				E545.openShutter();
+			}
 
-			E545.openShutter();
+			Sleep(5 * sleepValue);
+		}//Control + Enter = Open  or Close
+
+		//t = moveTo
+		if ((GetKeyState(0x54) & 0x8000) && (GetKeyState(0x11) & 0x8000))
+		{
+			double target[3];
+			cout << "moveTo, press (a)adavanced options: " << endl;
+			cout << "xTarget = ";
+			useful.cinAndCheckForDouble(target[0]);
+			cout << "yTarget = ";
+			useful.cinAndCheckForDouble(target[1]);
+			cout << "zTarget = ";
+			useful.cinAndCheckForDouble(target[2]);
+
+			E545.moveTo(target);
+			E545.printPosition();
+		}//t = moveTo
+
+		//f = cut (f)igure
+		if ((GetKeyState(0x46) & 0x8000))
+		{
+			//Just clearing the current command line
+			const int KEYEVENT_KEYUP = 0x02;
+			keybd_event(VK_ESCAPE, 0, 0, 0);              // press the Esc key
 			keybd_event(VK_ESCAPE, 0, KEYEVENT_KEYUP, 0); // let up the Esc key
 
-		}//Enter
+			char choice;
+			cout << "cut menu: (c)ut or (n)ew parameter ";
+			cin >> choice;
 
+			if (choice == 'n'){
 
+				cout << "Choose figure to cut:" << endl;
+				cout << "(r)ectangle" << endl;
+				cout << "(c)ircle" << endl;
+				cin >> choice;
+
+				if (choice == 'r'){
+					double x;
+					double y;
+					cout << "x = ";
+					useful.cinAndCheckForDouble(x);
+					cout << "y = ";
+					useful.cinAndCheckForDouble(y);
+					cut.setRectangle(x, y);
+					cut.rectangle();
+				}
+
+				if (choice == 'c'){
+					choice = 'n';
+					double R;
+					double circleVelocity;
+					cout << "R = ";
+					useful.cinAndCheckForDouble(R);
+					cout << "velocity = ";
+					useful.cinAndCheckForDouble(circleVelocity);
+					cut.setCircle(R, circleVelocity);
+				}
+			}
+
+			if (choice == 'c'){
+				cout << "Choose figure to cut:" << endl;
+				cout << "(r)ectangle" << endl;
+				cout << "(c)ircle" << endl;
+				cin >> choice;
+
+				if (choice == 'r'){
+					cut.rectangle();
+				}
+				if (choice == 'c'){
+					cut.circle();
+				}
+			}
+
+		}//f = cut figure
 
 
 	}//while ESC is not pressed

@@ -28,7 +28,7 @@ void stageController::initialize(){
 		}
 	}
 
-	
+
 }
 bool stageController::establishConnection(){
 	ID = PI_ConnectRS232(1, 115200);
@@ -137,6 +137,31 @@ void stageController::moveTo(double xCoord, double yCoord, double zCoord){
 
 		// call the MOV command (for closed servo loop).
 		if (PI_MOV(ID, szAxes, coordArray))
+		{
+			waitUntilMoveFinished();
+		}
+		else
+		{
+			iError = PI_GetError(ID);
+			PI_TranslateError(iError, szErrorMesage, 1024);
+			printf("MOV: ERROR %d: %s\n", iError, szErrorMesage);
+			PI_CloseConnection(ID);
+		}
+	}
+	else
+	{
+		std::cout << "Out of limits" << std::endl;
+	}
+}
+void stageController::moveTo(const double coord[3]){
+
+	if ((0 <= coord[0]) && (coord[0] <= 200) &&
+		(0 <= coord[1]) && (coord[1] <= 200) &&
+		(0 <= coord[2]) && (coord[2] <= 200))
+	{
+
+		// call the MOV command (for closed servo loop).
+		if (PI_MOV(ID, szAxes, coord))
 		{
 			waitUntilMoveFinished();
 		}
@@ -336,33 +361,34 @@ void stageController::printVelocity(){
 //////////////////////////////////////////////////////
 //				Trigger Digital Output				//
 //////////////////////////////////////////////////////
-void stageController::setLimits(int whichAxis, double minimum, double maximum){
+void stageController::setLimits(int whichAxis, double min, double max){
 
 	int piTriggerParameterArray[1];
 	int piTriggerOutputIdsArray[1];
 	double pdValueArray[1];
-
 	bool tryAgain = 1;
-	while (tryAgain == 1){
 
-		//piTriggerOutputIdsArray[0] = whichAxis;
-		//piTriggerParameterArray[0] = 3;
-		//pdValueArray[0] = 3;
-		//std::cout << PI_CTO(ID, piTriggerOutputIdsArray, piTriggerParameterArray, pdValueArray, 1) << std::endl;
+	if (useful.qIfposibleLimitValues(min, max))
+	{
+		while (tryAgain == 1){
 
-		piTriggerOutputIdsArray[0] = whichAxis;
-		piTriggerParameterArray[0] = 5;
-		pdValueArray[0] = minimum;
+			piTriggerOutputIdsArray[0] = whichAxis;
+			piTriggerParameterArray[0] = 5;
+			pdValueArray[0] = min;
 
-		tryAgain = !PI_CTO(ID, piTriggerOutputIdsArray, piTriggerParameterArray, pdValueArray, 1);
-		std::cout << !tryAgain << std::endl;
+			tryAgain = !PI_CTO(ID, piTriggerOutputIdsArray, piTriggerParameterArray, pdValueArray, 1);
+			std::cout << !tryAgain << std::endl;
 
-
-		piTriggerOutputIdsArray[0] = whichAxis;
-		piTriggerParameterArray[0] = 6;
-		pdValueArray[0] = maximum;
-		std::cout << PI_CTO(ID, piTriggerOutputIdsArray, piTriggerParameterArray, pdValueArray, 1) << std::endl;
+			piTriggerOutputIdsArray[0] = whichAxis;
+			piTriggerParameterArray[0] = 6;
+			pdValueArray[0] = max;
+			std::cout << PI_CTO(ID, piTriggerOutputIdsArray, piTriggerParameterArray, pdValueArray, 1) << std::endl;
+		}//while
 	}
+	else{
+		std::cout << "no valid limit values" << std::endl;
+	}
+
 }
 void stageController::setTriggerMode(int whichAxis, int mode){
 
@@ -377,10 +403,12 @@ void stageController::setTriggerMode(int whichAxis, int mode){
 
 }
 void stageController::openShutter(){
-	setLimits(1, 0, 200);	
+	setLimits(1, 0, 200);
 }
 void stageController::closeShutter(){
-	setLimits(1, 0, 200);
+	setLimits(1, 0, 0);
+	setLimits(2, 0, 0);
+	setLimits(3, 0, 0);
 }
 
 void stageController::getLimits(int whichAxis, double &min, double &max){
@@ -399,6 +427,41 @@ void stageController::getLimits(int whichAxis, double &min, double &max){
 	max = pdValueArray[0];
 }
 
+void stageController::getLimits(double &xMin, double &xMax, double &yMin, double &yMax, double &zMin, double &zMax){
+	int piTriggerParameterArray[1];
+	int piTriggerOutputIdsArray[1];
+	double pdValueArray[1];
+
+	//x Limits
+	piTriggerOutputIdsArray[0] = 1;
+	piTriggerParameterArray[0] = 5;
+	PI_qCTO(ID, piTriggerOutputIdsArray, piTriggerParameterArray, pdValueArray, 1);
+	xMin = pdValueArray[0];
+
+	piTriggerParameterArray[0] = 6;
+	PI_qCTO(ID, piTriggerOutputIdsArray, piTriggerParameterArray, pdValueArray, 1);
+	xMax = pdValueArray[0];
+
+	//y Limits
+	piTriggerOutputIdsArray[0] = 2;
+	piTriggerParameterArray[0] = 5;
+	PI_qCTO(ID, piTriggerOutputIdsArray, piTriggerParameterArray, pdValueArray, 1);
+	yMin = pdValueArray[0];
+
+	piTriggerParameterArray[0] = 6;
+	PI_qCTO(ID, piTriggerOutputIdsArray, piTriggerParameterArray, pdValueArray, 1);
+	yMax = pdValueArray[0];
+
+	//z Limits
+	piTriggerOutputIdsArray[0] = 3;
+	piTriggerParameterArray[0] = 5;
+	PI_qCTO(ID, piTriggerOutputIdsArray, piTriggerParameterArray, pdValueArray, 1);
+	zMin = pdValueArray[0];
+
+	piTriggerParameterArray[0] = 6;
+	PI_qCTO(ID, piTriggerOutputIdsArray, piTriggerParameterArray, pdValueArray, 1);
+	zMax = pdValueArray[0];
+}
 void stageController::printLimits(){
 
 	double xMin, xMax, yMin, yMax, zMin, zMax;
@@ -408,6 +471,20 @@ void stageController::printLimits(){
 	std::cout << xMin << " < x < " << xMax << std::endl << yMin << " < y < " << yMax << std::endl << zMin << " < z < " << zMax << std::endl;
 }
 
+bool stageController::checkIfAnyLimit(){
+	double xMin, xMax, yMin, yMax, zMin, zMax;
+	double pos[3];
+	getLimits(xMin, xMax, yMin, yMax, zMin, zMax);
+	getPositon(pos);
+	if (((xMin <= pos[0]) && (pos[0] <= xMax)) || ((yMin <= pos[1]) && (pos[1] <= yMax)) || ((zMin <= pos[2]) && (pos[2] <= zMax)))
+	{
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
+}
 
 //////////////////////////////////////////////////////
 //				Constructros						//

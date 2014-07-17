@@ -1,5 +1,6 @@
 #pragma once
 #include "Header.h"
+#include "usefulFunctions.h"
 
 //./ because I do not add the header to the project as I will not modify it, hence I have to give the relative path to the header.
 #include "./PI_stuff/Pi_GCS2_DLL.h" 
@@ -8,6 +9,7 @@ class stageController
 {
 
 private: double Position[3];
+		 usefulFunctions useful;
 		 
 public:
 	//Variables
@@ -55,6 +57,7 @@ public:
 	///////////////////////////////////////////
 	//uses waitUntilMoveFinished();          
 	void moveTo(double xCoord, double yCoord, double zCoord);
+	void moveTo(const double coordArray[3]);
 
 	///////////////////////////////////////////
 	//// relative movement   	(closed-loop)//
@@ -93,8 +96,9 @@ public:
 	void setTriggerMode(int axis, int mode);
 	void setLimits(int xYorZaxis, double min, double max);
 	void getLimits(int whichAxis, double &min, double &max);
+	void getLimits(double &xMin, double &xMax, double &yMin, double &yMax, double &zMin, double &zMax);
 	void printLimits();
-
+	bool checkIfAnyLimit();
 	void getConfigOfTriggerOutput();
 
 	
