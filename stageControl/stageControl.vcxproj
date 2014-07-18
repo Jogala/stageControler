@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="auslagerung.cpp" />
+    <ClCompile Include="figuresWriteCoordToFile.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="cut.cpp" />
     <ClCompile Include="figures.cpp" />
@@ -19,6 +20,7 @@
     <ClCompile Include="usefulFunctions.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="figuresWriteCoordToFile.h" />
     <ClInclude Include="Header.h" />
     <ClInclude Include="cut.h" />
     <ClInclude Include="moveStageUsingKeyboard.h" />

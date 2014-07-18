@@ -30,6 +30,8 @@ int main(int argc, char* argv[])
 
 	//E545.closeConnection();
 
+	
+
 	figures::polygon poly;
 	poly.set(10, 10,100, 10);
 	poly.cut();

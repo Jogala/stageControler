@@ -1,14 +1,20 @@
 #pragma once
 #include "Header.h"
+#include "stageController.h"
+#include "usefulFunctions.h"
 
 using namespace std;
 
 class figures
 {
 private:
+	usefulFunctions useful;
 	
 public:
-
+	stageController* pointerToE545;
+	//////////////////////////////
+	//		rectangle			//
+	//////////////////////////////
 	class rectangle{
 	private:
 		double a, b, phi0, velocity;
@@ -21,6 +27,26 @@ public:
 		rectangle::~rectangle(){}
 	};
 
+	//////////////////////////////////////
+	//		surface rectangle			//
+	//////////////////////////////////////
+	class surfaceRectangle{
+	private:
+		double a, b, phi0, velocity;
+		int resolution;
+		char orientation;
+
+	public:
+		void set(double aIn, double bIn, double phi0In, double velocityIn, int resoluationIn, char longOrShortSide);
+		void cut();
+
+		surfaceRectangle::surfaceRectangle(){}
+		surfaceRectangle::~surfaceRectangle(){}
+	};
+
+	//////////////////////////////
+	//			polygon			//
+	//////////////////////////////
 	class polygon{
 	private:
 		double R, phi0, velocity;
@@ -34,7 +60,7 @@ public:
 		polygon::~polygon(){}
 	};
 
-	figures();
+	figures(stageController &E545);
 	~figures();
 };
 

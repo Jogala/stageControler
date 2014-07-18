@@ -90,11 +90,66 @@ void figures::polygon::cut()
 	f.close();
 }
 
+void figures::surfaceRectangle::set(double aIn, double bIn, double phi0In, double velocityIn, int resolutionIn, char longOrShortSide){
 
+	velocity = velocityIn;
+	a = aIn;
+	b = bIn;
+	phi0 = phi0In*(2 * pi) / (360.0);
+	resolution = resolutionIn;
+	orientation = longOrShortSide;
 
-
-figures::figures()
+}
+void figures::surfaceRectangle::cut()
 {
+	double delta = b / resolution;
+	//get Position
+	//Set Limits 
+
+	double deltaPhi[2];
+	double R;
+	double x0, y0;
+	double h = 3;
+
+	R = 0.5*sqrt(a*a + b*b);
+	deltaPhi[0] = 2 * atan(b / a);
+	deltaPhi[1] = 2 * atan(a / b);
+
+	double phiStart = phi0 - deltaPhi[0] / 2.0;
+
+	x0 = R*cos(phiStart);
+	y0 = R*sin(phiStart);
+
+
+	double deltaX = a*cos(phi0);
+	double deltaY = b*sin(phi0);
+
+	double kDeltaX = -cos(phi0)*h - sin(phi0)*delta / 2;
+	double kDeltaY = -sin(phi0)*h + cos(phi0)*delta / 2;
+
+	double zkDeltaX = cos(phi0)*h - sin(phi0)*delta / 2;
+	double zkDeltaY = sin(phi0)*h + cos(phi0)*delta / 2;
+
+	//figurespointerToE545->move(x0, y0, 0);
+	//openShutter()
+	for (int i = 0; i <= (resolution - 1); i++){
+		//move(-deltaX,-deltaY,0)
+		//move(kDeltaX,kDeltaY,0)
+		//move(zkDeltaX,zkDeltaX,0)
+		//move(deltaX,deltaY,0)
+		//move(zkDeltaX,zkDeltaX,0)
+		//move(kDeltaX,kDeltaY,0)
+	}
+	//move(-deltaX,-deltaY,0)
+
+	//closeShutter()
+
+}
+
+
+figures::figures(stageController &E545)
+{
+	pointerToE545 = &E545;
 }
 
 
