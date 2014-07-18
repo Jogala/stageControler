@@ -1,38 +1,38 @@
 #pragma once
 #include "Header.h"
 
-using namespace std; 
-
-
+using namespace std;
 
 class figures
 {
-private: 
-	double pi = 3.1415926535897932384626;
-
+private:
+	
 public:
 
-	//////////////////////////
-	//		circle			//
-	//////////////////////////
-	vector<vector<double>>circleRelCoord;
-
-	void setCircle(double r, double velo, int steps);
-	
-
-	//////////////////////////
-	//		rectangle		//
-	//////////////////////////
-	double rectangleRelCoordArray[4][2];
-	double rectangleVelo;
-
-	void getRectangleRelCoord(double relCoord[4][2]);
-	void setRectangle(double a, double b, double phi0, double velo);
-	double getRectangleVelo();
-
+	class rectangle{
+	private:
+		double a, b, phi0, velocity;
 		
+	public:
+		void set(double a, double b, double phi0,double velocity);
+		void cut();
 
-	
+		rectangle::rectangle(){}
+		rectangle::~rectangle(){}
+	};
+
+	class polygon{
+	private:
+		double R, phi0, velocity;
+		int steps;
+
+	public:
+		void set(double R, double phi0, int steps, double velocity);
+		void cut();
+
+		polygon::polygon(){}
+		polygon::~polygon(){}
+	};
 
 	figures();
 	~figures();

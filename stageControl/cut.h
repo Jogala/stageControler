@@ -5,7 +5,6 @@
 class cut
 {
 private:
-	double pi = 3.1415926535897932384626;
 	stageController* pointerToE545;
 	usefulFunctions useful;
 

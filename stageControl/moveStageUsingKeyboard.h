@@ -284,53 +284,7 @@ void moveStageUsingKeyboard(stageController &E545){
 			keybd_event(VK_ESCAPE, 0, 0, 0);              // press the Esc key
 			keybd_event(VK_ESCAPE, 0, KEYEVENT_KEYUP, 0); // let up the Esc key
 
-			char choice;
-			cout << "cut menu: (c)ut or (n)ew parameter ";
-			cin >> choice;
 
-			if (choice == 'n'){
-
-				cout << "Choose figure to cut:" << endl;
-				cout << "(r)ectangle" << endl;
-				cout << "(c)ircle" << endl;
-				cin >> choice;
-
-				if (choice == 'r'){
-					double x;
-					double y;
-					cout << "x = ";
-					useful.cinAndCheckForDouble(x);
-					cout << "y = ";
-					useful.cinAndCheckForDouble(y);
-					cut.setRectangle(x, y);
-					cut.rectangle();
-				}
-
-				if (choice == 'c'){
-					choice = 'n';
-					double R;
-					double circleVelocity;
-					cout << "R = ";
-					useful.cinAndCheckForDouble(R);
-					cout << "velocity = ";
-					useful.cinAndCheckForDouble(circleVelocity);
-					cut.setCircle(R, circleVelocity);
-				}
-			}
-
-			if (choice == 'c'){
-				cout << "Choose figure to cut:" << endl;
-				cout << "(r)ectangle" << endl;
-				cout << "(c)ircle" << endl;
-				cin >> choice;
-
-				if (choice == 'r'){
-					cut.rectangle();
-				}
-				if (choice == 'c'){
-					cut.circle();
-				}
-			}
 
 		}//f = cut figure
 
