@@ -23,6 +23,8 @@ bool usefulFunctions::cinAndCheckForDoubleAndLimits(double & xStepSize){
 			cout << "not a number... try again" << endl;
 			cin.clear();
 			cin.ignore(INT_MAX, '\n');
+
+			return 0;
 		}
 	} while (!success);
 

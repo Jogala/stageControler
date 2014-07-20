@@ -1,5 +1,34 @@
 #include "figures.h"
 
+void figures::rectangle::leaveOrSwap(double &phi, double &a, double &b){
+
+	while (phi < 0){
+		phi = phi + 360;
+	}
+
+	phi = (phi / 360) * 2 * pi;
+	phi = fmod(phi, 2 * pi);
+	cout << (phi / (2 * pi)) * 360 << endl;
+	if (
+		(
+		(phi <= pi / 4) || (phi >= 7 * pi / 4) //phi ist minimal 0 und maximal 2*pi
+		)
+		||
+		(
+		(phi <= 5 * pi / 4) && (3 * pi / 4 <= phi)
+		)
+		)
+	{
+		//do nothing
+	}
+	else
+	{
+		double dummy = a;
+		a = b;
+		b = dummy;
+	}
+}
+
 
 void figures::rectangle::set(double aIn, double bIn, double phi0In, double velocityIn){
 
@@ -9,6 +38,8 @@ void figures::rectangle::set(double aIn, double bIn, double phi0In, double veloc
 	phi0 = phi0In*(2 * pi) / (360.0);
 
 }
+
+
 void figures::rectangle::cut()
 {
 

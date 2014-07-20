@@ -14,7 +14,9 @@ namespace figures{
 	private:
 		stageController * pointerToE545;
 		double a, b, phi0, velocity;
-		
+
+		//leaveOrSwap leaves a and b unchanged if -45<=phi<=45 or 135<=phi<=225
+		void leaveOrSwap(double &phi, double &a, double &b);
 
 	public:
 		void set(double a, double b, double phi0, double velocity);
