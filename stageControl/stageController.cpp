@@ -324,14 +324,14 @@ void stageController::deltaVelocity(double xDeltaVelocity, double yDeltaVelocity
 	newVelocity[1] = yDeltaVelocity + cVelVal[1];
 	newVelocity[2] = zDeltaVelocity + cVelVal[2];
 
-	if ((0 <= newVelocity[0]) && (newVelocity[0] <= 200) && (0 <= newVelocity[1]) && (newVelocity[1] <= 200) && (0 <= newVelocity[2]) && (newVelocity[2] <= 200))
-	{
+	//if ((0 <= newVelocity[0]) && (newVelocity[0] <= 200) && (0 <= newVelocity[1]) && (newVelocity[1] <= 200) && (0 <= newVelocity[2]) && (newVelocity[2] <= 200))
+	//{
 		setVelocity(newVelocity);
-	}
-	else
-	{
-		std::cout << "you can't go further then this" << std::endl;
-	}
+	//}
+	//else
+	//{
+	//	std::cout << "you can't go further then this" << std::endl;
+	//}
 }
 
 void stageController::getVelocity(double &xVelocity, double &yVelocity, double &zVelocity){

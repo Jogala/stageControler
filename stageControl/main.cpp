@@ -22,21 +22,17 @@ int main(int argc, char* argv[])
 {
 	
 
-	////Initialization
-	////Default is 	setVelocity(50, 50, 50); moveTo(100, 100, 100);
-	//stageController E545;
-	//E545.initialize();
-	//moveStageUsingKeyboard(E545);
-
-	//E545.closeConnection();
+	//Initialization
+	//Default is 	setVelocity(50, 50, 50); moveTo(100, 100, 100);
+	stageController E545;
+	E545.initialize();
+	moveStageUsingKeyboard(E545);
 
 	
+	
 
-	figures::polygon poly;
-	poly.set(10, 10,100, 10);
-	poly.cut();
 
-	return 0;
+	E545.closeConnection();
 }
 
 

@@ -3,15 +3,16 @@
 #include "usefulFunctions.h"
 #include "stageController.h"
 #include "cut.h"
+#include "figures.h"
 
 using namespace std;
 
-//ctrl+...
+//0+...
 //p				print
 //s				shutter
 //l				limits
 //t				moveTo (t)arget
-//f				cut (f)igure
+//c				cut 
 //enter			shutter OPEN CLOSE
 
 //4-1			velocity x Axis
@@ -27,6 +28,10 @@ void moveStageUsingKeyboard(stageController &E545){
 	usefulFunctions useful;
 	cut cut(E545);
 
+	figures::rectangle rectangle(E545);
+	figures::polygon   polygon(E545);
+	figures::surfaceRectangle surfaceRectangle(E545);
+
 	double xStepSize = 1;
 	double yStepSize = 1;
 
@@ -35,12 +40,15 @@ void moveStageUsingKeyboard(stageController &E545){
 
 	int sleepValue = 50;
 
+	int pulseDuration = 200;
+
 	std::cout << fixed;
 	std::cout << setprecision(3);
 
 	//http://msdn.microsoft.com/en-us/library/windows/desktop/dd375731%28v=vs.85%29.aspx
 	while (!(GetKeyState(0x51) & 0x8000) && !(GetKeyState(VK_ESCAPE) & 0x8000))
 	{
+
 
 		//////////////////////////////////////////////
 		//				Positions					//
@@ -155,7 +163,7 @@ void moveStageUsingKeyboard(stageController &E545){
 		//////////////////////////////////////////////
 
 		//s for stepSize
-		if ((GetKeyState(0x53) & 0x8000) && (GetKeyState(0x11) & 0x8000)){
+		if ((GetKeyState(0x53) & 0x8000) && (GetKeyState(0x30) & 0x8000)){
 
 			//Just clearing the current command line
 			const int KEYEVENT_KEYUP = 0x02;
@@ -164,7 +172,7 @@ void moveStageUsingKeyboard(stageController &E545){
 
 			char choice;
 			bool success = 0;
-			cout << "Set stepSize press x or y" << endl;
+			cout << "Set stepSize press x or y or adjust shutter pulse duration" << endl;
 			cin >> choice;
 
 			if (choice == 'x'){
@@ -177,6 +185,11 @@ void moveStageUsingKeyboard(stageController &E545){
 			if (choice == 'y'){
 				cout << "yStepSize = ";
 				useful.cinAndCheckForDoubleAndLimits(yStepSize);
+			}
+
+			if (choice == 's'){
+				cout << "pulse duration = ";
+				cin >> pulseDuration;
 			}
 		}//s
 
@@ -203,7 +216,7 @@ void moveStageUsingKeyboard(stageController &E545){
 
 
 		//l sets limits for threshold triggering
-		if ((GetKeyState(0x4C) & 0x8000) && (GetKeyState(0x11) & 0x8000))
+		if ((GetKeyState(0x4C) & 0x8000) && (GetKeyState(0x30) & 0x8000))
 		{
 
 			//Just clearing the current command line
@@ -247,7 +260,7 @@ void moveStageUsingKeyboard(stageController &E545){
 
 
 		//Control + Enter = Open  or Close
-		if ((GetKeyState(0x0D) & 0x8000) && (GetKeyState(0x11) & 0x8000))
+		if ((GetKeyState(0x0D) & 0x8000) && (GetKeyState(0x30) & 0x8000))
 		{
 			if (E545.checkIfAnyLimit()){
 				E545.closeShutter();
@@ -260,8 +273,27 @@ void moveStageUsingKeyboard(stageController &E545){
 			Sleep(5 * sleepValue);
 		}//Control + Enter = Open  or Close
 
+		//Entf + Enter = Open or Close pulsed
+		if ((GetKeyState(0x0D) & 0x8000) && (GetKeyState(0x2E) & 0x8000))
+		{
+			if (E545.checkIfAnyLimit()){
+				E545.closeShutter();
+				Sleep(pulseDuration);
+				E545.openShutter();
+
+			}
+			else
+			{
+				E545.openShutter();
+				Sleep(pulseDuration);
+				E545.closeShutter();
+			}
+
+			Sleep(5 * sleepValue);
+		}//Entf + Enter = Open or Close pulsed
+
 		//t = moveTo
-		if ((GetKeyState(0x54) & 0x8000) && (GetKeyState(0x11) & 0x8000))
+		if ((GetKeyState(0x54) & 0x8000) && (GetKeyState(0x30) & 0x8000))
 		{
 			double target[3];
 			cout << "moveTo, press (a)adavanced options: " << endl;
@@ -276,17 +308,103 @@ void moveStageUsingKeyboard(stageController &E545){
 			E545.printPosition();
 		}//t = moveTo
 
-		//f = cut (f)igure
-		if ((GetKeyState(0x46) & 0x8000))
+		//c = cut 
+		if ((GetKeyState(0x43) & 0x8000) && (GetKeyState(0x30) & 0x8000))
 		{
 			//Just clearing the current command line
 			const int KEYEVENT_KEYUP = 0x02;
 			keybd_event(VK_ESCAPE, 0, 0, 0);              // press the Esc key
 			keybd_event(VK_ESCAPE, 0, KEYEVENT_KEYUP, 0); // let up the Esc key
 
+			char choice1;
+			cout << "n for set up (n)ew figure and (c) for cut:" << endl;
+			cin >> choice1;
 
 
-		}//f = cut figure
+			if (choice1 == 'n'){
+				char choice2;
+				cout << "Set up new figure:" << endl;
+				cout << "(r)ectangle" << endl;
+				cout << "(p)olygon" << endl;
+				cout << "(s)urface Rectangle" << endl;
+				cin >> choice2;
+
+				if (choice2 == 'r'){
+					double a, b,phi0,velo;
+					cout << "a = " << endl;
+					cin >> a;
+					cout << "b = " << endl;
+					cin >> b;
+					cout << "phi0 = " << endl;
+					cin >> phi0;
+					cout << "velocity = " << endl;
+					cin >> velo;
+				
+					rectangle.set(a, b, phi0, velo);
+				}
+
+				if (choice2 == 'p'){
+					double R, phi0, velo;
+					int steps;
+					cout << "R = " << endl;
+					cin >> R;
+					cout << "phi0 = " << endl;
+					cin >> phi0;
+					cout << "steps = " << endl;
+					cin >> steps;
+					cout << "velocity = " << endl;
+					cin >> velo;
+					polygon.set(R, phi0, steps, velo);
+				}
+
+				if (choice2 == 's'){
+					double a, b, phi0, velo;
+					int resolution;
+					cout << "a = " << endl;
+					cin >> a;
+					cout << "b = " << endl;
+					cin >> b;
+					cout << "phi0 = " << endl;
+					cin >> phi0;
+					cout << "resolution = " << endl;
+					cin >> resolution;
+					cout << "velocity = " << endl;
+					cin >> velo;
+					surfaceRectangle.set(a,b,phi0,velo,resolution,'l');
+				}
+
+			}
+
+			if (choice1 == 'c'){
+				char choice2;
+				cout << "Choose figure to cut:" << endl;
+				cout << "(r)ectangle" << endl;
+				cout << "(p)olygon" << endl;
+				cin >> choice2;
+
+				if (choice2 == 'r'){
+					rectangle.cut();
+				}
+
+				if (choice2 == 'p'){
+					polygon.cut();
+				}
+
+				if (choice2 == 's'){
+					surfaceRectangle.cut();
+				}
+
+			}
+
+			
+			
+
+			
+
+			
+
+		}//c = cut 
+
 
 
 	}//while ESC is not pressed

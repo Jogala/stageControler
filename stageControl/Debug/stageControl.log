@@ -1,10 +1,16 @@
-﻿Build started 18/07/2014 13:59:23.
-     1>Project "E:\Joachim\Visual_Studio_C++\stageControler\stageControl\stageControl.vcxproj" on node 2 (ClCompile target(s)).
-     1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt figures.cpp
-         figures.cpp
-     1>Done Building Project "E:\Joachim\Visual_Studio_C++\stageControler\stageControl\stageControl.vcxproj" (ClCompile target(s)).
+﻿Build started 7/18/2014 6:56:00 PM.
+     1>Project "\\fileserver.mpi-cbg.de\rosenber\stageControler\stageControl\stageControl.vcxproj" on node 2 (Build target(s)).
+     1>Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"\\fileserver.mpi-cbg.de\rosenber\stageControler\Debug\stageControl.exe" /INCREMENTAL /NOLOGO /LIBPATH:.\PI_stuff PI_GCS2_DLL.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"\\fileserver.mpi-cbg.de\rosenber\stageControler\Debug\stageControl.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"\\fileserver.mpi-cbg.de\rosenber\stageControler\Debug\stageControl.lib" /MACHINE:X86 Debug\auslagerung.obj
+         Debug\figuresWriteCoordToFile.obj
+         Debug\main.obj
+         Debug\cut.obj
+         Debug\figures.obj
+         Debug\stageController.obj
+         Debug\usefulFunctions.obj
+         stageControl.vcxproj -> \\fileserver.mpi-cbg.de\rosenber\stageControler\Debug\stageControl.exe
+     1>Done Building Project "\\fileserver.mpi-cbg.de\rosenber\stageControler\stageControl\stageControl.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:01.27
+Time Elapsed 00:00:00.45
