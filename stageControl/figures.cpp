@@ -5,6 +5,7 @@ void figures::rectangle::leaveOrSwap(double &phi, double &a, double &b){
 	while (phi < 0){
 		phi = phi + 360;
 	}
+	double copyPhi = phi;
 
 	phi = (phi / 360) * 2 * pi;
 	phi = fmod(phi, 2 * pi);
@@ -26,6 +27,7 @@ void figures::rectangle::leaveOrSwap(double &phi, double &a, double &b){
 		double dummy = a;
 		a = b;
 		b = dummy;
+		phi = copyPhi - 90;
 	}
 }
 
@@ -115,6 +117,60 @@ void figures::rectangle::cutAbs()
 	pointerToE545->closeShutter();
 	pointerToE545->moveTo(pos[0], pos[1], pos[2]);
 }
+void figures::rectangle::cutAbsLim()
+{
+	pointerToE545->setVelocity(velocity, velocity, 10);
+
+	double sPhi = phi0;
+	double sa = a; 
+	double sb = b;
+	leaveOrSwap(sPhi, sa, sb);
+
+	double pos[3];
+	double deltaPhi[2];
+	double R;
+	double x, y, xOld, yOld;
+	double deltaX;
+	double deltaY;
+	double factor=2;
+	double norm;
+
+	pointerToE545->getPositon(pos);
+
+	R = 0.5*sqrt(sa*sa + sb*sb);
+	deltaPhi[0] = 2 * atan(sb / sa);
+	deltaPhi[1] = 2 * atan(sa / sb);
+
+	double deltaPhiSum = sPhi - deltaPhi[0] / 2.0;
+
+	for (int i = 0; i <= 4; i++){
+
+		if (i > 0){
+			xOld = x;
+			yOld = y;
+		}
+
+
+		deltaPhiSum = deltaPhiSum + deltaPhi[(i % 2)];
+		
+		x = R*cos(deltaPhiSum) + pos[0];
+		y = R*sin(deltaPhiSum) + pos[1];
+
+		if (i>=2)
+		{
+			norm = sqrt((x - xOld)*(x - xOld) + (y - yOld)*(y - yOld));
+			deltaX=factor*(x - xOld)/norm;
+			deltaY=factor*(y - yOld)/norm;
+			pointerToE545->moveTo(xOld-deltaX, yOld-deltaY, 0);	//Fahren zu Position 1
+
+			pointerToE545->setLimits((i+1)%2+1,y,yOld);					//set Limits A:B
+			pointerToE545->moveTo(x+deltaX, y+deltaY, pos[2]);  //Fahre zu Position 2
+		}		
+	}
+	pointerToE545->setLimits(0, 0, 0);
+	pointerToE545->moveTo(pos[0], pos[1], pos[2]);
+}
+
 
 void figures::surfaceRectangle::set(double aIn, double bIn, double phi0In, double velocityIn, int resolutionIn, char longOrShortSide){
 

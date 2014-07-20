@@ -22,6 +22,7 @@ namespace figures{
 		void set(double a, double b, double phi0, double velocity);
 		void cutRel();
 		void cutAbs();
+		void cutAbsLim();
 
 		rectangle(stageController &E545){
 
