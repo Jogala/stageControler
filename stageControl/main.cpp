@@ -22,13 +22,13 @@ int main(int argc, char* argv[])
 {
 
 
-	////Initialization
-	////Default is 	setVelocity(50, 50, 50); moveTo(100, 100, 100);
-	//stageController E545;
-	//E545.initialize();
-	//moveStageUsingKeyboard(E545);
+	//Initialization
+	//Default is 	setVelocity(50, 50, 50); moveTo(100, 100, 100);
+	stageController E545;
+	E545.initialize();
+	moveStageUsingKeyboard(E545);
 
-	//E545.closeConnection();
+	E545.closeConnection();
 
 	
 

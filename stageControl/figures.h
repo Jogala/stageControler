@@ -20,7 +20,8 @@ namespace figures{
 
 	public:
 		void set(double a, double b, double phi0, double velocity);
-		void cut();
+		void cutRel();
+		void cutAbs();
 
 		rectangle(stageController &E545){
 
@@ -44,7 +45,8 @@ namespace figures{
 
 	public:
 		void set(double aIn, double bIn, double phi0In, double velocityIn, int resoluationIn, char longOrShortSide);
-		void cut();
+		void cutRel();
+		void cutAbs();
 
 		surfaceRectangle(stageController &E545){
 
@@ -65,7 +67,8 @@ namespace figures{
 
 	public:
 		void set(double R, double phi0, int steps, double velocity);
-		void cut();
+		void cutRel();
+		void cutAbs();
 
 		polygon(stageController &E545){
 

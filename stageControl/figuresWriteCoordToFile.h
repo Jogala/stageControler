@@ -55,7 +55,7 @@ public:
 	public:
 		void set(double R, double phi0, int steps, double velocity);
 		void cut();
-
+	
 		polygon::polygon(){}
 		polygon::~polygon(){}
 	};

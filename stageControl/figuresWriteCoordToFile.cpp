@@ -149,7 +149,6 @@ void figuresWriteCoordToFile::polygon::cut()
 }
 
 
-
 figuresWriteCoordToFile::figuresWriteCoordToFile()
 {
 }

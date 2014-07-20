@@ -376,22 +376,34 @@ void moveStageUsingKeyboard(stageController &E545){
 			}
 
 			if (choice1 == 'c'){
-				char choice2;
+				
+				string choice2;
 				cout << "Choose figure to cut:" << endl;
-				cout << "(r)ectangle" << endl;
-				cout << "(p)olygon" << endl;
+				cout << "rRel, rAbs pRel, pAbs, sRel, sAbs" << endl;
 				cin >> choice2;
 
-				if (choice2 == 'r'){
-					rectangle.cut();
+				if (choice2 == "rRel"){
+					rectangle.cutRel();
 				}
 
-				if (choice2 == 'p'){
-					polygon.cut();
+				if (choice2 == "rAbs"){
+					rectangle.cutAbs();
 				}
 
-				if (choice2 == 's'){
-					surfaceRectangle.cut();
+				if (choice2 == "pRel"){
+					polygon.cutRel();
+				}
+
+				if (choice2 == "pAbs"){
+					polygon.cutAbs();
+				}
+
+				if (choice2 == "sRel"){
+					surfaceRectangle.cutRel();
+				}
+
+				if (choice2 == "sAbs"){
+					surfaceRectangle.cutAbs();
 				}
 
 			}
