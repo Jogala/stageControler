@@ -131,8 +131,9 @@ void figures::surfaceRectangle::cutRel()
 {
 	pointerToE545->setVelocity(velocity, velocity, 10);
 	double delta = b / resolution;
-	//get Position
-	//Set Limits 
+
+	double pos[3];
+	pointerToE545->getPositon(pos);
 
 	double deltaPhi[2];
 	double R;
@@ -177,7 +178,7 @@ void figures::surfaceRectangle::cutRel()
 
 	pointerToE545->closeShutter();
 
-
+	pointerToE545->moveTo(pos);
 }
 void figures::surfaceRectangle::cutAbs()
 {
