@@ -4,32 +4,50 @@
 #include "usefulFunctions.h"
 
 using namespace std;
+//This maybe seems confusing... I declared a namespace "figuresWriteCoordToFile"
+//here because I ant to use for example "figuresWriteCoordToFile::rectangle rec" and 
+//"figures::rectangle myRec"
+//Something like "figuresWriteCoordToFile::figuresWriteCoordToFile myFigure" can not 
+//occure becaue the contructors of "figuresWriteCoordToFile" are set to protected. 
+//the same is true for the class and namespace figures. 
+//This has the advantage that I can give all child classes shared functions or objects
+//(like usefulFunctions) by writing them into the parent class, and I can still use namespace.
+namespace figuresWriteCoordToFile{
 
-class figuresWriteCoordToFile
-{
-private:
+	class figuresWriteCoordToFile
+	{
+	private:
+
+	protected:
+		usefulFunctions use;
+		figuresWriteCoordToFile(){}
+		~figuresWriteCoordToFile(){}
+
+	};
 
 
-public:
 	//////////////////////////////
 	//		rectangle			//
 	//////////////////////////////
-	class rectangle{
+	class rectangle : public figuresWriteCoordToFile{
 	private:
 		double a, b, phi0, velocity;
 
 	public:
 		void set(double a, double b, double phi0, double velocity);
+		void leaveOrSwapAdjustPhi(double &phi, double &a, double &b);
 		void cut();
+		void cutAbsLim();
 
-		rectangle::rectangle(){}
+		rectangle::rectangle(){
+		}
 		rectangle::~rectangle(){}
 	};
 
 	//////////////////////////////////////
 	//		surface rectangle			//
 	//////////////////////////////////////
-	class surfaceRectangle{
+	class surfaceRectangle : public figuresWriteCoordToFile{
 	private:
 		double a, b, phi0, velocity;
 		int resolution;
@@ -47,7 +65,7 @@ public:
 	//////////////////////////////
 	//			polygon			//
 	//////////////////////////////
-	class polygon{
+	class polygon : public figuresWriteCoordToFile{
 	private:
 		double R, phi0, velocity;
 		int steps;
@@ -55,12 +73,11 @@ public:
 	public:
 		void set(double R, double phi0, int steps, double velocity);
 		void cut();
-	
+
 		polygon::polygon(){}
 		polygon::~polygon(){}
 	};
 
-	figuresWriteCoordToFile();
-	~figuresWriteCoordToFile();
-};
+}
+
 

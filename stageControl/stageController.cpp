@@ -302,16 +302,39 @@ bool stageController::switchDriftControlModeOn(){
 
 void stageController::setVelocity(double xVelocity, double yVelocity, double zVelocity){
 
-	double velocityArray[3];
-	velocityArray[0] = xVelocity;
-	velocityArray[1] = yVelocity;
-	velocityArray[2] = zVelocity;
+	double velocity[3];
+	velocity[0] = xVelocity;
+	velocity[1] = yVelocity;
+	velocity[2] = zVelocity;
 
-	PI_VEL(ID, szAxes, velocityArray);
+	PI_VEL(ID, szAxes, velocity);
+
+	if ((0 <= velocity[0]) && (velocity[0] <= veloLimit) && (0 <= velocity[1]) && (velocity[1] <= veloLimit) && (0 <= velocity[2]) && (velocity[2] <= veloLimit))
+	{
+		PI_VEL(ID, szAxes, velocity);
+	}
+	else
+	{
+		std::cout << "The maximum velocity is " << veloLimit << std::endl;
+	}
+
+
+
 }
 void stageController::setVelocity(const double velocity[3]){
 
-	PI_VEL(ID, szAxes, velocity);
+	
+
+	if ((0 <= velocity[0]) && (velocity[0] <= veloLimit) && (0 <= velocity[1]) && (velocity[1] <= veloLimit) && (0 <= velocity[2]) && (velocity[2] <= veloLimit))
+	{
+		PI_VEL(ID, szAxes, velocity);
+	}
+	else
+	{
+		std::cout << "The maximum velocity is " << veloLimit << std::endl;
+	}
+
+
 }
 void stageController::deltaVelocity(double xDeltaVelocity, double yDeltaVelocity, double zDeltaVelocity){
 
@@ -324,14 +347,9 @@ void stageController::deltaVelocity(double xDeltaVelocity, double yDeltaVelocity
 	newVelocity[1] = yDeltaVelocity + cVelVal[1];
 	newVelocity[2] = zDeltaVelocity + cVelVal[2];
 
-	//if ((0 <= newVelocity[0]) && (newVelocity[0] <= 200) && (0 <= newVelocity[1]) && (newVelocity[1] <= 200) && (0 <= newVelocity[2]) && (newVelocity[2] <= 200))
-	//{
+	
 		setVelocity(newVelocity);
-	//}
-	//else
-	//{
-	//	std::cout << "you can't go further then this" << std::endl;
-	//}
+	
 }
 
 void stageController::getVelocity(double &xVelocity, double &yVelocity, double &zVelocity){

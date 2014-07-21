@@ -13,9 +13,8 @@
 #include "cut.h"
 #include "moveStageUsingKeyboard.h"
 #include "figures.h"
+#include "figuresWriteCoordToFile.h"
 using namespace std;
-
-
 
 
 int main(int argc, char* argv[])
@@ -30,9 +29,7 @@ int main(int argc, char* argv[])
 
 	E545.closeConnection();
 
-	
-
-
+		
 }
 
 

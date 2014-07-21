@@ -28,6 +28,7 @@ void moveStageUsingKeyboard(stageController &E545){
 	usefulFunctions useful;
 	cut cut(E545);
 
+	
 	figures::rectangle rectangle(E545);
 	figures::polygon   polygon(E545);
 	figures::surfaceRectangle surfaceRectangle(E545);
@@ -379,7 +380,7 @@ void moveStageUsingKeyboard(stageController &E545){
 				
 				string choice2;
 				cout << "Choose figure to cut:" << endl;
-				cout << "rRel, rAbs pRel, pAbs, sRel, sAbs" << endl;
+				cout << "rRel, rAbs, rAbsLim, pRel, pAbs, sRel, sAbs" << endl;
 				cin >> choice2;
 
 				if (choice2 == "rRel"){
@@ -388,6 +389,10 @@ void moveStageUsingKeyboard(stageController &E545){
 
 				if (choice2 == "rAbs"){
 					rectangle.cutAbs();
+				}
+
+				if (choice2 == "rAbsLim"){
+					rectangle.cutAbsLim();
 				}
 
 				if (choice2 == "pRel"){

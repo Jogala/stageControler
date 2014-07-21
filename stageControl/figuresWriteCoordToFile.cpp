@@ -1,5 +1,34 @@
 #include "figuresWriteCoordToFile.h"
+void figuresWriteCoordToFile::rectangle::leaveOrSwapAdjustPhi(double &phi, double &a, double &b){
 
+	while (phi < 0){
+		phi = phi + 360;
+	}
+	double copyPhi = phi;
+
+	phi = (phi / 360) * 2 * pi;
+	phi = fmod(phi, 2 * pi);
+
+	if (
+		(
+		(phi <= pi / 4) || (phi >= 7 * pi / 4) //phi ist minimal 0 und maximal 2*pi
+		)
+		||
+		(
+		(phi <= 5 * pi / 4) && (3 * pi / 4 <= phi)
+		)
+		)
+	{
+		//do nothing
+	}
+	else
+	{
+		double dummy = a;
+		a = b;
+		b = dummy;
+		phi = copyPhi - 90;
+	}
+}
 
 void figuresWriteCoordToFile::rectangle::set(double aIn, double bIn, double phi0In, double velocityIn){
 
@@ -10,6 +39,98 @@ void figuresWriteCoordToFile::rectangle::set(double aIn, double bIn, double phi0
 
 
 }
+
+
+void figuresWriteCoordToFile::rectangle::cutAbsLim(){
+
+//phi0, sa, sb dürfen durch diese Funktion nicht geändert werden
+double sPhi = phi0;
+double sa = a;
+double sb = b;
+
+
+leaveOrSwapAdjustPhi(sPhi, sa, sb);
+
+use.degToRadByRef(sPhi);
+
+double pos[3];
+double deltaPhi[2];
+double R;
+double x, y, xOld, yOld;
+double deltaX;
+double deltaY;
+double factor = 2;
+double norm;
+
+string name = "mainRecAbsLim.txt";
+fstream f;
+f << fixed;
+f << setprecision(3);
+
+f.open(name, fstream::out | fstream::trunc);
+f.close();
+f.open(name, fstream::out | fstream::app);
+
+pos[0] = 100;
+pos[1] = 100;
+pos[2] = 100;
+
+R = 0.5*sqrt(sa*sa + sb*sb);
+deltaPhi[0] = 2 * atan(sb / sa);
+deltaPhi[1] = 2 * atan(sa / sb);
+
+
+double deltaPhiSum = sPhi - deltaPhi[0] / 2.0;
+
+xOld = R*cos(deltaPhiSum) + pos[0];
+yOld = R*sin(deltaPhiSum) + pos[1];
+
+for (int i = 0; i <= 3; i++){
+
+	if (i > 0){
+		xOld = x;
+		yOld = y;
+	}
+
+	deltaPhiSum = deltaPhiSum + deltaPhi[(i % 2)];
+
+	x = R*cos(deltaPhiSum) + pos[0];
+	y = R*sin(deltaPhiSum) + pos[1];
+
+
+	norm = sqrt((x - xOld)*(x - xOld) + (y - yOld)*(y - yOld));
+	deltaX = factor*(x - xOld) / norm;
+	deltaY = factor*(y - yOld) / norm;
+	//pointerToE545->moveTo(xOld - deltaX, yOld - deltaY, pos[2]);	//Fahren zu Position 1
+	f << xOld - deltaX << "\t" << yOld - deltaY << endl;
+
+	
+	if (!(i % 2)){
+		//pointerToE545->setLimits(2, y, yOld);					//set Limits A:B
+		f << "\t \t " << 2 << "\t" << y << "\t" << yOld << endl;
+	}
+	else
+	{
+		//pointerToE545->setLimits(1, x, xOld);
+		f << "\t \t " << 1 << "\t" << x << "\t" << xOld << endl;
+	}
+
+
+
+	//pointerToE545->moveTo(x + deltaX, y + deltaY, pos[2]);  //Fahre zu Position 2
+	f << x + deltaX << "\t" << y + deltaY << endl;
+
+}
+//pointerToE545->setLimits(0, 0, 0);
+//pointerToE545->moveTo(pos[0], pos[1], pos[2]);
+
+f.close();
+
+}
+
+
+
+
 void figuresWriteCoordToFile::rectangle::cut()
 {
 	double deltaPhi[2];
@@ -149,11 +270,4 @@ void figuresWriteCoordToFile::polygon::cut()
 }
 
 
-figuresWriteCoordToFile::figuresWriteCoordToFile()
-{
-}
 
-
-figuresWriteCoordToFile::~figuresWriteCoordToFile()
-{
-}

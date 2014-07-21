@@ -10,6 +10,7 @@ class stageController
 
 private: double Position[3];
 		 usefulFunctions useful;
+		 double veloLimit=9900;
 		 
 public:
 	//Variables
