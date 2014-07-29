@@ -150,7 +150,7 @@ void stageController::moveTo(double xCoord, double yCoord, double zCoord){
 	}
 	else
 	{
-		std::cout << "Out of limits" << std::endl;
+		std::cout << "void stageController::moveTo(double xCoord, double yCoord, double zCoord) says: Out of limits" << std::endl;
 	}
 }
 void stageController::moveTo(const double coord[3]){
@@ -175,7 +175,7 @@ void stageController::moveTo(const double coord[3]){
 	}
 	else
 	{
-		std::cout << "Out of limits" << std::endl;
+		std::cout << "void stageController::moveTo(const double coord[3]) says: Out of limits" << std::endl;
 	}
 }
 void stageController::move(double xDelta, double yDelta, double zDelta){
@@ -211,7 +211,7 @@ void stageController::move(double xDelta, double yDelta, double zDelta){
 	}
 	else
 	{
-		std::cout << "Out of limits" << std::endl;
+		std::cout << "void stageController::move(double xDelta, double yDelta, double zDelta) says: Out of limits" << std::endl;
 	}
 }
 void stageController::waitUntilMoveFinished(){
@@ -381,13 +381,43 @@ void stageController::printVelocity(){
 //////////////////////////////////////////////////////
 void stageController::setLimits(int whichAxis, double min, double max){
 
+	int piTriggerParameterArray[2] = {5,6};
+	int piTriggerOutputIdsArray[2] = { whichAxis, whichAxis };
+	double pdValueArray[2] = { min, max };
+	
+
+	if (useful.qValuesInLimits(min, max))
+	{
+
+		if (min <= max){
+			//do nothing
+		}
+		else
+		{
+			double dummy;
+			dummy = max;
+			max = min;
+			min = dummy;
+		}
+
+			std::cout << PI_CTO(ID, piTriggerOutputIdsArray, piTriggerParameterArray, pdValueArray, 2) << std::endl;
+	}
+	else{
+		std::cout << "no valid limit values" << std::endl;
+	}
+
+}
+
+void stageController::setLimitsMin(int whichAxis, double min){
+
 	int piTriggerParameterArray[1];
 	int piTriggerOutputIdsArray[1];
 	double pdValueArray[1];
 	bool tryAgain = 1;
 
-	if (useful.qIfposibleLimitValues(min, max))
+	if (useful.qValueInLimits(min))
 	{
+
 		while (tryAgain == 1){
 
 			piTriggerOutputIdsArray[0] = whichAxis;
@@ -396,11 +426,7 @@ void stageController::setLimits(int whichAxis, double min, double max){
 
 			tryAgain = !PI_CTO(ID, piTriggerOutputIdsArray, piTriggerParameterArray, pdValueArray, 1);
 			std::cout << !tryAgain << std::endl;
-
-			piTriggerOutputIdsArray[0] = whichAxis;
-			piTriggerParameterArray[0] = 6;
-			pdValueArray[0] = max;
-			std::cout << PI_CTO(ID, piTriggerOutputIdsArray, piTriggerParameterArray, pdValueArray, 1) << std::endl;
+	
 		}//while
 	}
 	else{
@@ -408,6 +434,33 @@ void stageController::setLimits(int whichAxis, double min, double max){
 	}
 
 }
+void stageController::setLimitsMax(int whichAxis, double max){
+
+	int piTriggerParameterArray[1];
+	int piTriggerOutputIdsArray[1];
+	double pdValueArray[1];
+	bool tryAgain = 1;
+
+	if (useful.qValueInLimits(max))
+	{
+
+		while (tryAgain == 1){
+
+			piTriggerOutputIdsArray[0] = whichAxis;
+			piTriggerParameterArray[0] = 6;
+			pdValueArray[0] = max;
+
+			tryAgain = !PI_CTO(ID, piTriggerOutputIdsArray, piTriggerParameterArray, pdValueArray, 1);
+			std::cout << !tryAgain << std::endl;
+
+		}//while
+	}
+	else{
+		std::cout << "no valid limit values" << std::endl;
+	}
+
+}
+
 void stageController::setTriggerMode(int whichAxis, int mode){
 
 	int piTriggerParameterArray[1];

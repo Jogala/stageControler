@@ -135,17 +135,10 @@ void figures::rectangle::cutAbsLim()
 	double x, y, xOld, yOld;
 	double deltaX;
 	double deltaY;
-	double factor = 2;
+	double factor = 10;
 	double norm;
-
-	string name = "recAbsLim.txt";
-	fstream f;
-	f << fixed;
-	f << setprecision(3);
-
-	f.open(name, fstream::out | fstream::trunc);
-	f.close();
-	f.open(name, fstream::out | fstream::app);
+	double dummy1;
+	double dummy2;
 
 	pos[0] = 100;
 	pos[1] = 100;
@@ -154,7 +147,6 @@ void figures::rectangle::cutAbsLim()
 	R = 0.5*sqrt(sa*sa + sb*sb);
 	deltaPhi[0] = 2 * atan(sb / sa);
 	deltaPhi[1] = 2 * atan(sa / sb);
-
 
 	double deltaPhiSum = sPhi - deltaPhi[0] / 2.0;
 
@@ -178,29 +170,56 @@ void figures::rectangle::cutAbsLim()
 		deltaX = factor*(x - xOld) / norm;
 		deltaY = factor*(y - yOld) / norm;
 
-		pointerToE545->setLimits(1, 0, 0);
-		pointerToE545->setLimits(2, 0, 0);
 		pointerToE545->moveTo(xOld - deltaX, yOld - deltaY, pos[2]);	//Fahren zu Position 1
-		f << xOld - deltaX << "\t" << yOld - deltaY << endl;
+		pointerToE545->printPosition();
+	
 
+
+		cout << "as !(i%2) = " << !(i % 2) << endl;
 		if (!(i%2)){
+
+			pointerToE545->printPosition();
+
+			if (y <= yOld){
+				//Do nothing
+			}
+			else{
+				dummy1 = yOld;
+				yOld = y;
+				y = dummy1;
+			}
+
 			pointerToE545->setLimits(2, y, yOld);					//set Limits A:B
-			f << "\t \t " << 2<<"\t"<<y <<"\t"<<yOld<< endl;
+			pointerToE545->printLimits();
+			pointerToE545->printPosition();			
+
 		}
 		else
 		{
+
+			if (x <= xOld){
+				//Do nothing
+			}
+			else{
+				dummy1 = xOld;
+				xOld = x;
+				x = dummy1;
+			}
+
 			pointerToE545->setLimits(1, x, xOld);
-			f << "\t \t " << 1 << "\t" << x << "\t" << xOld << endl;
+					
 		}
 
+		
 		pointerToE545->moveTo(x + deltaX, y + deltaY, pos[2]);  //Fahre zu Position 2
-		f << x + deltaX << "\t" << y + deltaY << endl;
+		pointerToE545->printPosition();
+		pointerToE545->closeShutter();
+		
 
 	}
-	pointerToE545->setLimits(0, 0, 0);
+	pointerToE545->closeShutter();
 	pointerToE545->moveTo(pos[0], pos[1], pos[2]);
 
-	f.close();
 }
 
 
@@ -321,12 +340,26 @@ void figures::surfaceRectangle::cutAbs()
 }
 
 
+
 void figures::polygon::set(double RIn, double phi0In, int stepsIn, double velocityIn){
 
 	velocity = velocityIn;
 	R = RIn;
 	phi0 = phi0In*(2 * pi) / (360.0);
 	steps = stepsIn;
+}
+void figures::polygon::set3D(double RIn, double phi0In, double rotAngleX, double rotAngleZ, int stepsIn, double velocityIn){
+
+	velocity = velocityIn;
+	R = RIn;
+	phi0 = phi0In*(2 * pi) / (360.0);
+	rotAngleX = rotAngleX*(2 * pi) / (360.0);
+	rotAngleZ = rotAngleZ*(2 * pi) / (360.0);
+	steps = stepsIn;
+
+	use.setRotMatrices(xRotMat, zRotMat, rotAngleZ, rotAngleX);
+
+
 }
 void figures::polygon::cutRel()
 {
@@ -335,6 +368,7 @@ void figures::polygon::cutRel()
 	double deltaPhi = (2 * pi) / steps;
 	double pos[3];
 
+	pointerToE545->getPositon(pos);
 
 	xOld = R*cos(phi0);
 	yOld = R*sin(phi0);
@@ -363,23 +397,12 @@ void figures::polygon::cutAbs()
 	double x, y, xOld, yOld;
 	double deltaPhi = (2 * pi) / steps;
 
-	string name = "polyAbs.txt";
-	fstream f;
-	f << fixed;
-	f << setprecision(3);
-
-	f.open(name, fstream::out | fstream::trunc);
-	f.close();
-	f.open(name, fstream::out | fstream::app);
-
 	pointerToE545->getPositon(pos);
 
 	xOld = R*cos(phi0);
 	yOld = R*sin(phi0);
 
 	pointerToE545->moveTo(xOld + pos[0], yOld + pos[1], pos[2]);
-
-	f << xOld + pos[0] << "\t" << yOld + pos[1] << "\t" << pos[2] << endl;
 
 	pointerToE545->openShutter();
 	for (int i = 1; i <= steps; i++){
@@ -388,10 +411,42 @@ void figures::polygon::cutAbs()
 		y = R*sin(phi0 + deltaPhi*i);
 
 		pointerToE545->moveTo(x + pos[0], y + pos[1], pos[2]);
-		f << x + pos[0] << "\t" << y + pos[1] << "\t" << pos[2] << endl;
+		/*cout << "i  = " << i << endl;
+		getchar();*/
 	}
 	pointerToE545->closeShutter();
 	pointerToE545->moveTo(pos);
-	f.close();
+}
+void figures::polygon::cutAbs3D()
+{
+	pointerToE545->setVelocity(velocity, velocity, 10);
+
+	double pos[3];
+	double xOld, yOld,zOld;
+	double x[3];
+	double deltaAlpha = (2 * pi) / steps;
+
+	pointerToE545->getPositon(pos);
+
+	xOld = R*cos(phi0);
+	yOld = R*sin(phi0);
+	
+	pointerToE545->moveTo(xOld + pos[0], yOld + pos[1], pos[2]);
+
+	pointerToE545->openShutter();
+	for (int i = 1; i <= steps; i++){
+
+		x[0]= R*cos(phi0 + deltaAlpha*i);
+		x[1] = R*sin(phi0 + deltaAlpha*i);
+		x[2] = pos[2];
+
+		use.matrixTimesVec(xRotMat, x);
+		use.matrixTimesVec(zRotMat, x);
+
+		pointerToE545->moveTo(x[0] + pos[0], x[1] + pos[1], x[2]+pos[2]);
+	
+	}
+	pointerToE545->closeShutter();
+	pointerToE545->moveTo(pos);
 }
 

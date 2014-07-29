@@ -32,7 +32,7 @@ namespace figures{
 	private:
 		stageController * pointerToE545;
 		double a, b, phi0, velocity;
-
+	
 		//leaveOrSwap leaves a and b unchanged if -45<=phi<=45 or 135<=phi<=225
 		//and adjusts phi
 		void leaveOrSwapAndAdjustPhi(double &phi, double &a, double &b);
@@ -82,14 +82,17 @@ namespace figures{
 	class polygon : public figures{
 	private:
 		stageController * pointerToE545;
-		double R, phi0, velocity;
+		double R, phi0,velocity;
 		int steps;
+		double xRotMat[3][3];
+		double zRotMat[3][3];
 
 	public:
 		void set(double R, double phi0, int steps, double velocity);
 		void cutRel();
 		void cutAbs();
-
+		void cutAbs3D();
+		void set3D(double RIn, double phi0In, double rotAngleXIn, double rotAngleZIn, int stepsIn, double velocityIn);
 		polygon(stageController &E545){
 
 			pointerToE545 = &E545;

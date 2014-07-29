@@ -2,18 +2,22 @@
 #include "Header.h"
 #include "usefulFunctions.h"
 #include "stageController.h"
-#include "cut.h"
 #include "figures.h"
 
 using namespace std;
 
 //0+...
 //p				print
-//s				shutter
+//s				stepSize
 //l				limits
 //t				moveTo (t)arget
 //c				cut 
+//v				velocityStepsize
 //enter			shutter OPEN CLOSE
+
+
+//del+	enter   open shutter for pulseDuration 
+//pulseDuration can be adjusted in stepSize Menue 0+s
 
 //4-1			velocity x Axis
 //5-2			velocity y Axis
@@ -26,18 +30,27 @@ using namespace std;
 void moveStageUsingKeyboard(stageController &E545){
 
 	usefulFunctions useful;
-	cut cut(E545);
 
-	
 	figures::rectangle rectangle(E545);
 	figures::polygon   polygon(E545);
 	figures::surfaceRectangle surfaceRectangle(E545);
+
+
+
+	//Get the handle to the console window
+	HWND WINAPI handleToConsole=GetConsoleWindow();
+	//Get handle to active window
+	HWND WINAPI handleToActiveWindow;
+
+	bool windowActive = 1;
 
 	double xStepSize = 1;
 	double yStepSize = 1;
 
 	double xVelocityStepSize = 1;
 	double yVelocityStepSize = 1;
+
+	
 
 	int sleepValue = 50;
 
@@ -46,9 +59,20 @@ void moveStageUsingKeyboard(stageController &E545){
 	std::cout << fixed;
 	std::cout << setprecision(3);
 
+	
 	//http://msdn.microsoft.com/en-us/library/windows/desktop/dd375731%28v=vs.85%29.aspx
-	while (!(GetKeyState(0x51) & 0x8000) && !(GetKeyState(VK_ESCAPE) & 0x8000))
+	while (!(GetKeyState(VK_ESCAPE) & 0x8000))
 	{
+
+		//Check is consol window is active
+		handleToActiveWindow = GetForegroundWindow();
+		if (handleToActiveWindow == handleToConsole){
+			windowActive = 1;
+		}
+		else
+		{
+			windowActive = 0;
+		}
 
 
 		//////////////////////////////////////////////
@@ -56,7 +80,7 @@ void moveStageUsingKeyboard(stageController &E545){
 		//////////////////////////////////////////////
 
 		//left
-		while ((GetKeyState(0x25) & 0x8000))
+		while ((GetKeyState(0x25) & 0x8000) &&windowActive)
 		{
 			E545.move(-1.0*xStepSize, 0, 0);
 			E545.printPosition();
@@ -64,7 +88,7 @@ void moveStageUsingKeyboard(stageController &E545){
 		}//left
 
 		//right
-		while ((GetKeyState(0x27) & 0x8000))
+		while ((GetKeyState(0x27) & 0x8000) && windowActive)
 		{
 			E545.move(1.0*xStepSize, 0, 0);
 			E545.printPosition();
@@ -72,7 +96,7 @@ void moveStageUsingKeyboard(stageController &E545){
 		}//right
 
 		//down
-		while ((GetKeyState(0x28) & 0x8000))
+		while ((GetKeyState(0x28) & 0x8000) && windowActive)
 		{
 			E545.move(0, -1.0*yStepSize, 0);
 			E545.printPosition();
@@ -80,7 +104,7 @@ void moveStageUsingKeyboard(stageController &E545){
 		}//down
 
 		//up
-		while ((GetKeyState(0x26) & 0x8000))
+		while ((GetKeyState(0x26) & 0x8000) && windowActive)
 		{
 			E545.move(0, 1.0*yStepSize, 0);
 			E545.printPosition();
@@ -93,7 +117,7 @@ void moveStageUsingKeyboard(stageController &E545){
 		//////////////////////////////////////////////
 
 		//x-Achse Velocity +  == 4
-		while ((GetKeyState(0x64) & 0x8000))
+		while ((GetKeyState(0x64) & 0x8000) && windowActive)
 		{
 			E545.deltaVelocity(xVelocityStepSize, 0, 0);
 			E545.printVelocity();
@@ -101,7 +125,7 @@ void moveStageUsingKeyboard(stageController &E545){
 		}//4
 
 		//x-Achse Velocity - == 1
-		while ((GetKeyState(0x61) & 0x8000))
+		while ((GetKeyState(0x61) & 0x8000) && windowActive)
 		{
 			E545.deltaVelocity(-1.0*xVelocityStepSize, 0, 0);
 			E545.printVelocity();
@@ -109,7 +133,7 @@ void moveStageUsingKeyboard(stageController &E545){
 		}//1
 
 		//y-Achse Velocity +  == 5
-		while ((GetKeyState(0x65) & 0x8000))
+		while ((GetKeyState(0x65) & 0x8000) && windowActive)
 		{
 			E545.deltaVelocity(0, yVelocityStepSize, 0);
 			E545.printVelocity();
@@ -118,7 +142,7 @@ void moveStageUsingKeyboard(stageController &E545){
 		}//5
 
 		//y-Achse Velocity - ==2
-		while ((GetKeyState(0x62) & 0x8000))
+		while ((GetKeyState(0x62) & 0x8000) && windowActive)
 		{
 			E545.deltaVelocity(0, -1.0*yVelocityStepSize, 0);
 			E545.printVelocity();
@@ -131,7 +155,7 @@ void moveStageUsingKeyboard(stageController &E545){
 		//////////////////////////////////////////////
 
 		//p print current position or velocity or limits
-		if ((GetKeyState(0x50) & 0x8000) && (GetKeyState(0x11) & 0x8000)){
+		if ((GetKeyState(0x50) & 0x8000) && (GetKeyState(0x30) & 0x8000) && windowActive){
 
 			//Just clearing the current command line
 			const int KEYEVENT_KEYUP = 0x02;
@@ -157,6 +181,9 @@ void moveStageUsingKeyboard(stageController &E545){
 			{
 				E545.printLimits();
 			}
+
+
+			
 		}//if p
 
 		//////////////////////////////////////////////
@@ -164,7 +191,7 @@ void moveStageUsingKeyboard(stageController &E545){
 		//////////////////////////////////////////////
 
 		//s for stepSize
-		if ((GetKeyState(0x53) & 0x8000) && (GetKeyState(0x30) & 0x8000)){
+		if ((GetKeyState(0x53) & 0x8000) && (GetKeyState(0x30) & 0x8000) && windowActive){
 
 			//Just clearing the current command line
 			const int KEYEVENT_KEYUP = 0x02;
@@ -192,10 +219,11 @@ void moveStageUsingKeyboard(stageController &E545){
 				cout << "pulse duration = ";
 				cin >> pulseDuration;
 			}
+			cout << "---------------Back in Main--------------" << endl;
 		}//s
 
 		//v for velocityStepSize
-		if ((GetKeyState(0x56) & 0x8000) && (GetKeyState(0x11) & 0x8000)){
+		if ((GetKeyState(0x56) & 0x8000) && (GetKeyState(0x30) & 0x8000) && windowActive){
 
 			//Just clearing the current command line
 			const int KEYEVENT_KEYUP = 0x02;
@@ -213,11 +241,12 @@ void moveStageUsingKeyboard(stageController &E545){
 				cout << "yVelocityStepSize = ";
 				useful.cinAndCheckForDoubleAndLimits(yVelocityStepSize);
 			}
+			cout << "---------------Back in Main--------------" << endl;
 		}//v
 
 
 		//l sets limits for threshold triggering
-		if ((GetKeyState(0x4C) & 0x8000) && (GetKeyState(0x30) & 0x8000))
+		if ((GetKeyState(0x4C) & 0x8000) && (GetKeyState(0x30) & 0x8000) && windowActive)
 		{
 
 			//Just clearing the current command line
@@ -225,7 +254,9 @@ void moveStageUsingKeyboard(stageController &E545){
 			keybd_event(VK_ESCAPE, 0, 0, 0);              // press the Esc key
 			keybd_event(VK_ESCAPE, 0, KEYEVENT_KEYUP, 0); // let up the Esc key
 
-			char choice;
+			char choice0;
+			string choice1;
+			char choice2;
 			double min;
 			double max;
 
@@ -233,35 +264,70 @@ void moveStageUsingKeyboard(stageController &E545){
 			E545.setTriggerMode(2, 3);
 			E545.setTriggerMode(3, 3);
 
-			cout << "set limits, press x or y" << endl;
-			cin >> choice;
+			cout << "set min max (s)eperately or set (l)limits" << endl;
+			cin >> choice0;
 
-			if (choice == 'x'){
-				cout << "min = ";
-				useful.cinAndCheckForDouble(min);
-				cout << "max = ";
-				useful.cinAndCheckForDouble(max);
-				E545.setLimits(1, min, max);
+			if (choice0 == 'l'){
+
+				cout << "set limits, press x, y or z" << endl;
+				cin >> choice1;
+
+				if (choice1 == "x"){
+					cout << "min = ";
+					useful.cinAndCheckForDouble(min);
+					cout << "max = ";
+					useful.cinAndCheckForDouble(max);
+					E545.setLimits(1, min, max);
+				}
+				if (choice1 == "y"){
+					cout << "min = ";
+					useful.cinAndCheckForDouble(min);
+					cout << "max = ";
+					useful.cinAndCheckForDouble(max);
+					E545.setLimits(2, min, max);
+				}
+				if (choice1 == "z"){
+					cout << "min = ";
+					useful.cinAndCheckForDouble(min);
+					cout << "max = ";
+					useful.cinAndCheckForDouble(max);
+					E545.setLimits(3, min, max);
+				}
 			}
-			if (choice == 'y'){
-				cout << "min = ";
-				useful.cinAndCheckForDouble(min);
-				cout << "max = ";
-				useful.cinAndCheckForDouble(max);
-				E545.setLimits(2, min, max);
+
+			if (choice0 == 's'){
+
+				cout << "set min or max, type xMax, xMin, yMin or yMax" << endl;
+				cin >> choice1;
+
+				if (choice1 == "xMax"){
+					cout << "xMax = ";
+					cin >> max;
+					E545.setLimitsMax(1, max);
+				}
+				if (choice1 == "xMin"){
+					cout << "xMin = ";
+					cin >> min;
+					E545.setLimitsMin(1, min);
+				}
+				if (choice1 == "yMax"){
+					cout << "yMax = ";
+					cin >> max;
+					E545.setLimitsMax(2, max);
+				}
+				if (choice1 == "yMin"){
+					cout << "yMin = ";
+					cin >> min;
+					E545.setLimitsMin(2, min);
+				}
+
 			}
-			if (choice == 'z'){
-				cout << "min = ";
-				useful.cinAndCheckForDouble(min);
-				cout << "max = ";
-				useful.cinAndCheckForDouble(max);
-				E545.setLimits(3, min, max);
-			}
+			cout << "---------------Back in Main--------------" << endl;
 		}//l
 
 
 		//Control + Enter = Open  or Close
-		if ((GetKeyState(0x0D) & 0x8000) && (GetKeyState(0x30) & 0x8000))
+		if ((GetKeyState(0x0D) & 0x8000) && (GetKeyState(0x30) & 0x8000) && windowActive)
 		{
 			if (E545.checkIfAnyLimit()){
 				E545.closeShutter();
@@ -275,7 +341,7 @@ void moveStageUsingKeyboard(stageController &E545){
 		}//Control + Enter = Open  or Close
 
 		//Entf + Enter = Open or Close pulsed
-		if ((GetKeyState(0x0D) & 0x8000) && (GetKeyState(0x2E) & 0x8000))
+		if ((GetKeyState(0x0D) & 0x8000) && (GetKeyState(0x2E) & 0x8000) && windowActive)
 		{
 			if (E545.checkIfAnyLimit()){
 				E545.closeShutter();
@@ -294,10 +360,10 @@ void moveStageUsingKeyboard(stageController &E545){
 		}//Entf + Enter = Open or Close pulsed
 
 		//t = moveTo
-		if ((GetKeyState(0x54) & 0x8000) && (GetKeyState(0x30) & 0x8000))
+		if ((GetKeyState(0x54) & 0x8000) && (GetKeyState(0x30) & 0x8000) && windowActive)
 		{
 			double target[3];
-			cout << "moveTo, press (a)adavanced options: " << endl;
+			cout << "moveTo" << endl;
 			cout << "xTarget = ";
 			useful.cinAndCheckForDouble(target[0]);
 			cout << "yTarget = ";
@@ -307,10 +373,12 @@ void moveStageUsingKeyboard(stageController &E545){
 
 			E545.moveTo(target);
 			E545.printPosition();
+
+			cout << "---------------Back in Main--------------" << endl;
 		}//t = moveTo
 
 		//c = cut 
-		if ((GetKeyState(0x43) & 0x8000) && (GetKeyState(0x30) & 0x8000))
+		if ((GetKeyState(0x43) & 0x8000) && (GetKeyState(0x30) & 0x8000) && windowActive)
 		{
 			//Just clearing the current command line
 			const int KEYEVENT_KEYUP = 0x02;
@@ -331,7 +399,7 @@ void moveStageUsingKeyboard(stageController &E545){
 				cin >> choice2;
 
 				if (choice2 == 'r'){
-					double a, b,phi0,velo;
+					double a, b, phi0, velo;
 					cout << "a = " << endl;
 					cin >> a;
 					cout << "b = " << endl;
@@ -340,7 +408,7 @@ void moveStageUsingKeyboard(stageController &E545){
 					cin >> phi0;
 					cout << "velocity = " << endl;
 					cin >> velo;
-				
+
 					rectangle.set(a, b, phi0, velo);
 				}
 
@@ -371,57 +439,154 @@ void moveStageUsingKeyboard(stageController &E545){
 					cin >> resolution;
 					cout << "velocity = " << endl;
 					cin >> velo;
-					surfaceRectangle.set(a,b,phi0,velo,resolution,'l');
+					surfaceRectangle.set(a, b, phi0, velo, resolution, 'l');
 				}
-
+				cout << "---------------Back in Main--------------" << endl;
 			}
 
 			if (choice1 == 'c'){
-				
+
 				string choice2;
 				cout << "Choose figure to cut:" << endl;
-				cout << "rRel, rAbs, rAbsLim, pRel, pAbs, sRel, sAbs" << endl;
+				cout << "------------rectangle------------"<<endl;
+				cout << "(rRel)"	<<endl;
+				cout << "(rAbs)" << endl;
+				cout << "------------polygon------------" << endl;
+				cout << "(pAbs)" <<endl;
+				cout << "(pRel)" << endl;
+				cout << "(pA) = predfined values pAbs" << endl;
+				cout << "(p)  = pAbs with pre. def. values but velocity can be set" << endl;
+				cout << "(pR) = pRel but predefinied values" << endl;
+				cout << "------------area------------" << endl;
+				cout << "(sRel)" << endl;
+				cout << "(sAbs)" << endl;
+
 				cin >> choice2;
 
 				if (choice2 == "rRel"){
 					rectangle.cutRel();
+					cout << "---------------Back in Main--------------" << endl;
 				}
 
 				if (choice2 == "rAbs"){
 					rectangle.cutAbs();
+					cout << "---------------Back in Main--------------" << endl;
 				}
 
 				if (choice2 == "rAbsLim"){
 					rectangle.cutAbsLim();
+					cout << "---------------Back in Main--------------" << endl;
 				}
+
 
 				if (choice2 == "pRel"){
 					polygon.cutRel();
+					cout << "---------------Back in Main--------------" << endl;
 				}
 
 				if (choice2 == "pAbs"){
 					polygon.cutAbs();
+					cout << "---------------Back in Main--------------" << endl;
 				}
 
 				if (choice2 == "sRel"){
 					surfaceRectangle.cutRel();
+					cout << "---------------Back in Main--------------" << endl;
 				}
 
 				if (choice2 == "sAbs"){
 					surfaceRectangle.cutAbs();
+					cout << "---------------Back in Main--------------" << endl;
 				}
 
+				if (choice2 == "pR"){
+					polygon.set(15, 0, 20, 1000);
+					polygon.cutRel();
+					cout << "---------------Back in Main--------------" << endl;
+				}
+
+				if (choice2 == "pA"){
+					polygon.set(15, 0, 10, 1000);
+					polygon.cutAbs();
+					cout << "---------------Back in Main--------------" << endl;
+				}
+
+				if (choice2 == "p"){
+					double vel = 0;
+					double steps = 0;
+					double R = 0;
+
+					cout << "Press Escape for returning to main menu" << endl;
+
+					while (!(GetKeyState(0x51) & 0x8000) && !(GetKeyState(VK_ESCAPE) & 0x8000))
+					{
+
+
+						//page Up
+						while ((GetKeyState(0x21) & 0x8000))
+						{
+							R = R + 1;
+							cout << "R = " << R << endl;
+							Sleep(sleepValue*2);
+						}//page Up
+
+						//Page Down
+						while ((GetKeyState(0x22) & 0x8000))
+						{
+							R = R - 1;
+							cout << "R = " << R << endl;
+							Sleep(sleepValue*2);
+						}//Page Down
+
+						//down
+						while ((GetKeyState(0x28) & 0x8000))
+						{
+							vel = vel - 100;
+							cout << "vel = " << vel << endl;
+							Sleep(sleepValue);
+						}//down
+
+						//up
+						while ((GetKeyState(0x26) & 0x8000))
+						{
+							vel = vel + 100;
+							cout << "vel = " << vel << endl;
+							Sleep(sleepValue);
+						}//up
+
+						//left
+						while ((GetKeyState(0x25) & 0x8000))
+						{
+							steps = steps - 1;
+							cout << "steps = " << steps << endl;
+							Sleep(sleepValue);
+						}//left
+
+						//right
+						while ((GetKeyState(0x27) & 0x8000))
+						{
+							steps = steps + 1;
+							cout << "steps = " << steps << endl;
+							Sleep(sleepValue);
+						}//right
+
+						if ((GetKeyState(0x43) & 0x8000))
+						{
+							polygon.set(R, 0, steps, vel);
+							polygon.cutAbs();
+
+						}
+					}
+					Sleep(sleepValue * 5);
+					
+				}
+				cout << "---------------Back in Main--------------" << endl;
 			}
 
-			
-			
-
-			
-
-			
 
 		}//c = cut 
 
+		
 
 
 	}//while ESC is not pressed

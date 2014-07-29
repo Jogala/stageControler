@@ -67,12 +67,17 @@ namespace figuresWriteCoordToFile{
 	//////////////////////////////
 	class polygon : public figuresWriteCoordToFile{
 	private:
+		
 		double R, phi0, velocity;
 		int steps;
+		double xRotMat[3][3];
+		double zRotMat[3][3];
 
 	public:
-		void set(double R, double phi0, int steps, double velocity);
+		void set(double RIn, double phi0In, int stepsIn, double velocityIn);
 		void cut();
+		void set3D(double RIn, double phi0In, double rotAngleX, double rotAngleZ, int stepsIn, double velocityIn);
+		void cutAbs3D();
 
 		polygon::polygon(){}
 		polygon::~polygon(){}

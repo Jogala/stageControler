@@ -127,10 +127,6 @@ for (int i = 0; i <= 3; i++){
 f.close();
 
 }
-
-
-
-
 void figuresWriteCoordToFile::rectangle::cut()
 {
 	double deltaPhi[2];
@@ -266,6 +262,72 @@ void figuresWriteCoordToFile::polygon::cut()
 		xOld = x;
 		yOld = y;
 	}
+	f.close();
+}
+void figuresWriteCoordToFile::polygon::set3D(double RIn, double phi0In, double rotAngleX, double rotAngleZ, int stepsIn, double velocityIn){
+
+	velocity = velocityIn;
+	R = RIn;
+	phi0 = phi0In*(2 * pi) / (360.0);
+	rotAngleX = rotAngleX*(2 * pi) / (360.0);
+	rotAngleZ = rotAngleZ*(2 * pi) / (360.0);
+	steps = stepsIn;
+
+	use.setRotMatrices(xRotMat, zRotMat, rotAngleX, rotAngleZ);
+
+
+}
+void figuresWriteCoordToFile::polygon::cutAbs3D()
+{
+	double pos[3];
+	double xOld, yOld, zOld;
+	double vec[3];
+	double x, y, z;
+	double deltaAlpha = (2 * pi) / steps;
+
+	string name = "poly3D.txt";
+	fstream f;
+	f << fixed;
+	f << setprecision(3);
+
+	f.open(name, fstream::out | fstream::trunc);
+	f.close();
+	f.open(name, fstream::out | fstream::app);
+
+	pos[0] = 100;
+	pos[1] = 100;
+	pos[2] = 100;
+
+	xOld = R*cos(phi0);
+	yOld = R*sin(phi0);
+
+	vec[0] = xOld;
+	vec[1] = yOld;
+	vec[2] = pos[2];
+
+	use.matrixTimesVec(xRotMat, vec);
+	use.matrixTimesVec(zRotMat, vec);
+
+	f<<vec[0] + pos[0]<<"\t"<< vec[1]+ pos[1]<<"\t"<< vec[2]+pos[2] <<endl;
+
+	for (int i = 1; i <= steps; i++){
+
+		
+
+		x = R*cos(phi0 + deltaAlpha*i);
+		y= R*sin(phi0 + deltaAlpha*i);
+		
+		vec[0] = x;
+		vec[1] = y;
+		vec[2] = pos[2];
+
+		use.matrixTimesVec(xRotMat, vec);
+		use.matrixTimesVec(zRotMat, vec);
+
+		f << vec[0] + pos[0] << "\t" << vec[1] + pos[1] << "\t" << vec[2]+pos[2] << endl;
+
+	}
+	cout << "leaving" << endl;
 	f.close();
 }
 

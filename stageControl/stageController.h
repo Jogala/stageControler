@@ -10,7 +10,7 @@ class stageController
 
 private: double Position[3];
 		 usefulFunctions useful;
-		 double veloLimit=9900;
+		 double  veloLimit=9900;
 		 
 public:
 	//Variables
@@ -96,9 +96,13 @@ public:
 
 	void setTriggerMode(int axis, int mode);
 	void setLimits(int xYorZaxis, double min, double max);
+	void setLimitsMin(int whichAxis, double min);
+	void setLimitsMax(int whichAxis, double max);
+
 	void getLimits(int whichAxis, double &min, double &max);
 	void getLimits(double &xMin, double &xMax, double &yMin, double &yMax, double &zMin, double &zMax);
 	void printLimits();
+
 	bool checkIfAnyLimit();
 	void getConfigOfTriggerOutput();
 

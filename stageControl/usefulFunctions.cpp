@@ -37,9 +37,9 @@ void usefulFunctions::cinAndCheckForDouble(double & xStepSize){
 	do{
 		if (cin >> newValue)
 		{
-			
-				xStepSize = newValue;
-				success = 1;
+
+			xStepSize = newValue;
+			success = 1;
 		}
 		else
 		{
@@ -49,7 +49,7 @@ void usefulFunctions::cinAndCheckForDouble(double & xStepSize){
 		}
 	} while (!success);
 }
-	
+
 bool usefulFunctions::qValueInLimits(double value){
 	if ((0 <= value) && (value <= 200)){
 		return 1;
@@ -59,7 +59,7 @@ bool usefulFunctions::qValueInLimits(double value){
 	}
 }
 
-bool usefulFunctions::qValuesInLimits(double value1,double value2){
+bool usefulFunctions::qValuesInLimits(double value1, double value2){
 	if ((0 <= value1) && (value1 <= 200) && (0 <= value2) && (value2 <= 200)){
 		return 1;
 	}
@@ -68,19 +68,6 @@ bool usefulFunctions::qValuesInLimits(double value1,double value2){
 	}
 }
 
-bool usefulFunctions::qIfposibleLimitValues(double min, double max){
-	if ((0 <= min) && (min <= 200) && (0 <= max) && (max <= 200)){
-		if (min <= max){
-			return 1;
-		}
-		else{
-			return 0;
-		}
-	}
-	else{
-		return 0;
-	}
-}
 
 usefulFunctions::usefulFunctions()
 {

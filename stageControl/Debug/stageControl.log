@@ -1,19 +1,23 @@
-﻿Build started 21/07/2014 10:05:29.
-     1>Project "E:\Joachim\Visual_Studio_C++\stageControler\stageControl\stageControl.vcxproj" on node 2 (Build target(s)).
-     1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
+﻿Build started 28/07/2014 15:48:36.
+     1>Project "E:\Joachim\Visual_Studio_C++\stageControler\stageControl\stageControl.vcxproj" on node 2 (build target(s)).
+     1>InitializeBuildStatus:
+         Touching "Debug\stageControl.unsuccessfulbuild".
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt figures.cpp figuresWriteCoordToFile.cpp main.cpp stageController.cpp
+         stageController.cpp
+     1>e:\joachim\visual_studio_c++\stagecontroler\stagecontrol\stagecontroller.h(13): error C2864: 'stageController::veloLimit' : only static const integral data members can be initialized within a class
          main.cpp
-       Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"E:\Joachim\Visual_Studio_C++\stageControler\Debug\stageControl.exe" /INCREMENTAL /NOLOGO /LIBPATH:.\PI_stuff PI_GCS2_DLL.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"E:\Joachim\Visual_Studio_C++\stageControler\Debug\stageControl.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"E:\Joachim\Visual_Studio_C++\stageControler\Debug\stageControl.lib" /MACHINE:X86 Debug\auslagerung.obj
-         Debug\figuresWriteCoordToFile.obj
-         Debug\main.obj
-         Debug\cut.obj
-         Debug\figures.obj
-         Debug\stageController.obj
-         Debug\usefulFunctions.obj
-         stageControl.vcxproj -> E:\Joachim\Visual_Studio_C++\stageControler\Debug\stageControl.exe
-     1>Done Building Project "E:\Joachim\Visual_Studio_C++\stageControler\stageControl\stageControl.vcxproj" (Build target(s)).
+     1>e:\joachim\visual_studio_c++\stagecontroler\stagecontrol\stagecontroller.h(13): error C2864: 'stageController::veloLimit' : only static const integral data members can be initialized within a class
+     1>e:\joachim\visual_studio_c++\stagecontroler\stagecontrol\movestageusingkeyboard.h(41): warning C4229: anachronism used : modifiers on data are ignored
+     1>e:\joachim\visual_studio_c++\stagecontroler\stagecontrol\movestageusingkeyboard.h(43): warning C4229: anachronism used : modifiers on data are ignored
+     1>e:\joachim\visual_studio_c++\stagecontroler\stagecontrol\movestageusingkeyboard.h(575): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
+         figuresWriteCoordToFile.cpp
+     1>e:\joachim\visual_studio_c++\stagecontroler\stagecontrol\stagecontroller.h(13): error C2864: 'stageController::veloLimit' : only static const integral data members can be initialized within a class
+         figures.cpp
+     1>e:\joachim\visual_studio_c++\stagecontroler\stagecontrol\stagecontroller.h(13): error C2864: 'stageController::veloLimit' : only static const integral data members can be initialized within a class
+         Generating Code...
+     1>Done Building Project "E:\Joachim\Visual_Studio_C++\stageControler\stageControl\stageControl.vcxproj" (build target(s)) -- FAILED.
 
-Build succeeded.
+Build FAILED.
 
-Time Elapsed 00:00:01.08
+Time Elapsed 00:00:02.65

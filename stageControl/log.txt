@@ -1,0 +1,7 @@
+i = 0
+next moving to position: 
+125.000||	||65.000
+next moving to position: 
+125.000||	||135.000
+we are arrived at 
+set limits to 0 0 0 with enter

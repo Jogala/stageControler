@@ -10,7 +10,6 @@
 //./ because I do not add the header to the project as I will not modify it, hence I have to give the relative path to the header.
 #include "Header.h"
 #include "./PI_stuff/Pi_GCS2_DLL.h" 
-#include "cut.h"
 #include "moveStageUsingKeyboard.h"
 #include "figures.h"
 #include "figuresWriteCoordToFile.h"
@@ -20,16 +19,20 @@ using namespace std;
 int main(int argc, char* argv[])
 {
 
+	////Initialization
+	////Default is 	setVelocity(50, 50, 50); moveTo(100, 100, 100);
+	//stageController E545;
+	//E545.initialize();
+	//moveStageUsingKeyboard(E545);
 
-	//Initialization
-	//Default is 	setVelocity(50, 50, 50); moveTo(100, 100, 100);
-	stageController E545;
-	E545.initialize();
-	moveStageUsingKeyboard(E545);
+	//E545.closeConnection();
 
-	E545.closeConnection();
+	figuresWriteCoordToFile::polygon myPoly;
 
-		
+	myPoly.set3D(20, 0, 20, 0, 10, 10);
+	myPoly.cutAbs3D();
+	
+	
 }
 
 
