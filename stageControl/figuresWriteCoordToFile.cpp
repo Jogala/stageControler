@@ -1,4 +1,40 @@
 #include "figuresWriteCoordToFile.h"
+
+void figuresWriteCoordToFile::line::set3D(double lIn, double phiIn ,double thetaIn, double  velocityIn, int repetionsIn){
+
+	velocity = velocityIn;
+	l = lIn;
+	phi = phiIn;
+	phi = (phi / 360) * 2 * pi;
+
+	repetitions = repetionsIn;
+	use.setRotMatrices(xRotMat, zRotMat, phi, -theta);
+}
+void figuresWriteCoordToFile::line::cutRel3D(){
+
+	double vec[3];
+	vec[0] = l*cos(phi)*sin(theta);
+	vec[1] = l*sin(phi)*sin(theta);
+	vec[2] = l*cos(theta);
+
+	string name = "line3D.txt";
+	fstream f;
+	f << fixed;
+	f << setprecision(3);
+
+	f.open(name, fstream::out | fstream::trunc);
+	f.close();
+	f.open(name, fstream::out | fstream::app);
+
+	f << vec[0] << "\t" << vec[1] << "\t" << vec[2] << endl;
+	
+
+
+	f.close();
+
+}
+void figuresWriteCoordToFile::line::cutAbs3D(){}
+
 void figuresWriteCoordToFile::rectangle::leaveOrSwapAdjustPhi(double &phi, double &a, double &b){
 
 	while (phi < 0){
@@ -29,7 +65,6 @@ void figuresWriteCoordToFile::rectangle::leaveOrSwapAdjustPhi(double &phi, doubl
 		phi = copyPhi - 90;
 	}
 }
-
 void figuresWriteCoordToFile::rectangle::set(double aIn, double bIn, double phi0In, double velocityIn){
 
 	velocity = velocityIn;
@@ -298,12 +333,9 @@ void figuresWriteCoordToFile::polygon::cutAbs3D()
 	pos[1] = 100;
 	pos[2] = 100;
 
-	xOld = R*cos(phi0);
-	yOld = R*sin(phi0);
-
-	vec[0] = xOld;
-	vec[1] = yOld;
-	vec[2] = pos[2];
+	vec[0] = R*cos(phi0);
+	vec[1] = R*sin(phi0);
+	vec[2] = 0;
 
 	use.matrixTimesVec(xRotMat, vec);
 	use.matrixTimesVec(zRotMat, vec);
@@ -312,22 +344,20 @@ void figuresWriteCoordToFile::polygon::cutAbs3D()
 
 	for (int i = 1; i <= steps; i++){
 
-		
-
 		x = R*cos(phi0 + deltaAlpha*i);
-		y= R*sin(phi0 + deltaAlpha*i);
-		
+		y = R*sin(phi0 + deltaAlpha*i);
+
 		vec[0] = x;
 		vec[1] = y;
-		vec[2] = pos[2];
+		vec[2] = 0;
 
 		use.matrixTimesVec(xRotMat, vec);
 		use.matrixTimesVec(zRotMat, vec);
 
-		f << vec[0] + pos[0] << "\t" << vec[1] + pos[1] << "\t" << vec[2]+pos[2] << endl;
-
+		f << vec[0] + pos[0] << "\t" << vec[1] + pos[1] << "\t" << vec[2] + pos[2] << endl;
 	}
-	cout << "leaving" << endl;
+
+	
 	f.close();
 }
 

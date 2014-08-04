@@ -21,7 +21,7 @@ void stageController::initialize(){
 						setLimits(1, 0, 0);
 						setLimits(2, 0, 0);
 						setLimits(3, 0, 0);
-						std::cout << "E545 ready" << std::endl;
+						std::cout << "E545 ready, press (h)elp for a list of avaliable commands" << std::endl;
 					}
 				}
 			}
@@ -43,6 +43,11 @@ bool stageController::establishConnection(){
 		std::cout << "ID = " << ID << " connection established" << std::endl;
 		return 1;
 	}
+}
+int stageController::getID(){
+
+	return ID;
+
 }
 void stageController::closeConnection(){
 
@@ -198,6 +203,37 @@ void stageController::move(double xDelta, double yDelta, double zDelta){
 	{
 
 		if (PI_MVR(ID, szAxes, deltaArray))
+		{
+			waitUntilMoveFinished();
+		}
+		else
+		{
+			iError = PI_GetError(ID);
+			PI_TranslateError(iError, szErrorMesage, 1024);
+			printf("MOV: ERROR %d: %s\n", iError, szErrorMesage);
+			PI_CloseConnection(ID);
+		}
+	}
+	else
+	{
+		std::cout << "void stageController::move(double xDelta, double yDelta, double zDelta) says: Out of limits" << std::endl;
+	}
+}
+void stageController::move(double vec[3]){
+
+	double position[3];
+	getPositon(position);
+
+	position[0] = position[0] + vec[0];
+	position[1] = position[1] + vec[1];
+	position[2] = position[2] + vec[2];
+
+	if ((0 <= position[0]) && (position[0] <= 200) &&
+		(0 <= position[1]) && (position[1] <= 200) &&
+		(0 <= position[2]) && (position[2] <= 200))
+	{
+
+		if (PI_MVR(ID, szAxes, vec))
 		{
 			waitUntilMoveFinished();
 		}
@@ -379,32 +415,35 @@ void stageController::printVelocity(){
 //////////////////////////////////////////////////////
 //				Trigger Digital Output				//
 //////////////////////////////////////////////////////
-void stageController::setLimits(int whichAxis, double min, double max){
+void stageController::setLimits(int whichAxis, double value1, double value2){
 
-	int piTriggerParameterArray[2] = {5,6};
+	int piTriggerParameterArray[2];
 	int piTriggerOutputIdsArray[2] = { whichAxis, whichAxis };
-	double pdValueArray[2] = { min, max };
+
+	double pdValueArray[2] = { value1, value2};
+	bool success = 0;
 	
-
-	if (useful.qValuesInLimits(min, max))
-	{
-
-		if (min <= max){
-			//do nothing
-		}
-		else
+	
+		if (useful.qValuesInLimits(value1, value2))
 		{
-			double dummy;
-			dummy = max;
-			max = min;
-			min = dummy;
-		}
 
-			std::cout << PI_CTO(ID, piTriggerOutputIdsArray, piTriggerParameterArray, pdValueArray, 2) << std::endl;
-	}
-	else{
-		std::cout << "no valid limit values" << std::endl;
-	}
+			if (value1 <= value2){
+				piTriggerParameterArray[0] = 5;
+				piTriggerParameterArray[1] = 6;
+			}
+			else
+			{
+				piTriggerParameterArray[0] = 6;
+				piTriggerParameterArray[1] = 5;
+			}
+
+			success = PI_CTO(ID, piTriggerOutputIdsArray, piTriggerParameterArray, pdValueArray, 2);
+			cout << success << endl;
+		}
+		else{
+			std::cout << "void stageController::setLimits(int whichAxis, double value1, double value2) says:\n No valid limit values" << std::endl;
+		}
+	
 
 }
 
@@ -556,29 +595,6 @@ bool stageController::checkIfAnyLimit(){
 		return 0;
 	}
 }
-
-template<int a, int b> void stageController::cutRel(double(&relCoord)[a][b],double velo){
-
-	if (b == 2){
-
-		double dummyArray[3];
-		getPositon(dummyArray);
-		for (int i = 0; i < a; i++){
-			dummyArray[0] = relCoord[i][0];
-			dummyArray[1] = relCoord[i][1];
-			move(dummyArray);
-		}
-
-	}
-
-	if (b == 3){
-
-	}
-
-}
-
-
-
 
 //////////////////////////////////////////////////////
 //				Constructros						//

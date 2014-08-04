@@ -25,6 +25,8 @@ public:
 	// Initialization//
 	///////////////////
 	void initialize();
+
+	int getID();
 	
 	////////////////////////////////////////////////////////////////////
 	// connect to the E-517 over RS-232 (COM port 1, baudrate 38400). //
@@ -64,7 +66,8 @@ public:
 	//// relative movement   	(closed-loop)//
 	///////////////////////////////////////////        
 	void move(double xDelta, double yDelta, double zDelta);
-	
+	void move(double vec[3]);
+
 	void printPosition();
 	void getPositon(double position[3]);
 

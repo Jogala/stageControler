@@ -1,0 +1,38 @@
+
+Avaliable commands in main menu:
+=================================================
+0 + ...
+-------------------------------------------------
+c		cut  
+l		limits 
+p		print 
+s		settings
+t		moveTo
+=================================================
+0 + Enter	reverse shutter state,
+		i.e. open or close it
+
+Delete + Enter 	open Shutter for shutterOpenTime (sot)
+		and then let it closed for at least 
+		the minShutterClosedTime (sct)
+======================================================
+-> 		move xStepSize along the x-Axis
+		with xVelocity
+<- 		move -xStepSize along the x-Axis
+		with xVelocity
+
+arrrow-up	same, but for y
+arrow-down	
+		same, but for z
+page-up		
+page-down	
+======================================================
+4		increase xVelocity by xVelocityStepSize
+1		decrease xVelocity by xVelocityStepSize
+
+5		same, but for y
+2
+
+6		same, but for z
+3
+=======================================================

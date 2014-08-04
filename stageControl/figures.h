@@ -23,6 +23,43 @@ namespace figures{
 		~figures(){}
 	};
 
+	//////////////////////////////
+	//		line				//
+	//////////////////////////////
+	class line : public figures
+	{
+	private:
+		stageController * pointerToE545;
+		double l, phi, velocity, theta;
+		int repetitions;
+
+		//leaveOrSwap leaves a and b unchanged if -45<=phi<=45 or 135<=phi<=225
+		//and adjusts phi
+
+	public:
+		void set3D(double lIn, double phi0In, double thetaIn, double velocityIn, int repetionsIn);
+		void cutRel3D();
+		void cutAbs3D();
+
+		void set(double l, double phi0, double velocity, int repetitions);
+		void cutRel();
+		void cutAbs();
+
+		line(stageController &E545){
+
+			pointerToE545 = &E545;
+		}
+
+		//Default constructor is needed! Because I am using line as a member of a class see 
+		//http://stackoverflow.com/questions/9802341/constructor-and-initialization-of-custom-classes-objects
+		line(){
+		}
+		~line(){}
+
+	};
+
+
+
 
 	//////////////////////////////
 	//		rectangle			//
@@ -46,6 +83,9 @@ namespace figures{
 		rectangle(stageController &E545){
 
 			pointerToE545 = &E545;
+		}
+		
+		rectangle(){		
 		}
 		~rectangle(){}
 
@@ -72,6 +112,10 @@ namespace figures{
 
 			pointerToE545 = &E545;
 		}
+
+		surfaceRectangle(){	
+		}
+
 		~surfaceRectangle(){}
 
 	};
@@ -97,6 +141,10 @@ namespace figures{
 
 			pointerToE545 = &E545;
 		}
+
+		polygon(){
+		}
+
 		~polygon(){}
 
 	};

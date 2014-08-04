@@ -1,0 +1,53 @@
+
+Menu
+###############################################
+//0+...
+//p				print
+//s				stepSize
+//l				limits
+//t				moveTo (t)arget
+//c				cut 
+//v				velocityStepsize
+//enter				shutter OPEN CLOSE
+
+
+//del+	enter   	open shutter for pulseDuration 
+//pulseDuration can be adjusted in stepSize Menue 0+s and then s again 
+
+//4-1			velocity x Axis
+//5-2			velocity y Axis
+//6-3			velocity z Axis
+//left-right	postion x Axis
+//up-down		postion y Axis
+###############################################
+
+
+
+polygon 
+
+R=15 
+
+steps 	recommendet maximumVelocity
+10	380
+20	190
+30	130
+50	80
+70	70
+100	40
+
+
+Cutting Worms 
+
+Cutting Frog Spindles
+Power mW	Speed mum/s	Dye		Result
+210 		1000		alexa 647	bleaching
+300 		1000		alexa 647	broad bleaching and cutting
+300 		1500		alexa 647	less micro tubules cut as with previous cut
+400		1500		alexa 647	broad bleaching area +cut and bubbles
+400		2000		alexa 647	sharp bleaching area +cut with depolymerization in one side and no bubbles n=2
+400		2000		alexa 647	huge bubble next cover slip
+400		2000		alexa 647	sharp bleaching area +cut with depolymerization in both side and bubbles both sides
+350		2000		alexa 647	sharp bleaching area +cut with depolymerization in both side and small bubble but spindle was quite weak
+350		2000		alexa 647	sharp bleaching area +cut with depolymerization in both side and bubbles both sides
+350		2500		alexa 647	nothing
+350		2000		alexa 647	sharp bleaching area +cut with depolymerization on both sides and no bubbles (workes quite nice as long as you are in the spindle and the spindle is quite dense, otherwise you will get bubbles)

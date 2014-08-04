@@ -6,11 +6,12 @@ class usefulFunctions
 {
 public:
 	bool cinAndCheckForDoubleAndLimits(double & xStepSize);
+	bool cinAndCheckForDoubleAndLimits(double & xStepSize, double min);
+	bool cinAndCheckForDoubleAndLimits(double & xStepSize, double min, double max);
 	void cinAndCheckForDouble(double & xStepSize);
 	bool qValueInLimits(double value);
 	bool qValuesInLimits(double value1, double value2);
-	bool qIfposibleLimitValues(double min, double max);
-
+	
 	void radToDegByRef(double &phi){
 
 		phi = (phi / (2 * pi)) * 360;

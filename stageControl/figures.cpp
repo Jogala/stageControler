@@ -1,5 +1,152 @@
 #include "figures.h"
 
+void figures::line::set(double lIn, double phi0In, double velocityIn, int repetionsIn){
+
+	velocity = velocityIn;
+	l = lIn;
+	phi = phi0In;
+	phi = (phi / 360) * 2 * pi;
+	repetitions = repetionsIn;
+
+}
+void figures::line::cutRel()
+{
+	pointerToE545->setVelocity(velocity, velocity, 10);
+	repetitions = repetitions - 1;
+
+	double pos[3];
+	double x = cos(phi)*l;
+	double y = sin(phi)*l;
+
+	pointerToE545->getPositon(pos);
+
+	if (repetitions == 0){
+		pointerToE545->openShutter();
+		pointerToE545->move(x, y, 0);
+		pointerToE545->closeShutter();
+		pointerToE545->setVelocity(1000, 1000, 10);
+		pointerToE545->moveTo(pos[0], pos[1], pos[2]);
+
+	}
+	else{
+
+		while (repetitions >= 0){
+			pointerToE545->openShutter();
+			pointerToE545->move(x, y,0);
+			pointerToE545->move(-x, -y, 0);
+			repetitions = repetitions - 1;
+		}
+		pointerToE545->closeShutter();
+		pointerToE545->moveTo(pos[0], pos[1], pos[2]);
+	}
+}
+void figures::line::cutAbs()
+{
+
+	pointerToE545->setVelocity(velocity, velocity, 10);
+	repetitions = repetitions - 1;
+
+	double pos[3];
+	double x = cos(phi)*l;
+	double y = sin(phi)*l;
+
+	pointerToE545->getPositon(pos);
+
+
+	if (repetitions == 0){
+		pointerToE545->openShutter();
+		pointerToE545->moveTo(x + pos[0], y + pos[1], pos[2]);
+		pointerToE545->closeShutter();
+		pointerToE545->setVelocity(1000, 1000, 10);
+		pointerToE545->moveTo(pos[0], pos[1], pos[2]);
+
+	}
+	else{
+
+		while (repetitions >= 0){
+			pointerToE545->openShutter();
+			pointerToE545->moveTo(x + pos[0], y + pos[1], pos[2]);
+			pointerToE545->moveTo(pos[0], pos[1], pos[2]);
+			repetitions = repetitions - 1;
+		}
+		pointerToE545->closeShutter();
+	}
+}
+
+void figures::line::set3D(double lIn, double phi0In,double thetaIn, double velocityIn, int repetionsIn){
+
+	velocity = velocityIn;
+	theta = thetaIn;
+	l = lIn;
+	phi = phi0In;
+	phi = (phi / 360) * 2 * pi;
+	repetitions = repetionsIn;
+
+}
+void figures::line::cutRel3D(){
+	
+	pointerToE545->setVelocity(velocity, velocity, velocity);
+	double vec[3];
+	double pos[3];
+	pointerToE545->getPositon(pos);
+	repetitions = repetitions - 1;
+
+	vec[0] = l*cos(phi)*sin(theta);
+	vec[1] = l*sin(phi)*sin(theta);
+	vec[2] = l*cos(theta);
+
+	if (repetitions == 0){
+		pointerToE545->openShutter();
+		pointerToE545->move(vec);
+		pointerToE545->closeShutter();
+		pointerToE545->setVelocity(1000, 1000, 10);
+		pointerToE545->moveTo(pos);
+	}
+	else{
+
+		while (repetitions >= 0){
+			pointerToE545->openShutter();
+			pointerToE545->move(vec);
+			pointerToE545->move(-vec[0],-vec[1],-vec[2]);
+			repetitions = repetitions - 1;
+		}
+		pointerToE545->closeShutter();
+		pointerToE545->moveTo(pos);
+	}
+}
+void figures::line::cutAbs3D(){
+
+	pointerToE545->setVelocity(velocity, velocity, velocity);
+	double vec[3];
+	double pos[3];
+	pointerToE545->getPositon(pos);
+	repetitions = repetitions - 1;
+
+	vec[0] = l*cos(phi)*sin(theta);
+	vec[1] = l*sin(phi)*sin(theta);
+	vec[2] = l*cos(theta);
+
+	if (repetitions == 0){
+		pointerToE545->openShutter();
+		pointerToE545->moveTo(pos[0] + vec[0], pos[1] + vec[1],pos[2] + vec[2]);
+		pointerToE545->closeShutter();
+		pointerToE545->setVelocity(1000, 1000, 10);
+		pointerToE545->moveTo(pos);
+	}
+	else{
+
+		while (repetitions >= 0){
+			pointerToE545->openShutter();
+			pointerToE545->moveTo(pos[0] + vec[0], pos[1] + vec[1], pos[2] + vec[2]);
+			pointerToE545->moveTo(pos);
+			repetitions = repetitions - 1;
+		}
+		pointerToE545->closeShutter();
+		pointerToE545->moveTo(pos);
+	}
+
+}
+
 void figures::rectangle::leaveOrSwapAndAdjustPhi(double &phi, double &a, double &b){
 
 	while (phi < 0){
@@ -30,7 +177,6 @@ void figures::rectangle::leaveOrSwapAndAdjustPhi(double &phi, double &a, double 
 		phi = copyPhi - 90;
 	}
 }
-
 void figures::rectangle::set(double aIn, double bIn, double phi0In, double velocityIn){
 
 	velocity = velocityIn;
@@ -39,7 +185,6 @@ void figures::rectangle::set(double aIn, double bIn, double phi0In, double veloc
 	phi0 = phi0In*(2 * pi) / (360.0);
 
 }
-
 void figures::rectangle::cutRel()
 {
 
@@ -172,11 +317,11 @@ void figures::rectangle::cutAbsLim()
 
 		pointerToE545->moveTo(xOld - deltaX, yOld - deltaY, pos[2]);	//Fahren zu Position 1
 		pointerToE545->printPosition();
-	
+
 
 
 		cout << "as !(i%2) = " << !(i % 2) << endl;
-		if (!(i%2)){
+		if (!(i % 2)){
 
 			pointerToE545->printPosition();
 
@@ -191,7 +336,7 @@ void figures::rectangle::cutAbsLim()
 
 			pointerToE545->setLimits(2, y, yOld);					//set Limits A:B
 			pointerToE545->printLimits();
-			pointerToE545->printPosition();			
+			pointerToE545->printPosition();
 
 		}
 		else
@@ -207,14 +352,14 @@ void figures::rectangle::cutAbsLim()
 			}
 
 			pointerToE545->setLimits(1, x, xOld);
-					
+
 		}
 
-		
+
 		pointerToE545->moveTo(x + deltaX, y + deltaY, pos[2]);  //Fahre zu Position 2
 		pointerToE545->printPosition();
 		pointerToE545->closeShutter();
-		
+
 
 	}
 	pointerToE545->closeShutter();
@@ -340,7 +485,6 @@ void figures::surfaceRectangle::cutAbs()
 }
 
 
-
 void figures::polygon::set(double RIn, double phi0In, int stepsIn, double velocityIn){
 
 	velocity = velocityIn;
@@ -419,34 +563,38 @@ void figures::polygon::cutAbs()
 }
 void figures::polygon::cutAbs3D()
 {
-	pointerToE545->setVelocity(velocity, velocity, 10);
-
 	double pos[3];
-	double xOld, yOld,zOld;
-	double x[3];
+	double xOld, yOld, zOld;
 	double deltaAlpha = (2 * pi) / steps;
-
+	double vec[3];
+	
+	auto storagePositions = vector<vector<double>>(steps, vector<double>(3));
+	
 	pointerToE545->getPositon(pos);
 
-	xOld = R*cos(phi0);
-	yOld = R*sin(phi0);
-	
-	pointerToE545->moveTo(xOld + pos[0], yOld + pos[1], pos[2]);
+
+	for (int i = 0; i < steps; i++){
+
+		vec[0] = R*cos(phi0 + deltaAlpha*i);
+		vec[1] = R*sin(phi0 + deltaAlpha*i);
+		vec[2] = 0;
+
+		use.matrixTimesVec(xRotMat, vec);
+		use.matrixTimesVec(zRotMat, vec);
+
+		storagePositions[i][0] = vec[0] + pos[0];
+		storagePositions[i][1] = vec[1] + pos[1];
+		storagePositions[i][2] = vec[2] + pos[2];
+	}
 
 	pointerToE545->openShutter();
-	for (int i = 1; i <= steps; i++){
+	for (int i = 0; i < steps; i++){
+		vec[0] = storagePositions[i][0];
+		vec[1] = storagePositions[i][1];
+		vec[2] = storagePositions[i][2];
 
-		x[0]= R*cos(phi0 + deltaAlpha*i);
-		x[1] = R*sin(phi0 + deltaAlpha*i);
-		x[2] = pos[2];
-
-		use.matrixTimesVec(xRotMat, x);
-		use.matrixTimesVec(zRotMat, x);
-
-		pointerToE545->moveTo(x[0] + pos[0], x[1] + pos[1], x[2]+pos[2]);
-	
+		pointerToE545->moveTo(vec);
 	}
 	pointerToE545->closeShutter();
-	pointerToE545->moveTo(pos);
 }
 

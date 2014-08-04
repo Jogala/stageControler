@@ -25,6 +25,29 @@ namespace figuresWriteCoordToFile{
 
 	};
 
+	//////////////////////////////
+	//		line				//
+	//////////////////////////////
+	class line : public figuresWriteCoordToFile
+	{
+	private:
+		double l, phi,theta, velocity;
+		int repetitions;
+		double xRotMat[3][3];
+		double zRotMat[3][3];
+
+		//leaveOrSwap leaves a and b unchanged if -45<=phi<=45 or 135<=phi<=225
+		//and adjusts phi
+
+	public:
+		void set3D(double lIn, double phiIn, double thetaIn, double  velocityIn, int repetionsIn);
+		void cutRel3D();
+		void cutAbs3D();
+
+		line(){
+		}
+
+	};
 
 	//////////////////////////////
 	//		rectangle			//
