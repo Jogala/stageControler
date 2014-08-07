@@ -2,16 +2,10 @@
 #include "Header.h"
 #include "stageController.h"
 #include "usefulFunctions.h"
+#include "WinProc.h"
 
 using namespace std;
-//This maybe seems confusing... I declared a namespace "figuresWriteCoordToFile"
-//here because I ant to use for example "figuresWriteCoordToFile::rectangle rec" and 
-//"figures::rectangle myRec"
-//Something like "figuresWriteCoordToFile::figuresWriteCoordToFile myFigure" can not 
-//occure becaue the contructors of "figuresWriteCoordToFile" are set to protected. 
-//the same is true for the class and namespace figures. 
-//This has the advantage that I can give all child classes shared functions or objects
-//(like usefulFunctions) by writing them into the parent class, and I can still use namespace.
+
 namespace figuresWriteCoordToFile{
 
 	class figuresWriteCoordToFile
@@ -101,6 +95,8 @@ namespace figuresWriteCoordToFile{
 		void cut();
 		void set3D(double RIn, double phi0In, double rotAngleX, double rotAngleZ, int stepsIn, double velocityIn);
 		void cutAbs3D();
+
+		bool openMenuWindow();
 
 		polygon::polygon(){}
 		polygon::~polygon(){}

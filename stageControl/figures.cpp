@@ -598,3 +598,123 @@ void figures::polygon::cutAbs3D()
 	pointerToE545->closeShutter();
 }
 
+bool figures::polygon::openWindowSet3D(){
+
+		HWND button, hwnd;
+
+		HWND h_text_R;
+		HWND h_text_phi0;
+		HWND h_text_velocity;
+		HWND h_text_steps;
+
+		HINSTANCE hInstance = GetModuleHandle(0);
+		HINSTANCE hPrevInstance = 0; //old relict
+		// In order to be able to create a window you need to have a window class available. A window class can be created for your
+		// application by registering one. The following struct declaration and fill provides details for a new window class.
+		WNDCLASSEX wc;
+
+		wc.cbSize = sizeof(WNDCLASSEX);
+		wc.style = 0;
+		wc.lpfnWndProc = WndProcNewPoly3D;
+		wc.cbClsExtra = 0;
+		wc.cbWndExtra = 0;
+		wc.hInstance = hInstance;
+		wc.hIcon = NULL;
+		wc.hCursor = LoadCursor(hInstance, IDC_ARROW);
+		wc.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+		wc.lpszMenuName = NULL;
+		wc.lpszClassName = "GijSoft";
+		wc.hIconSm = NULL;
+
+		// This function actually registers the window class. If the information specified in the 'wc' struct is correct,
+		// the window class should be created and no error is returned.
+		if (!RegisterClassEx(&wc))
+		{
+			return 0;
+		}
+
+		// This function creates the first window. It uses the window class registered in the first part, and takes a title,
+		// style and position/size parameters. For more information about style-specific definitions, refer to the MSDN where
+		// extended documentation is available.
+		hwnd = CreateWindowExA(WS_EX_CLIENTEDGE, "GijSoft", "Win32 C Window application by evolution536",
+			(WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX),
+			CW_USEDEFAULT, CW_USEDEFAULT, 320, 125, NULL, NULL, hInstance, NULL);
+
+		// This function creates the button that is displayed on the window. It takes almost the same parameter types as the function
+		// that created the window. A thing to note here though, is BS_DEFPUSHBUTTON, and BUTTON as window class, which is an existing one.
+
+		button = CreateWindowEx(0,                    /* more or ''extended'' styles */
+			TEXT("BUTTON"),                         /* GUI ''class'' to create */
+			TEXT("Push Me"),                        /* GUI caption */
+			WS_CHILD | WS_VISIBLE | BS_DEFPUSHBUTTON,   /* control styles separated by | */
+			10,                                     /* LEFT POSITION (Position from left) */
+			10,                                     /* TOP POSITION  (Position from Top) */
+			200,                                    /* WIDTH OF CONTROL */
+			30,                                     /* HEIGHT OF CONTROL */
+			hwnd,                                   /* Parent window handle */
+			(HMENU)ID_OK_KNOPF,                        /* control''s ID for WM_COMMAND */
+			hInstance,                                /* application instance */
+			NULL);
+
+
+		// This function creates the text field that is displayed on the window. It is almost the same as the function that created the
+		// button. Note the EDIT as window class, which is an existing window class defining a "text field".
+		h_text_R = CreateWindow("EDIT", "Some random text", WS_CHILD | WS_VISIBLE | WS_BORDER, 10, 50, 280, 25, hwnd, 
+			(HMENU)ID_TEXT_POLY_R, hInstance, NULL);
+		h_text_phi0 = CreateWindow("EDIT", "Some random text", WS_CHILD | WS_VISIBLE | WS_BORDER, 40, 50, 280, 25, hwnd, 
+			(HMENU)ID_TEXT_POLY_phi0, hInstance, NULL);
+		h_text_velocity = CreateWindow("EDIT", "Some random text", WS_CHILD | WS_VISIBLE | WS_BORDER, 70, 50, 280, 25, hwnd,
+			(HMENU)ID_TEXT_POLY_velocity, hInstance, NULL);
+		h_text_steps = CreateWindow("EDIT", "Some random text", WS_CHILD | WS_VISIBLE | WS_BORDER, 100, 50, 280, 25, hwnd, 
+			(HMENU)ID_TEXT_POLY_steps, hInstance, NULL);
+
+
+		// This block checks the integrity of the created window and it's controls. If a control did not succeed creation, the window
+		// is not created succesfully, hence it should not be shown.
+		if (!hwnd || !button || !h_text_R || !h_text_phi0 || !h_text_velocity||!steps)
+		{
+			return 0;
+		}
+
+		// Everything went right, show the window including all controls.
+		ShowWindow(hwnd, 4);
+		UpdateWindow(hwnd);
+
+		// This part is the "message loop". This loop ensures the application keeps running and makes the window able to receive messages
+		// in the WndProc function. You must have this piece of code in your GUI application if you want it to run properly.
+		MSG Msg;
+		while (GetMessage(&Msg, NULL, 0, 0) > 0)
+		{
+			TranslateMessage(&Msg);
+			DispatchMessage(&Msg);
+
+		}
+
+		string myString;
+		stringstream ss;
+
+		myString=G_Text_Poly_R;
+		ss.str(myString);
+		if (!(ss >> R)){
+			cout << "no new value set for R" << endl;
+		}
+		
+		myString = G_Text_Poly_phi0;
+		ss.str(myString);
+		if (!(ss >> phi0)){
+			cout << "no new value set for phi0" << endl;
+		}
+		myString = G_Text_Poly_velocity;
+		ss.str(myString);
+		if (!(ss >> velocity)){
+			cout << "no new value set for velocity" << endl;
+		}
+		myString = G_Text_Poly_steps;
+		ss.str(myString);
+		if (!(ss >> steps)){
+			cout << "no new value set for steps" << endl;
+		}
+
+
+
+}

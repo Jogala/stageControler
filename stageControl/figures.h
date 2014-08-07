@@ -2,6 +2,7 @@
 #include "Header.h"
 #include "stageController.h"
 #include "usefulFunctions.h"
+#include "WinProc.h"
 
 //This maybe seems confusing... I declared a namespace "figuresWriteCoordToFile"
 //here because I ant to use for example "figuresWriteCoordToFile::rectangle rec" and 
@@ -137,6 +138,10 @@ namespace figures{
 		void cutAbs();
 		void cutAbs3D();
 		void set3D(double RIn, double phi0In, double rotAngleXIn, double rotAngleZIn, int stepsIn, double velocityIn);
+		
+		bool openWindowSet3D();
+		//uses WndProcNewPoly3D
+		
 		polygon(stageController &E545){
 
 			pointerToE545 = &E545;

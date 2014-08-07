@@ -15,6 +15,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="figures.cpp" />
     <ClCompile Include="menu.cpp" />
+    <ClCompile Include="WinProc.cpp" />
     <ClCompile Include="stageController.cpp" />
     <ClCompile Include="usefulFunctions.cpp" />
   </ItemGroup>
@@ -26,6 +27,7 @@
     <ClInclude Include="figures.h" />
     <ClInclude Include="stageController.h" />
     <ClInclude Include="usefulFunctions.h" />
+    <ClInclude Include="WinProc.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{80CA8065-F75F-425E-B2A1-E2BA8E13EC51}</ProjectGuid>
@@ -37,7 +39,7 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
