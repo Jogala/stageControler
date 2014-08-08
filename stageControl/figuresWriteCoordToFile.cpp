@@ -299,16 +299,19 @@ void figuresWriteCoordToFile::polygon::cut()
 	}
 	f.close();
 }
-void figuresWriteCoordToFile::polygon::set3D(double RIn, double phi0In, double rotAngleX, double rotAngleZ, int stepsIn, double velocityIn){
+void figuresWriteCoordToFile::polygon::set3D(double RIn, double phi0In, double rotAngleXIn, double rotAngleZIn, int stepsIn, double velocityIn){
+
+	rotAngleX = rotAngleXIn;
+	rotAngleZ = rotAngleZIn;
 
 	velocity = velocityIn;
 	R = RIn;
 	phi0 = phi0In*(2 * pi) / (360.0);
-	rotAngleX = rotAngleX*(2 * pi) / (360.0);
-	rotAngleZ = rotAngleZ*(2 * pi) / (360.0);
+	double tempRotAngleX = rotAngleX*(2 * pi) / (360.0);
+	double tempRotAngleZ = rotAngleZ*(2 * pi) / (360.0);
 	steps = stepsIn;
 
-	use.setRotMatrices(xRotMat, zRotMat, rotAngleX, rotAngleZ);
+	use.setRotMatrices(xRotMat, zRotMat, tempRotAngleX, tempRotAngleZ);
 
 
 }
@@ -360,18 +363,15 @@ void figuresWriteCoordToFile::polygon::cutAbs3D()
 	
 	f.close();
 }
-bool  figuresWriteCoordToFile::polygon::openMenuWindow(){
-	
-	HWND button, hwnd;
+
+bool  figuresWriteCoordToFile::polygon::regMenuWindow(){
+
 	HINSTANCE hInstance = GetModuleHandle(0);
-	HINSTANCE hPrevInstance = 0; //old relict
-	// In order to be able to create a window you need to have a window class available. A window class can be created for your
-	// application by registering one. The following struct declaration and fill provides details for a new window class.
 	WNDCLASSEX wc;
 
 	wc.cbSize = sizeof(WNDCLASSEX);
 	wc.style = 0;
-	wc.lpfnWndProc = WndProcNewPoly;
+	wc.lpfnWndProc = WndProcNewPoly3D;
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = 0;
 	wc.hInstance = hInstance;
@@ -386,58 +386,212 @@ bool  figuresWriteCoordToFile::polygon::openMenuWindow(){
 	// the window class should be created and no error is returned.
 	if (!RegisterClassEx(&wc))
 	{
+		cout << "RegisterClassEx failed" << endl;
 		return 0;
 	}
 
-	// This function creates the first window. It uses the window class registered in the first part, and takes a title,
-	// style and position/size parameters. For more information about style-specific definitions, refer to the MSDN where
-	// extended documentation is available.
+}
+void  figuresWriteCoordToFile::polygon::openWindowSet3D(){
+	
+	HWND button, hwnd;
+
+	HWND h_text_R;
+	HWND h_text_phi0;
+	HWND h_text_velocity;
+	HWND h_text_steps;
+
+	HINSTANCE hInstance = GetModuleHandle(0);
+
+
 	hwnd = CreateWindowExA(WS_EX_CLIENTEDGE, "GijSoft", "Win32 C Window application by evolution536",
 		(WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX),
-		CW_USEDEFAULT, CW_USEDEFAULT, 320, 125, NULL, NULL, hInstance, NULL);
+		CW_USEDEFAULT, CW_USEDEFAULT, 250, 300, NULL, NULL, hInstance, NULL);
 
 	// This function creates the button that is displayed on the window. It takes almost the same parameter types as the function
 	// that created the window. A thing to note here though, is BS_DEFPUSHBUTTON, and BUTTON as window class, which is an existing one.
 
+	//EDIT
+	int xE = 120;	//x pos
+	int bE = 50;	//Breite
+
+	//STATIC
+	int xS = 20;	//x pos
+	int bS = 90;	//Breite
+	
+	//Höhe EDIT and STATIC
+	int hEaS = 25;
+
+	//y position of boxes
+	int top= 10;
+	int deltaY=30;
+
+	//R
+	CreateWindow("STATIC", "R = ", WS_VISIBLE | WS_CHILD | SS_RIGHT, xS, top, bS, hEaS,
+		hwnd, NULL, hInstance, NULL);
+	h_text_R = CreateWindow("EDIT", "0", WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP, xE, top, bE, hEaS,
+		hwnd,(HMENU)ID_TEXT_POLY_R, hInstance, NULL);
+	top += deltaY;
+
+	//phi0
+	CreateWindow("STATIC", "phi0 = ", WS_VISIBLE | WS_CHILD | SS_RIGHT, xS, top, bS, hEaS,
+		hwnd,NULL, hInstance, NULL);
+	CreateWindow("EDIT", "0", WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP, xE, top, bE, hEaS,
+		hwnd,(HMENU)ID_TEXT_POLY_phi0, hInstance, NULL);
+	top += deltaY;
+
+	//xRotAngle
+	CreateWindow("STATIC", "xRotAngle = ", WS_VISIBLE | WS_CHILD | SS_RIGHT, xS, top, bS, hEaS,
+		hwnd,NULL, hInstance, NULL);
+	CreateWindow("EDIT", "0", WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP, xE, top, bE, hEaS,
+		hwnd,	(HMENU)ID_TEXT_POLY_xRotWinkel, hInstance, NULL);
+	top += deltaY;
+
+	//zRotAngle
+	CreateWindow("STATIC", "zRotAngle = ", WS_VISIBLE | WS_CHILD | SS_RIGHT, xS, top, bS, hEaS,
+		hwnd,NULL, hInstance, NULL);
+	CreateWindow("EDIT", "0", WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP, xE, top, bE, hEaS,
+		hwnd,(HMENU)ID_TEXT_POLY_zRotWinkel, hInstance, NULL);
+	top += deltaY;
+
+	//steps
+	CreateWindow("STATIC", "steps = ", WS_VISIBLE | WS_CHILD | SS_RIGHT, xS, top, bS, hEaS,
+		hwnd,NULL, hInstance, NULL);
+	CreateWindow("EDIT", "0", WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP, xE, top, bE, hEaS,
+		hwnd,(HMENU)ID_TEXT_POLY_steps, hInstance, NULL);
+	top += deltaY;
+
+	//velocity
+	CreateWindow("STATIC", "velocity = ", WS_VISIBLE | WS_CHILD | SS_RIGHT, xS, top, bS, hEaS,
+		hwnd,NULL, hInstance, NULL);
+	CreateWindow("EDIT", "0", WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP, xE, top, bE, hEaS,
+		hwnd,(HMENU)ID_TEXT_POLY_velocity, hInstance, NULL);
+	top += deltaY;
+
 	button = CreateWindowEx(0,                    /* more or ''extended'' styles */
 		TEXT("BUTTON"),                         /* GUI ''class'' to create */
-		TEXT("Push Me"),                        /* GUI caption */
-		WS_CHILD | WS_VISIBLE | BS_DEFPUSHBUTTON,   /* control styles separated by | */
+		TEXT("APPLAY"),                        /* GUI caption */
+		WS_CHILD | WS_VISIBLE | BS_DEFPUSHBUTTON | WS_TABSTOP,   /* control styles separated by | */
 		10,                                     /* LEFT POSITION (Position from left) */
-		10,                                     /* TOP POSITION  (Position from Top) */
-		200,                                    /* WIDTH OF CONTROL */
-		30,                                     /* HEIGHT OF CONTROL */
+		top,                                     /* TOP POSITION  (Position from Top) */
+		150,                                    /* WIDTH OF CONTROL */
+		50,                                     /* HEIGHT OF CONTROL */
 		hwnd,                                   /* Parent window handle */
 		(HMENU)ID_OK_KNOPF,                        /* control''s ID for WM_COMMAND */
 		hInstance,                                /* application instance */
 		NULL);
+	
 
-
-	// This function creates the text field that is displayed on the window. It is almost the same as the function that created the
-	// button. Note the EDIT as window class, which is an existing window class defining a "text field".
-	HWND h_text = CreateWindow("EDIT", "Some random text", WS_CHILD | WS_VISIBLE | WS_BORDER, 10, 50, 280, 25, hwnd, (HMENU)ID_TEXT_POLY1, hInstance, NULL);
-
-
-	// This block checks the integrity of the created window and it's controls. If a control did not succeed creation, the window
-	// is not created succesfully, hence it should not be shown.
-	if (!hwnd || !button || !h_text)
-	{
-		return 0;
-	}
-
-	// Everything went right, show the window including all controls.
-	ShowWindow(hwnd, 4);
+	//Show the window including all controls.
+	ShowWindow(hwnd, 5);
 	UpdateWindow(hwnd);
 
-	// This part is the "message loop". This loop ensures the application keeps running and makes the window able to receive messages
-	// in the WndProc function. You must have this piece of code in your GUI application if you want it to run properly.
+	//set h_text_R on focus and mark text, such that user can start typing new values immidiately
+	SetFocus(h_text_R);
+	SendDlgItemMessage(hwnd, ID_TEXT_POLY_R, EM_SETSEL, 0, -1);
+
+	
 	MSG Msg;
 	while (GetMessage(&Msg, NULL, 0, 0) > 0)
 	{
-		TranslateMessage(&Msg);
-		DispatchMessage(&Msg);
-		
-	}
 
+		if (IsDialogMessage(hwnd, &Msg)) {
+			/* Already handled by dialog manager */
+		}
+		else {
+
+			TranslateMessage(&Msg);
+			DispatchMessage(&Msg);
+		}
+
+			string myString;
+			stringstream ss;
+			
+			if (poly_BOOL)
+			{
+				//R
+				////////////////////////////////////////////////////
+				myString = G_Text_Poly_R;
+				ss.str(myString);
+				if (!(ss >> R)){
+					cout << "no new value set for R" << endl;
+				}
+				else{
+					cout << "R = " << R << endl;
+				}
+				ss.str("");
+				ss.clear();
+
+				//phi0
+				////////////////////////////////////////////////////
+				myString = G_Text_Poly_phi0;
+				ss.str(myString);
+				if (!(ss >> phi0)){
+					cout << "no new value set for phi0" << endl;
+				}
+				else{
+					cout << "phi0 = " << phi0 << endl;
+				}
+				ss.str("");
+				ss.clear();
+
+				//xRotAngle
+				////////////////////////////////////////////////////
+				myString = G_Text_Poly_xRotWinkel;
+				ss.str(myString);
+				if (!(ss >> rotAngleX)){
+					cout << "no new value set for steps" << endl;
+				}
+				else{
+					cout << "rotAngleX = " << rotAngleX << endl;
+				}
+				ss.str("");
+				ss.clear();
+
+				//zRotAngle
+				////////////////////////////////////////////////////
+				myString = G_Text_Poly_zRotWinkel;
+				ss.str(myString);
+				if (!(ss >> rotAngleZ)){
+					cout << "no new value set for steps" << endl;
+				}
+				else{
+					cout << "rotAngleZ = " << rotAngleZ << endl;
+				}
+				ss.str("");
+				ss.clear();
+
+				//steps
+				////////////////////////////////////////////////////
+				myString = G_Text_Poly_steps;
+				ss.str(myString);
+				if (!(ss >> steps)){
+					cout << "no new value set for steps" << endl;
+				}
+				else{
+					cout << "steps = " << steps << endl;
+				}
+				ss.str("");
+				ss.clear();
+
+				//velocity
+				////////////////////////////////////////////////////
+				myString = G_Text_Poly_velocity;
+				ss.str(myString);
+				if (!(ss >> velocity)){
+					cout << "no new value set for velocity" << endl;
+				}
+				else{
+					cout << "velocity = " << velocity << endl;
+
+				}
+				ss.str("");
+				ss.clear();
+
+				
+			
+			poly_BOOL = 0;
+
+		}
+	}//while 
 }
 

@@ -150,6 +150,7 @@ void menu::cutNewFigureMenu(){
 	cout << "Set up new figure:" << endl;
 	cout << "(r)ectangle" << endl;
 	cout << "(p)olygon" << endl;
+	cout << "(f)" << endl;
 	cout << "(s)urface Rectangle" << endl;
 	cout << "(l)ine in xy-plane" << endl;
 	cin >> choice;
@@ -180,6 +181,10 @@ void menu::cutNewFigureMenu(){
 		cout << "velocity = " << endl;
 		cin >> velo;
 		polygon.set(R, phi0, steps, velo);
+	}
+
+	if (choice == "f"){
+		polygon.openWindowSet3D();
 	}
 
 	if (choice == "l"){

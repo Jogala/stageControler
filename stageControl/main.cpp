@@ -19,13 +19,21 @@ using namespace std;
 int main(int argc, char* argv[])
 {
 
-	stageController E545;
-	menu menu(E545);
+	//stageController E545;
+	//menu menu(E545);
 
-	E545.initialize();
-	menu.mainMenu();
+	//E545.initialize();
+	//menu.mainMenu();
 
-	E545.closeConnection();
+	//E545.closeConnection();
+
+	figuresWriteCoordToFile::polygon poly;
+	poly.regMenuWindow();
+
+	poly.openWindowSet3D();
+	Sleep(200);
+	poly.openWindowSet3D();
+	
 
 }
 

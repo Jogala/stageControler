@@ -129,6 +129,7 @@ namespace figures{
 		stageController * pointerToE545;
 		double R, phi0,velocity;
 		int steps;
+		double rotAngleX, rotAngleZ;
 		double xRotMat[3][3];
 		double zRotMat[3][3];
 
@@ -139,14 +140,14 @@ namespace figures{
 		void cutAbs3D();
 		void set3D(double RIn, double phi0In, double rotAngleXIn, double rotAngleZIn, int stepsIn, double velocityIn);
 		
-		bool openWindowSet3D();
-		//uses WndProcNewPoly3D
+		//set Values using Window
+		bool regMenuWindow();
+		void openWindowSet3D();
 		
 		polygon(stageController &E545){
 
 			pointerToE545 = &E545;
 		}
-
 		polygon(){
 		}
 

@@ -87,16 +87,19 @@ namespace figuresWriteCoordToFile{
 		
 		double R, phi0, velocity;
 		int steps;
+		double rotAngleX, rotAngleZ;
 		double xRotMat[3][3];
 		double zRotMat[3][3];
 
 	public:
 		void set(double RIn, double phi0In, int stepsIn, double velocityIn);
 		void cut();
-		void set3D(double RIn, double phi0In, double rotAngleX, double rotAngleZ, int stepsIn, double velocityIn);
+		void set3D(double RIn, double phi0In, double rotAngleXIn, double rotAngleZIn, int stepsIn, double velocityIn);
 		void cutAbs3D();
 
-		bool openMenuWindow();
+		//set Values using Window
+		bool regMenuWindow();
+		void openWindowSet3D();
 
 		polygon::polygon(){}
 		polygon::~polygon(){}
