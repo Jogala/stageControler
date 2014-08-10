@@ -145,12 +145,11 @@ void menu::cutMainMenu(){
 
 }
 void menu::cutNewFigureMenu(){
-	
+
 	string  choice;
-	cout << "Set up new figure:" << endl;
+	cout << "----cutNewFigureMenu----" << endl;
 	cout << "(r)ectangle" << endl;
 	cout << "(p)olygon" << endl;
-	cout << "(f)" << endl;
 	cout << "(s)urface Rectangle" << endl;
 	cout << "(l)ine in xy-plane" << endl;
 	cin >> choice;
@@ -169,21 +168,21 @@ void menu::cutNewFigureMenu(){
 		rectangle.set(a, b, phi0, velo);
 	}
 
-	if (choice == "p"){
-		double R, phi0, velo;
-		int steps;
-		cout << "R = " << endl;
-		cin >> R;
-		cout << "phi0 = " << endl;
-		cin >> phi0;
-		cout << "steps = " << endl;
-		cin >> steps;
-		cout << "velocity = " << endl;
-		cin >> velo;
-		polygon.set(R, phi0, steps, velo);
-	}
+	//if (choice == "p"){
+	//	double R, phi0, velo;
+	//	int steps;
+	//	cout << "R = " << endl;
+	//	cin >> R;
+	//	cout << "phi0 = " << endl;
+	//	cin >> phi0;
+	//	cout << "steps = " << endl;
+	//	cin >> steps;
+	//	cout << "velocity = " << endl;
+	//	cin >> velo;
+	//	polygon.set(R, phi0, steps, velo);
+	//}
 
-	if (choice == "f"){
+	if (choice == "p"){
 		polygon.openWindowSet3D();
 	}
 

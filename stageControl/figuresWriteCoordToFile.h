@@ -91,6 +91,9 @@ namespace figuresWriteCoordToFile{
 		double xRotMat[3][3];
 		double zRotMat[3][3];
 
+		//get called by constructor, should only be opend once. 
+		bool regMenuWindow();
+
 	public:
 		void set(double RIn, double phi0In, int stepsIn, double velocityIn);
 		void cut();
@@ -98,10 +101,11 @@ namespace figuresWriteCoordToFile{
 		void cutAbs3D();
 
 		//set Values using Window
-		bool regMenuWindow();
 		void openWindowSet3D();
 
-		polygon::polygon(){}
+		polygon::polygon(){
+			regMenuWindow();
+		}
 		polygon::~polygon(){}
 	};
 

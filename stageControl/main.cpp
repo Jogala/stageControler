@@ -1,4 +1,4 @@
-
+//Version 8.8.2014 10:23
 // Include the defaut Win32 header, you need functions from it
 #include "Header.h"
 #include "./PI_stuff/PI_GCS2_DLL.h" 
@@ -19,20 +19,22 @@ using namespace std;
 int main(int argc, char* argv[])
 {
 
-	//stageController E545;
-	//menu menu(E545);
+	stageController E545;
+	menu menu(E545);
 
-	//E545.initialize();
-	//menu.mainMenu();
+	E545.initialize();
+	menu.mainMenu();
 
-	//E545.closeConnection();
+	E545.closeConnection();
 
-	figuresWriteCoordToFile::polygon poly;
-	poly.regMenuWindow();
+	
 
-	poly.openWindowSet3D();
-	Sleep(200);
-	poly.openWindowSet3D();
+
+	//figuresWriteCoordToFile::polygon poly;
+
+	//poly.openWindowSet3D();
+	//Sleep(200);
+	//poly.openWindowSet3D();
 	
 
 }

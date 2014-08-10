@@ -1,23 +1,57 @@
-﻿Build started 08/08/2014 10:13:11.
-     1>Project "C:\Users\howardlab\Desktop\stageControler\stageControl\stageControl.vcxproj" on node 2 (Build target(s)).
-     1>InitializeBuildStatus:
-         Touching "Debug\stageControl.tlog\unsuccessfulbuild".
-       ClCompile:
-         All outputs are up-to-date.
+﻿Build started 8/8/2014 2:47:05 PM.
+     1>Project "C:\Users\9G63Q02\Desktop\stageControler\stageControl\stageControl.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt figures.cpp main.cpp menu.cpp
+         figures.cpp
+     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\figures.h(158): warning C4101: 'x' : unreferenced local variable
+     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\figures.cpp(293): warning C4101: 'dummy2' : unreferenced local variable
+     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\figures.cpp(867): warning C4101: 'zOld' : unreferenced local variable
+     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\figures.cpp(867): warning C4101: 'xOld' : unreferenced local variable
+     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\figures.cpp(867): warning C4101: 'yOld' : unreferenced local variable
+         Generating Code...
+     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\figures.cpp(550): warning C4715: 'figures::polygon::regMenuWindow' : not all control paths return a value
+         Compiling...
+         menu.cpp
+     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\figures.h(158): warning C4101: 'x' : unreferenced local variable
+     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\menu.cpp(297): warning C4244: 'argument' : conversion from 'double' to 'DWORD', possible loss of data
+     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\menu.cpp(305): warning C4244: 'argument' : conversion from 'double' to 'DWORD', possible loss of data
+     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\menu.cpp(313): warning C4244: 'argument' : conversion from 'double' to 'DWORD', possible loss of data
+     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\menu.cpp(321): warning C4244: 'argument' : conversion from 'double' to 'DWORD', possible loss of data
+     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\menu.cpp(329): warning C4244: 'argument' : conversion from 'double' to 'DWORD', possible loss of data
+     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\menu.cpp(337): warning C4244: 'argument' : conversion from 'double' to 'DWORD', possible loss of data
+     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\menu.cpp(343): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
+     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\menu.cpp(374): warning C4244: 'argument' : conversion from 'double' to 'DWORD', possible loss of data
+     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\menu.cpp(382): warning C4244: 'argument' : conversion from 'double' to 'DWORD', possible loss of data
+     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\menu.cpp(390): warning C4244: 'argument' : conversion from 'double' to 'DWORD', possible loss of data
+     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\menu.cpp(398): warning C4244: 'argument' : conversion from 'double' to 'DWORD', possible loss of data
+     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\menu.cpp(406): warning C4244: 'argument' : conversion from 'double' to 'DWORD', possible loss of data
+     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\menu.cpp(414): warning C4244: 'argument' : conversion from 'double' to 'DWORD', possible loss of data
+     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\menu.cpp(424): warning C4244: 'argument' : conversion from 'double' to 'DWORD', possible loss of data
+     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\menu.cpp(432): warning C4244: 'argument' : conversion from 'double' to 'DWORD', possible loss of data
+     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\menu.cpp(440): warning C4244: 'argument' : conversion from 'double' to 'DWORD', possible loss of data
+     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\menu.cpp(449): warning C4244: 'argument' : conversion from 'double' to 'DWORD', possible loss of data
+     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\menu.cpp(457): warning C4244: 'argument' : conversion from 'double' to 'DWORD', possible loss of data
+     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\menu.cpp(466): warning C4244: 'argument' : conversion from 'double' to 'DWORD', possible loss of data
+     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\menu.cpp(480): warning C4244: 'argument' : conversion from 'double' to 'DWORD', possible loss of data
+     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\menu.cpp(486): warning C4244: 'argument' : conversion from 'double' to 'DWORD', possible loss of data
+     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\menu.cpp(492): warning C4244: 'argument' : conversion from 'double' to 'DWORD', possible loss of data
+     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\menu.cpp(496): warning C4244: 'argument' : conversion from 'double' to 'DWORD', possible loss of data
+     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\menu.cpp(599): warning C4229: anachronism used : modifiers on data are ignored
+     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\menu.cpp(601): warning C4229: anachronism used : modifiers on data are ignored
+         main.cpp
+     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\figures.h(158): warning C4101: 'x' : unreferenced local variable
+         Generating Code...
        Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\howardlab\Desktop\stageControler\stageControl\Debug\stageControl.exe" /INCREMENTAL /NOLOGO /LIBPATH:.\PI_stuff PI_GCS2_DLL.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\howardlab\Desktop\stageControler\stageControl\Debug\stageControl.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\howardlab\Desktop\stageControler\stageControl\Debug\stageControl.lib" /MACHINE:X86 Debug\figuresWriteCoordToFile.obj
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\9G63Q02\Desktop\stageControler\stageControl\Debug\stageControl.exe" /INCREMENTAL /NOLOGO /LIBPATH:.\PI_stuff PI_GCS2_DLL.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\9G63Q02\Desktop\stageControler\stageControl\Debug\stageControl.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\9G63Q02\Desktop\stageControler\stageControl\Debug\stageControl.lib" /MACHINE:X86 Debug\figuresWriteCoordToFile.obj
          Debug\main.obj
          Debug\figures.obj
          Debug\menu.obj
          Debug\WinProc.obj
          Debug\stageController.obj
          Debug\usefulFunctions.obj
-         stageControl.vcxproj -> C:\Users\howardlab\Desktop\stageControler\stageControl\Debug\stageControl.exe
-       FinalizeBuildStatus:
-         Deleting file "Debug\stageControl.tlog\unsuccessfulbuild".
-         Touching "Debug\stageControl.tlog\stageControl.lastbuildstate".
-     1>Done Building Project "C:\Users\howardlab\Desktop\stageControler\stageControl\stageControl.vcxproj" (Build target(s)).
+         stageControl.vcxproj -> C:\Users\9G63Q02\Desktop\stageControler\stageControl\Debug\stageControl.exe
+     1>Done Building Project "C:\Users\9G63Q02\Desktop\stageControler\stageControl\stageControl.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:00.28
+Time Elapsed 00:00:02.37

@@ -44,7 +44,7 @@ LRESULT CALLBACK WndProcNewPoly3D(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPa
 										   GetDlgItemText(hwnd, ID_TEXT_POLY_xRotWinkel, &G_Text_Poly_xRotWinkel[0], sizeof(G_Text_Poly_xRotWinkel));
 										   GetDlgItemText(hwnd, ID_TEXT_POLY_zRotWinkel, &G_Text_Poly_zRotWinkel[0], sizeof(G_Text_Poly_zRotWinkel));
 										   poly_BOOL = 1;
-										  
+										   DestroyWindow(hwnd);
 					   }
 						   break;
 
@@ -60,6 +60,7 @@ LRESULT CALLBACK WndProcNewPoly3D(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPa
 										 GetDlgItemText(hwnd, ID_TEXT_POLY_xRotWinkel, &G_Text_Poly_xRotWinkel[0], sizeof(G_Text_Poly_xRotWinkel));
 										 GetDlgItemText(hwnd, ID_TEXT_POLY_zRotWinkel, &G_Text_Poly_zRotWinkel[0], sizeof(G_Text_Poly_zRotWinkel));
 										 poly_BOOL = 1;
+										 DestroyWindow(hwnd);
 									 }
 					   }
 						   break;

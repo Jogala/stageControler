@@ -1,5 +1,8 @@
 #include "figures.h"
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//line																												//
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void figures::line::set(double lIn, double phi0In, double velocityIn, int repetionsIn){
 
 	velocity = velocityIn;
@@ -147,6 +150,10 @@ void figures::line::cutAbs3D(){
 
 }
 
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//rectangle																											//
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void figures::rectangle::leaveOrSwapAndAdjustPhi(double &phi, double &a, double &b){
 
 	while (phi < 0){
@@ -368,6 +375,9 @@ void figures::rectangle::cutAbsLim()
 }
 
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//surfaceRectangle																									//
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void figures::surfaceRectangle::set(double aIn, double bIn, double phi0In, double velocityIn, int resolutionIn, char longOrShortSide){
 
 
@@ -484,7 +494,9 @@ void figures::surfaceRectangle::cutAbs()
 
 }
 
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//polygon																								//
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void figures::polygon::set(double RIn, double phi0In, int stepsIn, double velocityIn){
 
 	velocity = velocityIn;
@@ -508,99 +520,34 @@ void figures::polygon::set3D(double RIn, double phi0In, double rotAngleXIn, doub
 
 
 }
-void figures::polygon::cutRel()
-{
-	pointerToE545->setVelocity(velocity, velocity, 10);
-	double x, y, xOld, yOld;
-	double deltaPhi = (2 * pi) / steps;
-	double pos[3];
 
-	pointerToE545->getPositon(pos);
+bool figures::polygon::regMenuWindow(){
 
-	xOld = R*cos(phi0);
-	yOld = R*sin(phi0);
+	HINSTANCE hInstance = GetModuleHandle(0);
+	WNDCLASSEX wc;
 
-	pointerToE545->move(xOld, yOld, 0);
+	wc.cbSize = sizeof(WNDCLASSEX);
+	wc.style = 0;
+	wc.lpfnWndProc = WndProcNewPoly3D;
+	wc.cbClsExtra = 0;
+	wc.cbWndExtra = 0;
+	wc.hInstance = hInstance;
+	wc.hIcon = NULL;
+	wc.hCursor = LoadCursor(hInstance, IDC_ARROW);
+	wc.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+	wc.lpszMenuName = NULL;
+	wc.lpszClassName = "GijSoft";
+	wc.hIconSm = NULL;
 
-	pointerToE545->openShutter();
-	for (int i = 1; i <= steps; i++){
-
-		x = R*cos(phi0 + deltaPhi*i);
-		y = R*sin(phi0 + deltaPhi*i);
-
-		pointerToE545->move(x - xOld, y - yOld, 0);
-
-		xOld = x;
-		yOld = y;
+	// This function actually registers the window class. If the information specified in the 'wc' struct is correct,
+	// the window class should be created and no error is returned.
+	if (!RegisterClassEx(&wc))
+	{
+		cout << "RegisterClassEx failed" << endl;
+		return 0;
 	}
-	pointerToE545->closeShutter();
-	pointerToE545->moveTo(pos);
+
 }
-void figures::polygon::cutAbs()
-{
-	pointerToE545->setVelocity(velocity, velocity, 10);
-
-	double pos[3];
-	double x, y, xOld, yOld;
-	double deltaPhi = (2 * pi) / steps;
-
-	pointerToE545->getPositon(pos);
-
-	xOld = R*cos(phi0);
-	yOld = R*sin(phi0);
-
-	pointerToE545->moveTo(xOld + pos[0], yOld + pos[1], pos[2]);
-
-	pointerToE545->openShutter();
-	for (int i = 1; i <= steps; i++){
-
-		x = R*cos(phi0 + deltaPhi*i);
-		y = R*sin(phi0 + deltaPhi*i);
-
-		pointerToE545->moveTo(x + pos[0], y + pos[1], pos[2]);
-		/*cout << "i  = " << i << endl;
-		getchar();*/
-	}
-	pointerToE545->closeShutter();
-	pointerToE545->moveTo(pos);
-}
-void figures::polygon::cutAbs3D()
-{
-	double pos[3];
-	double xOld, yOld, zOld;
-	double deltaAlpha = (2 * pi) / steps;
-	double vec[3];
-	
-	auto storagePositions = vector<vector<double>>(steps, vector<double>(3));
-	
-	pointerToE545->getPositon(pos);
-
-
-	for (int i = 0; i < steps; i++){
-
-		vec[0] = R*cos(phi0 + deltaAlpha*i);
-		vec[1] = R*sin(phi0 + deltaAlpha*i);
-		vec[2] = 0;
-
-		use.matrixTimesVec(xRotMat, vec);
-		use.matrixTimesVec(zRotMat, vec);
-
-		storagePositions[i][0] = vec[0] + pos[0];
-		storagePositions[i][1] = vec[1] + pos[1];
-		storagePositions[i][2] = vec[2] + pos[2];
-	}
-
-	pointerToE545->openShutter();
-	for (int i = 0; i < steps; i++){
-		vec[0] = storagePositions[i][0];
-		vec[1] = storagePositions[i][1];
-		vec[2] = storagePositions[i][2];
-
-		pointerToE545->moveTo(vec);
-	}
-	pointerToE545->closeShutter();
-}
-
 void figures::polygon::openWindowSet3D(){
 
 	HWND hwnd;
@@ -611,10 +558,9 @@ void figures::polygon::openWindowSet3D(){
 
 	hwnd = CreateWindowExA(WS_EX_CLIENTEDGE, "GijSoft", "Win32 C Window application by evolution536",
 		(WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX),
-		CW_USEDEFAULT, CW_USEDEFAULT, 250, 300, NULL, NULL, hInstance, NULL);
+		CW_USEDEFAULT, CW_USEDEFAULT, 330, 350, NULL, NULL, hInstance, NULL);
 
-	// This function creates the button that is displayed on the window. It takes almost the same parameter types as the function
-	// that created the window. A thing to note here though, is BS_DEFPUSHBUTTON, and BUTTON as window class, which is an existing one.
+
 
 	//EDIT
 	int xE = 120;	//x pos
@@ -624,18 +570,46 @@ void figures::polygon::openWindowSet3D(){
 	int xS = 20;	//x pos
 	int bS = 90;	//Breite
 
-	//Höhe EDIT and STATIC
+	//Höhe 
 	int hEaS = 25;
 
 	//y position of boxes
 	int top = 10;
 	int deltaY = 30;
 
+	//current Values
+	int xSC = 180;	//x pos
+	int bSC = 100;	//Breite
+
+
+	const char *R_current = use.doubleToLPSTR(R);
+	const char *phi0_current = use.doubleToLPSTR(phi0);
+	const char *steps_current = use.doubleToLPSTR(steps);
+	const char *velocity_current = use.doubleToLPSTR(velocity);
+	const char *xRot_current = use.doubleToLPSTR(rotAngleX);
+	const char *zRot_current = use.doubleToLPSTR(rotAngleZ);
+	
+
+	//Headline
+	CreateWindow("STATIC", "Poly 3D ", WS_VISIBLE | WS_CHILD | SS_CENTER, xS, top, 290, hEaS,
+		hwnd, NULL, hInstance, NULL);
+	top += deltaY;
+
+	CreateWindow("STATIC", "Current Values ", WS_VISIBLE | WS_CHILD | SS_RIGHT, xSC, top, bSC, hEaS,
+		hwnd, NULL, hInstance, NULL);
+	top += deltaY;
+
 	//R
 	CreateWindow("STATIC", "R = ", WS_VISIBLE | WS_CHILD | SS_RIGHT, xS, top, bS, hEaS,
 		hwnd, NULL, hInstance, NULL);
+
 	h_text_R = CreateWindow("EDIT", "0", WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP, xE, top, bE, hEaS,
 		hwnd, (HMENU)ID_TEXT_POLY_R, hInstance, NULL);
+	
+	CreateWindow("STATIC", R_current, WS_VISIBLE | WS_CHILD | SS_RIGHT, xSC, top, bS, hEaS,
+		hwnd, NULL, hInstance, NULL);
+	
+	
 	top += deltaY;
 
 	//phi0
@@ -643,6 +617,9 @@ void figures::polygon::openWindowSet3D(){
 		hwnd, NULL, hInstance, NULL);
 	CreateWindow("EDIT", "0", WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP, xE, top, bE, hEaS,
 		hwnd, (HMENU)ID_TEXT_POLY_phi0, hInstance, NULL);
+	CreateWindow("STATIC", phi0_current, WS_VISIBLE | WS_CHILD | SS_RIGHT, xSC, top, bS, hEaS,
+		hwnd, NULL, hInstance, NULL);
+
 	top += deltaY;
 
 	//xRotAngle
@@ -650,6 +627,8 @@ void figures::polygon::openWindowSet3D(){
 		hwnd, NULL, hInstance, NULL);
 	CreateWindow("EDIT", "0", WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP, xE, top, bE, hEaS,
 		hwnd, (HMENU)ID_TEXT_POLY_xRotWinkel, hInstance, NULL);
+	CreateWindow("STATIC", xRot_current, WS_VISIBLE | WS_CHILD | SS_RIGHT, xSC, top, bS, hEaS,
+		hwnd, NULL, hInstance, NULL);
 	top += deltaY;
 
 	//zRotAngle
@@ -657,6 +636,8 @@ void figures::polygon::openWindowSet3D(){
 		hwnd, NULL, hInstance, NULL);
 	CreateWindow("EDIT", "0", WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP, xE, top, bE, hEaS,
 		hwnd, (HMENU)ID_TEXT_POLY_zRotWinkel, hInstance, NULL);
+	CreateWindow("STATIC", zRot_current, WS_VISIBLE | WS_CHILD | SS_RIGHT, xSC, top, bS, hEaS,
+		hwnd, NULL, hInstance, NULL);
 	top += deltaY;
 
 	//steps
@@ -664,6 +645,8 @@ void figures::polygon::openWindowSet3D(){
 		hwnd, NULL, hInstance, NULL);
 	CreateWindow("EDIT", "0", WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP, xE, top, bE, hEaS,
 		hwnd, (HMENU)ID_TEXT_POLY_steps, hInstance, NULL);
+	CreateWindow("STATIC", steps_current, WS_VISIBLE | WS_CHILD | SS_RIGHT, xSC, top, bS, hEaS,
+		hwnd, NULL, hInstance, NULL);
 	top += deltaY;
 
 	//velocity
@@ -671,15 +654,19 @@ void figures::polygon::openWindowSet3D(){
 		hwnd, NULL, hInstance, NULL);
 	CreateWindow("EDIT", "0", WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP, xE, top, bE, hEaS,
 		hwnd, (HMENU)ID_TEXT_POLY_velocity, hInstance, NULL);
+	CreateWindow("STATIC", velocity_current, WS_VISIBLE | WS_CHILD | SS_RIGHT, xSC, top, bS, hEaS,
+		hwnd, NULL, hInstance, NULL);
 	top += deltaY;
 
+
+	//BUTTON
 	CreateWindowEx(0,                    /* more or ''extended'' styles */
 		TEXT("BUTTON"),                         /* GUI ''class'' to create */
-		TEXT("APPLAY"),                        /* GUI caption */
+		TEXT("OK"),                        /* GUI caption */
 		WS_CHILD | WS_VISIBLE | BS_DEFPUSHBUTTON | WS_TABSTOP,   /* control styles separated by | */
 		10,                                     /* LEFT POSITION (Position from left) */
 		top,                                     /* TOP POSITION  (Position from Top) */
-		150,                                    /* WIDTH OF CONTROL */
+		290,                                    /* WIDTH OF CONTROL */
 		50,                                     /* HEIGHT OF CONTROL */
 		hwnd,                                   /* Parent window handle */
 		(HMENU)ID_OK_KNOPF,                        /* control''s ID for WM_COMMAND */
@@ -794,9 +781,120 @@ void figures::polygon::openWindowSet3D(){
 			}
 			ss.str("");
 			ss.clear();
-
-			
-
 		}
 	}//while 
+
+
+string name = "polyLastValues.txt";
+fstream f;
+
+f << fixed;
+f << setprecision(3);
+f.open(name, fstream::out | fstream::trunc);
+f.close();
+f.open(name, fstream::out | fstream::app);
+
+f << R << endl;
+f << phi0 << endl;
+f << rotAngleX << endl;
+f << rotAngleZ << endl;
+f << steps << endl;
+f << velocity << endl;
+f.close();
+
+
 }
+
+void figures::polygon::cutRel()
+{
+	pointerToE545->setVelocity(velocity, velocity, 10);
+	double x, y, xOld, yOld;
+	double deltaPhi = (2 * pi) / steps;
+	double pos[3];
+
+	pointerToE545->getPositon(pos);
+
+	xOld = R*cos(phi0);
+	yOld = R*sin(phi0);
+
+	pointerToE545->move(xOld, yOld, 0);
+
+	pointerToE545->openShutter();
+	for (int i = 1; i <= steps; i++){
+
+		x = R*cos(phi0 + deltaPhi*i);
+		y = R*sin(phi0 + deltaPhi*i);
+
+		pointerToE545->move(x - xOld, y - yOld, 0);
+
+		xOld = x;
+		yOld = y;
+	}
+	pointerToE545->closeShutter();
+	pointerToE545->moveTo(pos);
+}
+void figures::polygon::cutAbs()
+{
+	pointerToE545->setVelocity(velocity, velocity, 10);
+
+	double pos[3];
+	double x, y, xOld, yOld;
+	double deltaPhi = (2 * pi) / steps;
+
+	pointerToE545->getPositon(pos);
+
+	xOld = R*cos(phi0);
+	yOld = R*sin(phi0);
+
+	pointerToE545->moveTo(xOld + pos[0], yOld + pos[1], pos[2]);
+
+	pointerToE545->openShutter();
+	for (int i = 1; i <= steps; i++){
+
+		x = R*cos(phi0 + deltaPhi*i);
+		y = R*sin(phi0 + deltaPhi*i);
+
+		pointerToE545->moveTo(x + pos[0], y + pos[1], pos[2]);
+		/*cout << "i  = " << i << endl;
+		getchar();*/
+	}
+	pointerToE545->closeShutter();
+	pointerToE545->moveTo(pos);
+}
+void figures::polygon::cutAbs3D()
+{
+	double pos[3];
+	double xOld, yOld, zOld;
+	double deltaAlpha = (2 * pi) / steps;
+	double vec[3];
+	
+	auto storagePositions = vector<vector<double>>(steps, vector<double>(3));
+	
+	pointerToE545->getPositon(pos);
+
+
+	for (int i = 0; i < steps; i++){
+
+		vec[0] = R*cos(phi0 + deltaAlpha*i);
+		vec[1] = R*sin(phi0 + deltaAlpha*i);
+		vec[2] = 0;
+
+		use.matrixTimesVec(xRotMat, vec);
+		use.matrixTimesVec(zRotMat, vec);
+
+		storagePositions[i][0] = vec[0] + pos[0];
+		storagePositions[i][1] = vec[1] + pos[1];
+		storagePositions[i][2] = vec[2] + pos[2];
+	}
+
+	pointerToE545->openShutter();
+	for (int i = 0; i < steps; i++){
+		vec[0] = storagePositions[i][0];
+		vec[1] = storagePositions[i][1];
+		vec[2] = storagePositions[i][2];
+
+		pointerToE545->moveTo(vec);
+	}
+	pointerToE545->closeShutter();
+}
+

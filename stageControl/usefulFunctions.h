@@ -11,7 +11,7 @@ public:
 	void cinAndCheckForDouble(double & xStepSize);
 	bool qValueInLimits(double value);
 	bool qValuesInLimits(double value1, double value2);
-	
+
 	void radToDegByRef(double &phi){
 
 		phi = (phi / (2 * pi)) * 360;
@@ -30,7 +30,7 @@ public:
 		phi = (phi / 360) * (2 * pi);
 		return phi;
 	}
-	
+
 	//theta = around x axis 0<=theta<=pi
 	//phi = around z axis arbitrary 
 	void setRotMatrices(double rotMatX[3][3], double rotMatZ[3][3], double rotAngleX, double rotAngleZ){
@@ -74,14 +74,35 @@ public:
 			for (int j = 0; j < 3; j++){
 				x[i] = x[i] + a[i][j] * v[j];
 			}
-			
+
 		}
 		v[0] = x[0];
 		v[1] = x[1];
 		v[2] = x[2];
 
 	}
-		
+
+	const char * doubleToLPSTR(double x){
+
+		const int size = 20;
+		char *cs = new char[size];
+
+		string s;
+		stringstream ss;
+		ss << x;
+		s = ss.str();
+		const char * tempAr = s.c_str();
+
+
+		for (int i = 0; i < size; i++){
+
+			cs[i] = tempAr[i];
+
+		}
+
+		return cs;
+	}
+
 	usefulFunctions();
 	~usefulFunctions();
 };

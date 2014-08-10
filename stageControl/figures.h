@@ -133,6 +133,9 @@ namespace figures{
 		double xRotMat[3][3];
 		double zRotMat[3][3];
 
+		//get called by constructor, should only be opend once. 
+		bool regMenuWindow();
+
 	public:
 		void set(double R, double phi0, int steps, double velocity);
 		void cutRel();
@@ -141,7 +144,6 @@ namespace figures{
 		void set3D(double RIn, double phi0In, double rotAngleXIn, double rotAngleZIn, int stepsIn, double velocityIn);
 		
 		//set Values using Window
-		bool regMenuWindow();
 		void openWindowSet3D();
 		
 		polygon(stageController &E545){
@@ -149,9 +151,61 @@ namespace figures{
 			pointerToE545 = &E545;
 		}
 		polygon(){
+			
+			cout << "Old Values Poly" << endl;
+			fstream myReadFile;
+			myReadFile.open("polyLastValues.txt");
+			double x;
+			int i = 0;
+			if (myReadFile.is_open()) {
+				while (i<6) {
+
+					if (i == 0){
+						myReadFile >> R;
+						cout << R << endl;
+						i++;
+					}
+
+					if (i == 1){
+						myReadFile >> phi0;
+						cout << phi0 << endl;
+						i++;
+					}
+					if (i == 2){
+						myReadFile >> rotAngleX;
+						cout << rotAngleX << endl;
+						i++;
+					}
+					if (i == 3){
+						myReadFile >> rotAngleZ;
+						cout << rotAngleZ << endl;
+						i++;
+					}
+					if (i == 4){
+						myReadFile >> steps;
+						cout << steps << endl;
+						i++;
+					}
+					if (i == 5){
+						myReadFile >> velocity;
+						cout << velocity << endl;
+						i++;
+					}
+					
+
+				}
+			}
+			myReadFile.close();
+			
+			
+			regMenuWindow();
+			
+
 		}
 
-		~polygon(){}
+		~polygon(){
+
+		}
 
 	};
 
