@@ -24,6 +24,16 @@ namespace figures{
 		~figures(){}
 	};
 
+
+
+
+
+
+
+
+
+
+
 	//////////////////////////////
 	//		line				//
 	//////////////////////////////
@@ -38,26 +48,42 @@ namespace figures{
 		//and adjusts phi
 
 	public:
+		void loadStoredValues();
+
 		void set3D(double lIn, double phi0In, double thetaIn, double velocityIn, int repetionsIn);
 		void cutRel3D();
 		void cutAbs3D();
+
+		bool regMenuWindow();
+		void openWindowSet3D();
 
 		void set(double l, double phi0, double velocity, int repetitions);
 		void cutRel();
 		void cutAbs();
 
 		line(stageController &E545){
-
+		
 			pointerToE545 = &E545;
-		}
 
+		}
 		//Default constructor is needed! Because I am using line as a member of a class see 
 		//http://stackoverflow.com/questions/9802341/constructor-and-initialization-of-custom-classes-objects
 		line(){
+
 		}
 		~line(){}
 
 	};
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -133,10 +159,12 @@ namespace figures{
 		double xRotMat[3][3];
 		double zRotMat[3][3];
 
-		//get called by constructor, should only be opend once. 
-		bool regMenuWindow();
+		//gets called by constructor, should only be opend once. 
+		
 
 	public:
+		bool regMenuWindow();
+		void loadStoredValues();
 		void set(double R, double phi0, int steps, double velocity);
 		void cutRel();
 		void cutAbs();
@@ -147,58 +175,8 @@ namespace figures{
 		void openWindowSet3D();
 		
 		polygon(stageController &E545){
-
-			pointerToE545 = &E545;
 		}
 		polygon(){
-			
-			cout << "Old Values Poly" << endl;
-			fstream myReadFile;
-			myReadFile.open("polyLastValues.txt");
-			double x;
-			int i = 0;
-			if (myReadFile.is_open()) {
-				while (i<6) {
-
-					if (i == 0){
-						myReadFile >> R;
-						cout << R << endl;
-						i++;
-					}
-
-					if (i == 1){
-						myReadFile >> phi0;
-						cout << phi0 << endl;
-						i++;
-					}
-					if (i == 2){
-						myReadFile >> rotAngleX;
-						cout << rotAngleX << endl;
-						i++;
-					}
-					if (i == 3){
-						myReadFile >> rotAngleZ;
-						cout << rotAngleZ << endl;
-						i++;
-					}
-					if (i == 4){
-						myReadFile >> steps;
-						cout << steps << endl;
-						i++;
-					}
-					if (i == 5){
-						myReadFile >> velocity;
-						cout << velocity << endl;
-						i++;
-					}
-					
-
-				}
-			}
-			myReadFile.close();
-			
-			
-			regMenuWindow();
 			
 
 		}

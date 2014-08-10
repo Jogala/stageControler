@@ -151,7 +151,8 @@ void menu::cutNewFigureMenu(){
 	cout << "(r)ectangle" << endl;
 	cout << "(p)olygon" << endl;
 	cout << "(s)urface Rectangle" << endl;
-	cout << "(l)ine in xy-plane" << endl;
+	cout << "(l)ine" << endl;
+
 	cin >> choice;
 
 	if (choice == "r"){
@@ -168,38 +169,16 @@ void menu::cutNewFigureMenu(){
 		rectangle.set(a, b, phi0, velo);
 	}
 
-	//if (choice == "p"){
-	//	double R, phi0, velo;
-	//	int steps;
-	//	cout << "R = " << endl;
-	//	cin >> R;
-	//	cout << "phi0 = " << endl;
-	//	cin >> phi0;
-	//	cout << "steps = " << endl;
-	//	cin >> steps;
-	//	cout << "velocity = " << endl;
-	//	cin >> velo;
-	//	polygon.set(R, phi0, steps, velo);
-	//}
-
 	if (choice == "p"){
+		polygon.regMenuWindow();
+		polygon.loadStoredValues();
 		polygon.openWindowSet3D();
 	}
 
 	if (choice == "l"){
-		double l, phi, velo, theta;
-		int repetitions;
-		cout << "l = " << endl;
-		cin >> l;
-		cout << "phi = " << endl;
-		cin >> phi;
-		cout << "phi = " << endl;
-		cin >> theta;
-		cout << "velocity = " << endl;
-		cin >> velo;
-		cout << "repetions = " << endl;
-		cin >> repetitions;
-		line.set3D(l, phi, theta, velo, repetitions);
+		line.regMenuWindow();
+		line.loadStoredValues();
+		line.openWindowSet3D();
 	}
 
 	if (choice == "s"){

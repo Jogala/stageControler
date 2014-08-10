@@ -82,25 +82,31 @@ public:
 
 	}
 
-	const char * doubleToLPSTR(double x){
+	const string doubleToString(double x){
 
-		const int size = 20;
-		char *cs = new char[size];
-
-		string s;
 		stringstream ss;
 		ss << x;
-		s = ss.str();
-		const char * tempAr = s.c_str();
+		return ss.str();
+	}
 
+	template<class aNumber>
+	void assignValueToMember(const char * charArray, aNumber & member, string name){
 
-		for (int i = 0; i < size; i++){
+		aNumber temp;
+		string myString(charArray);
+		stringstream ss;
 
-			cs[i] = tempAr[i];
-
+		ss.str(myString);
+		if (!(ss >> temp)){
+			cout << "no new value set for "<<name << endl;
 		}
+		else{
+			member = temp;
+			cout <<name<< " = " << member << endl;
+		}
+		ss.str("");
+		ss.clear();
 
-		return cs;
 	}
 
 	usefulFunctions();

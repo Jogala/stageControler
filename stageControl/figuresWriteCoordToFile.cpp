@@ -476,7 +476,7 @@ void  figuresWriteCoordToFile::polygon::openWindowSet3D(){
 		150,                                    /* WIDTH OF CONTROL */
 		50,                                     /* HEIGHT OF CONTROL */
 		hwnd,                                   /* Parent window handle */
-		(HMENU)ID_OK_KNOPF,                        /* control''s ID for WM_COMMAND */
+		(HMENU)ID_OK_KNOPF_POLY,                        /* control''s ID for WM_COMMAND */
 		hInstance,                                /* application instance */
 		NULL);
 	
