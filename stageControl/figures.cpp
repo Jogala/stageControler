@@ -129,7 +129,7 @@ void figures::line::set3D(double lIn, double phi0In,double thetaIn, double veloc
 
 }
 void figures::line::cutRel3D(){
-	
+
 	pointerToE545->setVelocity(velocity, velocity, velocity);
 	double vec[3];
 	double pos[3];
@@ -262,7 +262,7 @@ void figures::line::openWindowSet3D(){
 		hwnd, NULL, hInstance, NULL);
 	top += deltaY;
 
-	CreateWindow("STATIC", "Current Values ", WS_VISIBLE | WS_CHILD | SS_RIGHT, xSC, top, bSC, hEaS,
+	CreateWindow("STATIC", "currently", WS_VISIBLE | WS_CHILD | SS_RIGHT, xSC, top, bSC, hEaS,
 		hwnd, NULL, hInstance, NULL);
 	top += deltaY;
 
@@ -359,7 +359,7 @@ void figures::line::openWindowSet3D(){
 
 		if (line_BOOL)
 		{
-			
+
 			//l
 			////////////////////////////////////////////////////
 			use.assignValueToMember(G_Text_line_l, l, "l");
@@ -397,7 +397,7 @@ void figures::line::openWindowSet3D(){
 			f << velocity << endl;
 			f.close();
 
-			
+
 		}
 	}//while 
 
@@ -437,12 +437,12 @@ void figures::rectangle::leaveOrSwapAndAdjustPhi(double &phi, double &a, double 
 		phi = copyPhi - 90;
 	}
 }
-void figures::rectangle::set(double aIn, double bIn, double phi0In, double velocityIn){
+void figures::rectangle::set(double aIn, double bIn, double rotAngleZIn, double velocityIn){
 
 	velocity = velocityIn;
 	a = aIn;
 	b = bIn;
-	phi0 = phi0In*(2 * pi) / (360.0);
+	rotAngleZ = rotAngleZIn*(2 * pi) / (360.0);
 
 }
 void figures::rectangle::cutRel()
@@ -460,7 +460,7 @@ void figures::rectangle::cutRel()
 	deltaPhi[0] = 2 * atan(b / a);
 	deltaPhi[1] = 2 * atan(a / b);
 
-	double deltaPhiSum = phi0 - deltaPhi[0] / 2.0;
+	double deltaPhiSum = rotAngleZ - deltaPhi[0] / 2.0;
 
 	xOld = R*cos(deltaPhiSum);
 	yOld = R*sin(deltaPhiSum);
@@ -499,7 +499,7 @@ void figures::rectangle::cutAbs()
 	deltaPhi[0] = 2 * atan(b / a);
 	deltaPhi[1] = 2 * atan(a / b);
 
-	double deltaPhiSum = phi0 - deltaPhi[0] / 2.0;
+	double deltaPhiSum = rotAngleZ - deltaPhi[0] / 2.0;
 
 	xOld = R*cos(deltaPhiSum);
 	yOld = R*sin(deltaPhiSum);
@@ -526,8 +526,8 @@ void figures::rectangle::cutAbsLim()
 {
 	pointerToE545->setVelocity(velocity, velocity, 10);
 
-	//phi0, sa, sb dürfen durch diese Funktion nicht geändert werden
-	double sPhi = phi0;
+	//rotAngleZ, sa, sb dürfen durch diese Funktion nicht geändert werden
+	double sPhi = rotAngleZ;
 	double sa = a;
 	double sb = b;
 
@@ -626,7 +626,324 @@ void figures::rectangle::cutAbsLim()
 	pointerToE545->moveTo(pos[0], pos[1], pos[2]);
 
 }
+void figures::rectangle::cutAbs3D(){
 
+	pointerToE545->setVelocity(velocity, velocity, 10);
+
+	double pos[3];
+	double deltaPhi[2];
+	double R;
+	double x, y, xOld, yOld;
+	double storagePos[4][3];
+	double vec[3];
+
+	pointerToE545->getPositon(pos);
+
+	//////////////////////////////////////////
+	//		Generating the coordinates		//
+	//////////////////////////////////////////
+
+	R = 0.5*sqrt(a*a + b*b);
+	deltaPhi[0] = 2 * atan(b / a);
+	deltaPhi[1] = 2 * atan(a / b);
+
+	double deltaPhiSum = rotAngleZ - deltaPhi[0] / 2.0;
+
+	vec[0]=R*cos(deltaPhiSum);
+	vec[1]=R*sin(deltaPhiSum);
+	vec[2]=0;
+
+	use.matrixTimesVec(xRotMat, vec);
+	use.matrixTimesVec(zRotMat, vec);
+
+	storagePos[0][0] = vec[0] + pos[0];
+	storagePos[0][1] = vec[1] + pos[1];
+	storagePos[0][2] = vec[2] + pos[2];
+
+	for (int i = 1; i <= 4; i++){
+
+		deltaPhiSum = deltaPhiSum + deltaPhi[(i % 2)];
+
+		vec[0] = R*cos(deltaPhiSum);
+		vec[1] = R*sin(deltaPhiSum);
+		vec[2] = 0;
+
+		use.matrixTimesVec(xRotMat, vec);
+		use.matrixTimesVec(zRotMat, vec);
+
+		storagePos[i][0] = vec[0] + pos[0];
+		storagePos[i][1] = vec[1] + pos[1];
+		storagePos[i][2] = vec[2] + pos[2];
+	}
+
+	//////////////////////////////////////////
+	//		Actual cutting procedure 		//
+	//////////////////////////////////////////
+		vec[0] = storagePos[0][0];
+		vec[1] = storagePos[0][1];
+		vec[2] = storagePos[0][2];
+
+		pointerToE545->moveTo(vec);
+		pointerToE545->openShutter();
+
+	for (int i = 1; i < 4; i++){
+
+		vec[0] = storagePos[i][0];
+		vec[1] = storagePos[i][1];
+		vec[2] = storagePos[i][2];
+
+		pointerToE545->moveTo(vec);
+	}
+	pointerToE545->closeShutter();
+
+	//Move Back to center
+	pointerToE545->moveTo(pos);
+}
+
+bool figures::rectangle::regMenuWindow(){
+
+	HINSTANCE hInstance = GetModuleHandle(0);
+	WNDCLASSEX wcRec;
+
+	wcRec.cbSize = sizeof(WNDCLASSEX);
+	wcRec.style = 0;
+	wcRec.lpfnWndProc = WndProcNewRectangle3D;
+	wcRec.cbClsExtra = 0;
+	wcRec.cbWndExtra = 0;
+	wcRec.hInstance = hInstance;
+	wcRec.hIcon = NULL;
+	wcRec.hCursor = LoadCursor(hInstance, IDC_ARROW);
+	wcRec.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+	wcRec.lpszMenuName = NULL;
+	wcRec.lpszClassName = "rectangle";
+	wcRec.hIconSm = NULL;
+
+	if (!RegisterClassEx(&wcRec))
+	{
+		cout << "RegisterClassEx wcRec failed" << endl;
+		return 0;
+	}
+
+}
+void figures::rectangle::openWindowSet3D(){
+
+	HWND hwnd;
+	HWND h_text_a;
+
+	HINSTANCE hInstance = GetModuleHandle(0);
+
+	hwnd = CreateWindowExA(WS_EX_CLIENTEDGE, "rectangle", "",
+		(WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX),
+		CW_USEDEFAULT, CW_USEDEFAULT, 330, 350, NULL, NULL, hInstance, NULL);
+
+	//EDIT
+	int xE = 120;	//x pos
+	int bE = 50;	//Breite
+
+	//STATIC
+	int xS = 20;	//x pos
+	int bS = 90;	//Breite
+
+	//Höhe 
+	int hEaS = 25;
+
+	//y position of boxes
+	int top = 10;
+	int deltaY = 30;
+
+	//current Values
+	int xSC = 180;	//x pos
+	int bSC = 100;	//Breite
+
+	const string sA = use.doubleToString(a);
+	const string sB = use.doubleToString(b);
+	const string sRotAngleX = use.doubleToString(rotAngleX);
+	const string sRotAngleZ = use.doubleToString(rotAngleZ);
+	const string sVelocity = use.doubleToString(velocity);
+
+
+	//Headline
+	CreateWindow("STATIC", "Rectangle 3D ", WS_VISIBLE | WS_CHILD | SS_CENTER, xS, top, 290, hEaS,
+		hwnd, NULL, hInstance, NULL);
+	top += deltaY;
+
+	CreateWindow("STATIC", "currently", WS_VISIBLE | WS_CHILD | SS_RIGHT, xSC, top, bSC, hEaS,
+		hwnd, NULL, hInstance, NULL);
+	top += deltaY;
+
+	//a
+	CreateWindow("STATIC", "a = ", WS_VISIBLE | WS_CHILD | SS_RIGHT, xS, top, bS, hEaS,
+		hwnd, NULL, hInstance, NULL);
+
+	h_text_a = CreateWindow("EDIT", sA.c_str(), WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP, xE, top, bE, hEaS,
+		hwnd, (HMENU)ID_TEXT_REC_a, hInstance, NULL);
+
+	CreateWindow("STATIC", sA.c_str(), WS_VISIBLE | WS_CHILD | SS_RIGHT, xSC, top, bS, hEaS,
+		hwnd, NULL, hInstance, NULL);
+
+
+	top += deltaY;
+
+	//b
+	CreateWindow("STATIC", "b = ", WS_VISIBLE | WS_CHILD | SS_RIGHT, xS, top, bS, hEaS,
+		hwnd, NULL, hInstance, NULL);
+	CreateWindow("EDIT", sB.c_str(), WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP, xE, top, bE, hEaS,
+		hwnd, (HMENU)ID_TEXT_REC_b, hInstance, NULL);
+	CreateWindow("STATIC", sB.c_str(), WS_VISIBLE | WS_CHILD | SS_RIGHT, xSC, top, bS, hEaS,
+		hwnd, NULL, hInstance, NULL);
+
+	top += deltaY;
+
+	//xRotAngle
+	CreateWindow("STATIC", "xRotAngle = ", WS_VISIBLE | WS_CHILD | SS_RIGHT, xS, top, bS, hEaS,
+		hwnd, NULL, hInstance, NULL);
+	CreateWindow("EDIT", sRotAngleX.c_str(), WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP, xE, top, bE, hEaS,
+		hwnd, (HMENU)ID_TEXT_REC_xRotWinkel, hInstance, NULL);
+	CreateWindow("STATIC", sRotAngleX.c_str(), WS_VISIBLE | WS_CHILD | SS_RIGHT, xSC, top, bS, hEaS,
+		hwnd, NULL, hInstance, NULL);
+	top += deltaY;
+
+	//zRotAngle
+	CreateWindow("STATIC", "zRotAngle = ", WS_VISIBLE | WS_CHILD | SS_RIGHT, xS, top, bS, hEaS,
+		hwnd, NULL, hInstance, NULL);
+	CreateWindow("EDIT", sRotAngleZ.c_str(), WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP, xE, top, bE, hEaS,
+		hwnd, (HMENU)ID_TEXT_REC_zRotWinkel, hInstance, NULL);
+	CreateWindow("STATIC", sRotAngleZ.c_str(), WS_VISIBLE | WS_CHILD | SS_RIGHT, xSC, top, bS, hEaS,
+		hwnd, NULL, hInstance, NULL);
+	top += deltaY;
+
+	//velocity
+	CreateWindow("STATIC", "velocity = ", WS_VISIBLE | WS_CHILD | SS_RIGHT, xS, top, bS, hEaS,
+		hwnd, NULL, hInstance, NULL);
+	CreateWindow("EDIT", sVelocity.c_str(), WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP, xE, top, bE, hEaS,
+		hwnd, (HMENU)ID_TEXT_REC_velocity, hInstance, NULL);
+	CreateWindow("STATIC", sVelocity.c_str(), WS_VISIBLE | WS_CHILD | SS_RIGHT, xSC, top, bS, hEaS,
+		hwnd, NULL, hInstance, NULL);
+	top += deltaY;
+
+
+	//BUTTON
+	CreateWindowEx(0,                    /* more or ''extended'' styles */
+		TEXT("BUTTON"),                         /* GUI ''class'' to create */
+		TEXT("OK"),                        /* GUI caption */
+		WS_CHILD | WS_VISIBLE | BS_DEFPUSHBUTTON | WS_TABSTOP,   /* control styles separated by | */
+		10,                                     /* LEFT POSITION (Position from left) */
+		top,                                     /* TOP POSITION  (Position from Top) */
+		290,                                    /* WIDTH OF CONTROL */
+		50,                                     /* HEIGHT OF CONTROL */
+		hwnd,                                   /* Parent window handle */
+		(HMENU)ID_OK_KNOPF_REC,                        /* control''s ID for WM_COMMAND */
+		hInstance,                                /* application instance */
+		NULL);
+
+
+	//Show the window including all controls.
+	ShowWindow(hwnd, 5);
+	UpdateWindow(hwnd);
+	SetForegroundWindow(hwnd);
+
+	//set h_text_R on focus and mark text, such that user can start typing new values immidiately
+	SetFocus(h_text_a);
+	SendDlgItemMessage(hwnd, ID_TEXT_REC_a, EM_SETSEL, 0, -1);
+
+
+	MSG Msg;
+	while (GetMessage(&Msg, NULL, 0, 0) > 0)
+	{
+		if (IsDialogMessage(hwnd, &Msg)) {
+			/* Already handled by dialog manager */
+		}
+		else {
+
+			TranslateMessage(&Msg);
+			DispatchMessage(&Msg);
+		}
+
+		if (rec_BOOL)
+		{
+			//a
+			////////////////////////////////////////////////////
+			use.assignValueToMember(G_Text_Rec_a, a, "a");
+
+			//b
+			////////////////////////////////////////////////////
+			use.assignValueToMember(G_Text_Rec_b, b, "b");
+
+			//rotangleX
+			////////////////////////////////////////////////////
+			use.assignValueToMember(G_Text_Rec_xRotWinkel, rotAngleX, "rotanglex");
+			//rotangleZ
+			////////////////////////////////////////////////////
+			use.assignValueToMember(G_Text_Rec_zRotWinkel, rotAngleZ, "rotAngleZ");
+
+			//veclotiy
+			////////////////////////////////////////////////////
+			use.assignValueToMember(G_Text_Rec_velocity, velocity, "velocity");
+
+			rec_BOOL=0;
+		}
+	}//while 
+
+
+	string name = "recLastValues.txt";
+	fstream f;
+
+	f << fixed;
+	f << setprecision(3);
+	f.open(name, fstream::out | fstream::trunc);
+	f.close();
+	f.open(name, fstream::out | fstream::app);
+
+	f << a << endl;
+	f << b << endl;
+	f << rotAngleX << endl;
+	f << rotAngleZ << endl;
+	f << velocity << endl;
+	f.close();
+
+
+}
+void figures::rectangle::loadStoredValues(){
+
+	cout << "Old Values Rectangle" << endl;
+	fstream myReadFile;
+	myReadFile.open("recLastValues.txt");
+	double x;
+	int i = 0;
+	if (myReadFile.is_open()) {
+		while (i<5) {
+
+			if (i == 0){
+				myReadFile >> a;
+				cout << a << endl;
+				i++;
+			}
+
+			if (i == 1){
+				myReadFile >> b;
+				cout << b << endl;
+				i++;
+			}
+			if (i == 2){
+				myReadFile >> rotAngleX;
+				cout << rotAngleX <<endl;
+				i++;
+			}
+			if (i == 3){
+				myReadFile >> rotAngleZ;
+				cout << rotAngleZ << endl;
+				i++;
+			}
+			if (i == 4){
+				myReadFile >> velocity;
+				cout << velocity << endl;
+				i++;
+			}
+		}
+	}
+	myReadFile.close();
+
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //surfaceRectangle																									//
@@ -883,14 +1200,14 @@ void figures::polygon::openWindowSet3D(){
 	const string sRotAngleX = use.doubleToString(rotAngleX);
 	const string sRotAngleZ = use.doubleToString(rotAngleZ);
 	const string sVelocity = use.doubleToString(velocity);
-	
+
 
 	//Headline
 	CreateWindow("STATIC", "Poly 3D ", WS_VISIBLE | WS_CHILD | SS_CENTER, xS, top, 290, hEaS,
 		hwnd, NULL, hInstance, NULL);
 	top += deltaY;
 
-	CreateWindow("STATIC", "Current Values ", WS_VISIBLE | WS_CHILD | SS_RIGHT, xSC, top, bSC, hEaS,
+	CreateWindow("STATIC", "currently", WS_VISIBLE | WS_CHILD | SS_RIGHT, xSC, top, bSC, hEaS,
 		hwnd, NULL, hInstance, NULL);
 	top += deltaY;
 
@@ -900,11 +1217,11 @@ void figures::polygon::openWindowSet3D(){
 
 	h_text_R = CreateWindow("EDIT", sR.c_str(), WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP, xE, top, bE, hEaS,
 		hwnd, (HMENU)ID_TEXT_POLY_R, hInstance, NULL);
-	
+
 	CreateWindow("STATIC", sR.c_str(), WS_VISIBLE | WS_CHILD | SS_RIGHT, xSC, top, bS, hEaS,
 		hwnd, NULL, hInstance, NULL);
-	
-	
+
+
 	top += deltaY;
 
 	//phi0
@@ -997,7 +1314,7 @@ void figures::polygon::openWindowSet3D(){
 			//R
 			////////////////////////////////////////////////////
 			use.assignValueToMember(G_Text_Poly_R, R, "R");
-			
+
 			//phi0
 			////////////////////////////////////////////////////
 			use.assignValueToMember(G_Text_Poly_phi0, phi0, "phi0");
@@ -1005,38 +1322,39 @@ void figures::polygon::openWindowSet3D(){
 			//steps
 			////////////////////////////////////////////////////
 			use.assignValueToMember(G_Text_Poly_steps, steps, "steps");
-			
+
 			//rotangleX
 			////////////////////////////////////////////////////
 			use.assignValueToMember(G_Text_Poly_xRotWinkel, rotAngleX, "rotanglex");
 			//rotangleZ
 			////////////////////////////////////////////////////
 			use.assignValueToMember(G_Text_Poly_zRotWinkel, rotAngleZ, "rotAngleZ");
-			
+
 			//veclotiy
 			////////////////////////////////////////////////////
 			use.assignValueToMember(G_Text_Poly_velocity, velocity, "velocity");
 
+			poly_BOOL=0;
 		}
 	}//while 
 
 
-string name = "polyLastValues.txt";
-fstream f;
+	string name = "polyLastValues.txt";
+	fstream f;
 
-f << fixed;
-f << setprecision(3);
-f.open(name, fstream::out | fstream::trunc);
-f.close();
-f.open(name, fstream::out | fstream::app);
+	f << fixed;
+	f << setprecision(3);
+	f.open(name, fstream::out | fstream::trunc);
+	f.close();
+	f.open(name, fstream::out | fstream::app);
 
-f << R << endl;
-f << phi0 << endl;
-f << rotAngleX << endl;
-f << rotAngleZ << endl;
-f << steps << endl;
-f << velocity << endl;
-f.close();
+	f << R << endl;
+	f << phi0 << endl;
+	f << rotAngleX << endl;
+	f << rotAngleZ << endl;
+	f << steps << endl;
+	f << velocity << endl;
+	f.close();
 
 
 }
@@ -1103,12 +1421,14 @@ void figures::polygon::cutAbs3D()
 	double xOld, yOld, zOld;
 	double deltaAlpha = (2 * pi) / steps;
 	double vec[3];
-	
-	auto storagePositions = vector<vector<double>>(steps, vector<double>(3));
-	
+
+	auto storagePos = vector<vector<double>>(steps, vector<double>(3));
+
 	pointerToE545->getPositon(pos);
 
-
+	//////////////////////////////////////////
+	//		Generating the coordinates		//
+	//////////////////////////////////////////
 	for (int i = 0; i < steps; i++){
 
 		vec[0] = R*cos(phi0 + deltaAlpha*i);
@@ -1118,19 +1438,32 @@ void figures::polygon::cutAbs3D()
 		use.matrixTimesVec(xRotMat, vec);
 		use.matrixTimesVec(zRotMat, vec);
 
-		storagePositions[i][0] = vec[0] + pos[0];
-		storagePositions[i][1] = vec[1] + pos[1];
-		storagePositions[i][2] = vec[2] + pos[2];
+		storagePos[i][0] = vec[0] + pos[0];
+		storagePos[i][1] = vec[1] + pos[1];
+		storagePos[i][2] = vec[2] + pos[2];
 	}
 
-	pointerToE545->openShutter();
-	for (int i = 0; i < steps; i++){
-		vec[0] = storagePositions[i][0];
-		vec[1] = storagePositions[i][1];
-		vec[2] = storagePositions[i][2];
+	//////////////////////////////////////////
+	//		Actual cutting procedure 		//
+	//////////////////////////////////////////
+		vec[0] = storagePos[0][0];
+		vec[1] = storagePos[0][1];
+		vec[2] = storagePos[0][2];
+
+		pointerToE545->moveTo(vec);
+		pointerToE545->openShutter();
+
+	for (int i = 1; i < steps; i++){
+
+		vec[0] = storagePos[i][0];
+		vec[1] = storagePos[i][1];
+		vec[2] = storagePos[i][2];
 
 		pointerToE545->moveTo(vec);
 	}
 	pointerToE545->closeShutter();
+
+	//Move Back to center
+	pointerToE545->moveTo(pos);
 }
 

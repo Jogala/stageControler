@@ -601,6 +601,7 @@ bool stageController::checkIfAnyLimit(){
 //////////////////////////////////////////////////////
 stageController::stageController()
 {
+	veloLimit=9900;
 }
 stageController::~stageController()
 {

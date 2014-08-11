@@ -148,25 +148,18 @@ void menu::cutNewFigureMenu(){
 
 	string  choice;
 	cout << "----cutNewFigureMenu----" << endl;
+	cout << "(l)ine" << endl;
 	cout << "(r)ectangle" << endl;
 	cout << "(p)olygon" << endl;
 	cout << "(s)urface Rectangle" << endl;
-	cout << "(l)ine" << endl;
+	
 
 	cin >> choice;
 
 	if (choice == "r"){
-		double a, b, phi0, velo;
-		cout << "a = " << endl;
-		cin >> a;
-		cout << "b = " << endl;
-		cin >> b;
-		cout << "phi0 = " << endl;
-		cin >> phi0;
-		cout << "velocity = " << endl;
-		cin >> velo;
-
-		rectangle.set(a, b, phi0, velo);
+		rectangle.regMenuWindow();
+		rectangle.loadStoredValues();
+		rectangle.openWindowSet3D();
 	}
 
 	if (choice == "p"){
@@ -176,7 +169,7 @@ void menu::cutNewFigureMenu(){
 	}
 
 	if (choice == "l"){
-		line.regMenuWindow();
+		line.regMenuWindow();	
 		line.loadStoredValues();
 		line.openWindowSet3D();
 	}
@@ -202,18 +195,18 @@ void menu::cutCutMenu(){
 	
 	cout << "Choose figure to cut:" << endl;
 	cout << "------------line------------" << endl;
-	cout << "(lAbs) 3D" << endl;
-	cout << "(lRel) 3D" << endl;
+	cout << "(lAbs) \t\t 3D" << endl;
+	cout << "(lRel) \t\t 3D" << endl;
 	cout << "------------rectangle------------" << endl;
-	cout << "(rRel)" << endl;
-	cout << "(rAbs)" << endl;
+	cout << "(rRel) \t\t 2D" << endl;
+	cout << "(rAbs) \t\t 3D"<< endl;
+	cout << "(rAbsLim) \t 2D"<<endl;
 	cout << "------------polygon------------" << endl;
-	cout << "(pAbs)" << endl;
-	cout << "(pRel)" << endl;
-	cout << "(p)  = pAbs with pre. def. values but velocity can be set" << endl;
+	cout << "(pAbs) \t\t 3D" << endl;
+	cout << "(pRel) \t\t 2D" << endl;
 	cout << "------------area------------" << endl;
-	cout << "(sRel)" << endl;
-	cout << "(sAbs)" << endl;
+	cout << "(sRel) \t\t 2D" << endl;
+	cout << "(sAbs) \t\t 2D" << endl;
 
 	cin >> choice;
 
@@ -232,7 +225,7 @@ void menu::cutCutMenu(){
 	}
 
 	if (choice == "rAbs"){
-		rectangle.cutAbs();
+		rectangle.cutAbs3D();
 	}
 
 	if (choice == "rAbsLim"){
@@ -254,79 +247,8 @@ void menu::cutCutMenu(){
 	}
 
 	if (choice == "pAbs"){
-		polygon.cutAbs();
+		polygon.cutAbs3D();
 	}
-
-	if (choice == "p"){
-		double vel = 0;
-		double steps = 0;
-		double R = 0;
-
-		cout << "Press Escape for returning to main menu" << endl;
-
-		while (!(GetKeyState(0x51) & 0x8000) && !(GetKeyState(VK_ESCAPE) & 0x8000))
-		{
-
-
-			//page Up = 0x21
-			while ((GetKeyState(0x21) & 0x8000))
-			{
-				R = R + 1;
-				cout << "R = " << R << endl;
-				Sleep(sleepValue * 2);
-			}//page Up
-
-			//Page Down = 0x22
-			while ((GetKeyState(0x22) & 0x8000))
-			{
-				R = R - 1;
-				cout << "R = " << R << endl;
-				Sleep(sleepValue * 2);
-			}//Page Down
-
-			//down arrow = 0x28
-			while ((GetKeyState(0x28) & 0x8000))
-			{
-				vel = vel - 100;
-				cout << "vel = " << vel << endl;
-				Sleep(sleepValue);
-			}//down
-
-			//up arrow = 0x26
-			while ((GetKeyState(0x26) & 0x8000))
-			{
-				vel = vel + 100;
-				cout << "vel = " << vel << endl;
-				Sleep(sleepValue);
-			}//up
-
-			//left arrow = 0x25
-			while ((GetKeyState(0x25) & 0x8000))
-			{
-				steps = steps - 1;
-				cout << "steps = " << steps << endl;
-				Sleep(sleepValue);
-			}//left
-
-			//right arrow = 0x27
-			while ((GetKeyState(0x27) & 0x8000))
-			{
-				steps = steps + 1;
-				cout << "steps = " << steps << endl;
-				Sleep(sleepValue);
-			}//right
-
-			//c = 0x43
-			if ((GetKeyState(0x43) & 0x8000))
-			{
-				polygon.set(R, 0, steps, vel);
-				polygon.cutAbs();
-
-			}
-		}
-	}
-
-
 
 }
 void menu::moveToMenu(){

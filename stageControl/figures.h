@@ -95,17 +95,25 @@ namespace figures{
 	{
 	private:
 		stageController * pointerToE545;
-		double a, b, phi0, velocity;
-	
+		double a, b, velocity;
+		double rotAngleX, rotAngleZ;
+		double xRotMat[3][3];
+		double zRotMat[3][3];
+
 		//leaveOrSwap leaves a and b unchanged if -45<=phi<=45 or 135<=phi<=225
 		//and adjusts phi
 		void leaveOrSwapAndAdjustPhi(double &phi, double &a, double &b);
 
 	public:
-		void set(double a, double b, double phi0, double velocity);
+		void set(double a, double b, double rotAngleZ, double velocity);
 		void cutRel();
 		void cutAbs();
 		void cutAbsLim();
+		void cutAbs3D();
+
+		void openWindowSet3D();
+		bool regMenuWindow();
+		void loadStoredValues();
 
 		rectangle(stageController &E545){
 
@@ -117,6 +125,16 @@ namespace figures{
 		~rectangle(){}
 
 	};
+
+
+
+
+
+
+
+
+
+
 
 
 	//////////////////////////////////////
@@ -158,8 +176,6 @@ namespace figures{
 		double rotAngleX, rotAngleZ;
 		double xRotMat[3][3];
 		double zRotMat[3][3];
-
-		//gets called by constructor, should only be opend once. 
 		
 
 	public:
