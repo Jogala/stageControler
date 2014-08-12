@@ -22,19 +22,11 @@ int main(int argc, char* argv[])
 	stageController E545;
 	menu menu(E545);
 	
-	//E545.initialize();
+	E545.initialize();
 	
 	menu.mainMenu();
 	
-	E545.closeConnection();
-
-	
-	//figuresWriteCoordToFile::polygon poly;
-
-	//poly.openWindowSet3D();
-	//Sleep(200);
-	//poly.openWindowSet3D();
-	
+	E545.closeConnection();	
 
 }
 

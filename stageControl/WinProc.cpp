@@ -172,6 +172,7 @@ char G_Text_Rec_b[4];
 char G_Text_Rec_xRotWinkel[4];
 char G_Text_Rec_zRotWinkel[4];
 char G_Text_Rec_velocity[5];
+char G_Text_Rec_phi0[5];
 
 LRESULT CALLBACK WndProcNewRectangle3D(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -203,6 +204,7 @@ LRESULT CALLBACK WndProcNewRectangle3D(HWND hwnd, UINT msg, WPARAM wParam, LPARA
 					GetDlgItemText(hwnd, ID_TEXT_REC_xRotWinkel, &G_Text_Rec_xRotWinkel[0], sizeof(G_Text_Rec_xRotWinkel));
 					GetDlgItemText(hwnd, ID_TEXT_REC_zRotWinkel, &G_Text_Rec_zRotWinkel[0], sizeof(G_Text_Rec_zRotWinkel));
 					GetDlgItemText(hwnd, ID_TEXT_REC_velocity, &G_Text_Rec_velocity[0], sizeof(G_Text_Rec_velocity));
+					GetDlgItemText(hwnd, ID_TEXT_REC_phi0, &G_Text_Rec_phi0[0], sizeof(G_Text_Rec_phi0));
 					rec_BOOL = 1;
 					DestroyWindow(hwnd);
 				}
@@ -218,6 +220,7 @@ LRESULT CALLBACK WndProcNewRectangle3D(HWND hwnd, UINT msg, WPARAM wParam, LPARA
 						GetDlgItemText(hwnd, ID_TEXT_REC_xRotWinkel, &G_Text_Rec_xRotWinkel[0], sizeof(G_Text_Rec_xRotWinkel));
 						GetDlgItemText(hwnd, ID_TEXT_REC_zRotWinkel, &G_Text_Rec_zRotWinkel[0], sizeof(G_Text_Rec_zRotWinkel));
 						GetDlgItemText(hwnd, ID_TEXT_REC_velocity, &G_Text_Rec_velocity[0], sizeof(G_Text_Rec_velocity));
+						GetDlgItemText(hwnd, ID_TEXT_REC_phi0, &G_Text_Rec_phi0[0], sizeof(G_Text_Rec_phi0));
 						rec_BOOL = 1;
 						DestroyWindow(hwnd);
 					}

@@ -96,9 +96,7 @@ namespace figures{
 	private:
 		stageController * pointerToE545;
 		double a, b, velocity;
-		double rotAngleX, rotAngleZ;
-		double xRotMat[3][3];
-		double zRotMat[3][3];
+		double rotAngleX, rotAngleZ, phi0;
 
 		//leaveOrSwap leaves a and b unchanged if -45<=phi<=45 or 135<=phi<=225
 		//and adjusts phi
@@ -114,6 +112,8 @@ namespace figures{
 		void openWindowSet3D();
 		bool regMenuWindow();
 		void loadStoredValues();
+
+		void printMemberVariables();
 
 		rectangle(stageController &E545){
 
@@ -174,10 +174,7 @@ namespace figures{
 		double R, phi0,velocity;
 		int steps;
 		double rotAngleX, rotAngleZ;
-		double xRotMat[3][3];
-		double zRotMat[3][3];
-		
-
+	
 	public:
 		bool regMenuWindow();
 		void loadStoredValues();

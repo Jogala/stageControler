@@ -158,19 +158,16 @@ void menu::cutNewFigureMenu(){
 
 	if (choice == "r"){
 		rectangle.regMenuWindow();
-		rectangle.loadStoredValues();
 		rectangle.openWindowSet3D();
 	}
 
 	if (choice == "p"){
 		polygon.regMenuWindow();
-		polygon.loadStoredValues();
 		polygon.openWindowSet3D();
 	}
 
 	if (choice == "l"){
 		line.regMenuWindow();	
-		line.loadStoredValues();
 		line.openWindowSet3D();
 	}
 
@@ -484,13 +481,8 @@ void menu::setLimitsMenu(){
 
 		}	
 }
-void menu::mainMenu(){
 
-	figures::rectangle rectangle(*pToE545);
-	figures::polygon   polygon(*pToE545);
-	figures::surfaceRectangle surfaceRectangle(*pToE545);
-	figures::line line(*pToE545);
-	
+void menu::mainMenu(){
 
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	//Needed for making sure that program detects only key press when window is selected by user//

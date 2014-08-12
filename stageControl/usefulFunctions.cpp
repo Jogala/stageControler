@@ -123,8 +123,6 @@ bool usefulFunctions::qValuesInLimits(double value1, double value2){
 	}
 }
 
-
-
 usefulFunctions::usefulFunctions()
 {
 }

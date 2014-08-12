@@ -35,32 +35,32 @@ public:
 	//phi = around z axis arbitrary 
 	void setRotMatrices(double rotMatX[3][3], double rotMatZ[3][3], double rotAngleX, double rotAngleZ){
 
-		//Rotation matrix X 
-		rotMatX[0][0] = 1;
-		rotMatX[0][1] = 0;
-		rotMatX[0][2] = 0;
+			//Rotation matrix X 
+			rotMatX[0][0] = 1;
+			rotMatX[0][1] = 0;
+			rotMatX[0][2] = 0;
 
-		rotMatX[1][0] = 0;
-		rotMatX[1][1] = cos(rotAngleX);
-		rotMatX[1][2] = -sin(rotAngleX);
+			rotMatX[1][0] = 0;
+			rotMatX[1][1] = cos(rotAngleX);
+			rotMatX[1][2] = -sin(rotAngleX);
 
-		rotMatX[2][0] = 0;
-		rotMatX[2][1] = sin(rotAngleX);
-		rotMatX[2][2] = cos(rotAngleX);
+			rotMatX[2][0] = 0;
+			rotMatX[2][1] = sin(rotAngleX);
+			rotMatX[2][2] = cos(rotAngleX);
 
-		//Rotation matrix Z 
-		rotMatZ[0][0] = cos(rotAngleZ);
-		rotMatZ[0][1] = -sin(rotAngleZ);
-		rotMatZ[0][2] = 0;
+			//Rotation matrix Z 
+			rotMatZ[0][0] = cos(rotAngleZ);
+			rotMatZ[0][1] = -sin(rotAngleZ);
+			rotMatZ[0][2] = 0;
 
-		rotMatZ[1][0] = sin(rotAngleZ);
-		rotMatZ[1][1] = cos(rotAngleX);
-		rotMatZ[1][2] = 0;
+			rotMatZ[1][0] = sin(rotAngleZ);
+			rotMatZ[1][1] = cos(rotAngleX);
+			rotMatZ[1][2] = 0;
 
-		rotMatZ[2][0] = 0;
-		rotMatZ[2][1] = 0;
-		rotMatZ[2][2] = 1;
-
+			rotMatZ[2][0] = 0;
+			rotMatZ[2][1] = 0;
+			rotMatZ[2][2] = 1;
+		
 	}
 	void matrixTimesVec(double a[3][3], double v[3]){
 
@@ -108,6 +108,45 @@ public:
 		ss.clear();
 
 	}
+
+	void writeCoordToFile(string name, double storedPos[][3], int length){
+
+		fstream f;
+		f << fixed;
+		f << setprecision(3);
+
+		f.open(name, fstream::out | fstream::trunc);
+		f.close();
+		f.open(name, fstream::out | fstream::app);
+
+		for (int i = 0; i < length; i++){
+
+			f << storedPos[i][0] << "\t" << storedPos[i][1] << "\t" << storedPos[i][2] << endl;
+			
+		}
+
+		f.close();
+	}
+	void writeCoordToFile(string name, vector< vector<double> > &storedPos, int length){
+
+		fstream f;
+		f << fixed;
+		f << setprecision(3);
+
+		f.open(name, fstream::out | fstream::trunc);
+		f.close();
+		f.open(name, fstream::out | fstream::app);
+
+		for (int i = 0; i < length; i++){
+
+			f << storedPos[i][0] << "\t" << storedPos[i][1] << "\t" << storedPos[i][2] << endl;
+
+		}
+
+		f.close();
+	}
+
+
 
 	usefulFunctions();
 	~usefulFunctions();

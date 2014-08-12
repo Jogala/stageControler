@@ -15,6 +15,7 @@ private:
 	usefulFunctions useful;
 	stageController * pToE545;
 
+	//Werden im constructor initzialisiert 
 	figures::line line;
 	figures::rectangle rectangle;
 	figures::surfaceRectangle surfaceRectangle;
@@ -76,6 +77,10 @@ public:
 		shutterOpenTime=100;
 		minShutterClosedTime=100;
 		sleepValue=50;
+
+		line.loadStoredValues();
+		rectangle.loadStoredValues();
+		polygon.loadStoredValues();
 
 	}
 

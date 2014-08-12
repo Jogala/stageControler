@@ -161,35 +161,67 @@ void figures::line::cutRel3D(){
 }
 void figures::line::cutAbs3D(){
 
-	pointerToE545->setVelocity(velocity, velocity, velocity);
-	double vec[3];
-	double pos[3];
-	pointerToE545->getPositon(pos);
-	repetitions = repetitions - 1;
+	if (repetitions < 1){
+	
+		cout << endl;
+		cout << "ERROR:" << endl;
+		cout << "repetitions has to be >= 1" << endl;
+	
+	}else{
 
-	vec[0] = l*cos(phi)*sin(theta);
-	vec[1] = l*sin(phi)*sin(theta);
-	vec[2] = l*cos(theta);
+		pointerToE545->setVelocity(velocity, velocity, velocity);
 
-	if (repetitions == 0){
+		double vec[3];
+		double pos[3];
+		auto storagePos = vector<vector<double>>(repetitions, vector<double>(3));
+
+		pointerToE545->getPositon(pos);
+
+		vec[0] = l*cos(phi)*sin(theta);
+		vec[1] = l*sin(phi)*sin(theta);
+		vec[2] = l*cos(theta);
+
+		//////////////////////////////////////////////////////////////////////////
+		//		Generating the sequence of coordinates that will be visited		//
+		//////////////////////////////////////////////////////////////////////////
+		
+		
+		for (int i = 0; i < repetitions; i++)
+		{
+			if (i % 2 == 0){
+				storagePos[i][0] = pos[0] + vec[0];
+				storagePos[i][1] = pos[1] + vec[1];
+				storagePos[i][2] = pos[2] + vec[2];
+			}
+
+			if (i % 2 == 1){
+				storagePos[i][0] = pos[0];
+				storagePos[i][1] = pos[1];
+				storagePos[i][2] = pos[2];
+			}
+		}
+		//////////////////////////////////////////////////////
+		//		Write sequence to file for controle			//
+		//////////////////////////////////////////////////////
+
+		use.writeCoordToFile("line3DAbs.txt", storagePos, repetitions);
+
+
+		//////////////////////////////////////////
+		//		Actual cutting procedure 		//
+		//////////////////////////////////////////
+
 		pointerToE545->openShutter();
-		pointerToE545->moveTo(pos[0] + vec[0], pos[1] + vec[1],pos[2] + vec[2]);
-		pointerToE545->closeShutter();
-		pointerToE545->setVelocity(1000, 1000, 10);
-		pointerToE545->moveTo(pos);
-	}
-	else{
+		for (int i = 0; i < repetitions; i++){
+			
+			pointerToE545->moveTo(storagePos[i][0], storagePos[i][1], storagePos[i][2]);
 
-		while (repetitions >= 0){
-			pointerToE545->openShutter();
-			pointerToE545->moveTo(pos[0] + vec[0], pos[1] + vec[1], pos[2] + vec[2]);
-			pointerToE545->moveTo(pos);
-			repetitions = repetitions - 1;
 		}
 		pointerToE545->closeShutter();
-		pointerToE545->moveTo(pos);
-	}
+		pointerToE545->moveTo(pos[0], pos[1], pos[2]);
 
+	}//else
+	
 }
 
 bool figures::line::regMenuWindow(){
@@ -251,9 +283,12 @@ void figures::line::openWindowSet3D(){
 	int xSC = 180;	//x pos
 	int bSC = 100;	//Breite
 
+	double phiInDeg = (phi / (2*pi))*(360);
+	double thetaInDeg = (theta / (2* pi))*(360);
+
 	string sL = use.doubleToString(l);
-	string sPhi = use.doubleToString(phi);
-	string sTheta = use.doubleToString(theta);
+	string sPhi = use.doubleToString(phiInDeg);
+	string sTheta = use.doubleToString(thetaInDeg);
 	string sRepetitions = use.doubleToString(repetitions);
 	string sVelocity = use.doubleToString(velocity);
 
@@ -367,11 +402,11 @@ void figures::line::openWindowSet3D(){
 			//phi
 			////////////////////////////////////////////////////
 			use.assignValueToMember(G_Text_line_phi, phi, "phi");
-
+			phi = (phi / 360)*(2 * pi);
 			//theta
 			////////////////////////////////////////////////////
 			use.assignValueToMember(G_Text_line_theta, theta, "theta");
-
+			theta = (theta / 360)*(2 * pi);
 			//repetitions
 			////////////////////////////////////////////////////
 			use.assignValueToMember(G_Text_line_repetitions, repetitions, "repetitions");
@@ -397,7 +432,7 @@ void figures::line::openWindowSet3D(){
 			f << velocity << endl;
 			f.close();
 
-
+			line_BOOL = 0;
 		}
 	}//while 
 
@@ -460,7 +495,7 @@ void figures::rectangle::cutRel()
 	deltaPhi[0] = 2 * atan(b / a);
 	deltaPhi[1] = 2 * atan(a / b);
 
-	double deltaPhiSum = rotAngleZ - deltaPhi[0] / 2.0;
+	double deltaPhiSum = phi0 - deltaPhi[0] / 2.0;
 
 	xOld = R*cos(deltaPhiSum);
 	yOld = R*sin(deltaPhiSum);
@@ -499,7 +534,7 @@ void figures::rectangle::cutAbs()
 	deltaPhi[0] = 2 * atan(b / a);
 	deltaPhi[1] = 2 * atan(a / b);
 
-	double deltaPhiSum = rotAngleZ - deltaPhi[0] / 2.0;
+	double deltaPhiSum = phi0 - deltaPhi[0] / 2.0;
 
 	xOld = R*cos(deltaPhiSum);
 	yOld = R*sin(deltaPhiSum);
@@ -628,42 +663,43 @@ void figures::rectangle::cutAbsLim()
 }
 void figures::rectangle::cutAbs3D(){
 
-	pointerToE545->setVelocity(velocity, velocity, 10);
+	if ((a <= 0) || (b <= 0)){
 
-	double pos[3];
-	double deltaPhi[2];
-	double R;
-	double x, y, xOld, yOld;
-	double storagePos[4][3];
-	double vec[3];
+		cout << endl;
+		cout << "ERROR:" << endl;
+		cout << "a <= 0 or b <= 0 are no exaptable values for a rectangle " << endl;
 
-	pointerToE545->getPositon(pos);
+	}
+	else{
 
-	//////////////////////////////////////////
-	//		Generating the coordinates		//
-	//////////////////////////////////////////
+		pointerToE545->setVelocity(velocity, velocity, velocity);
 
-	R = 0.5*sqrt(a*a + b*b);
-	deltaPhi[0] = 2 * atan(b / a);
-	deltaPhi[1] = 2 * atan(a / b);
+		double xRotMat[3][3];
+		double zRotMat[3][3];
+		double pos[3];
+		double deltaPhi[2];
+		double R;
+		double x, y, xOld, yOld;
+		double storagePos[5][3];
+		double vec[3];
+		
+		int moves = 5;
 
-	double deltaPhiSum = rotAngleZ - deltaPhi[0] / 2.0;
+		use.setRotMatrices(xRotMat, zRotMat, rotAngleX, rotAngleZ);
+		pointerToE545->getPositon(pos);
 
-	vec[0]=R*cos(deltaPhiSum);
-	vec[1]=R*sin(deltaPhiSum);
-	vec[2]=0;
+		//////////////////////////////////////////////////////////////////////////
+		//		Generating the sequence of coordinates that will be visited		//
+		//////////////////////////////////////////////////////////////////////////
 
-	use.matrixTimesVec(xRotMat, vec);
-	use.matrixTimesVec(zRotMat, vec);
+		R = 0.5*sqrt(a*a + b*b);
+		deltaPhi[0] = 2 * atan(b / a);
+		deltaPhi[1] = 2 * atan(a / b);
 
-	storagePos[0][0] = vec[0] + pos[0];
-	storagePos[0][1] = vec[1] + pos[1];
-	storagePos[0][2] = vec[2] + pos[2];
+		double deltaPhiSum = phi0 - deltaPhi[0] / 2.0;
 
-	for (int i = 1; i <= 4; i++){
-
-		deltaPhiSum = deltaPhiSum + deltaPhi[(i % 2)];
-
+		//A
+		//##################################
 		vec[0] = R*cos(deltaPhiSum);
 		vec[1] = R*sin(deltaPhiSum);
 		vec[2] = 0;
@@ -671,33 +707,53 @@ void figures::rectangle::cutAbs3D(){
 		use.matrixTimesVec(xRotMat, vec);
 		use.matrixTimesVec(zRotMat, vec);
 
-		storagePos[i][0] = vec[0] + pos[0];
-		storagePos[i][1] = vec[1] + pos[1];
-		storagePos[i][2] = vec[2] + pos[2];
-	}
+		storagePos[0][0] = vec[0] + pos[0];
+		storagePos[0][1] = vec[1] + pos[1];
+		storagePos[0][2] = vec[2] + pos[2];
+		//##################################
 
-	//////////////////////////////////////////
-	//		Actual cutting procedure 		//
-	//////////////////////////////////////////
-		vec[0] = storagePos[0][0];
-		vec[1] = storagePos[0][1];
-		vec[2] = storagePos[0][2];
+		//B, C, D, A 
+		for (int i = 1; i < moves; i++){
+			
+			deltaPhiSum = deltaPhiSum + deltaPhi[((i+1) % 2)];
 
-		pointerToE545->moveTo(vec);
+			vec[0] = R*cos(deltaPhiSum);
+			vec[1] = R*sin(deltaPhiSum);
+			vec[2] = 0;
+
+			use.matrixTimesVec(xRotMat, vec);
+			use.matrixTimesVec(zRotMat, vec);
+
+			storagePos[i][0] = vec[0] + pos[0];
+			storagePos[i][1] = vec[1] + pos[1];
+			storagePos[i][2] = vec[2] + pos[2];
+		}
+
+		//////////////////////////////////////////////////////
+		//		Write sequence to file for controle			//
+		//////////////////////////////////////////////////////
+
+		use.writeCoordToFile("rec3DAbs.txt", storagePos, moves);
+
+
+		//////////////////////////////////////////
+		//		Actual cutting procedure 		//
+		//////////////////////////////////////////
+
+		//A
+		pointerToE545->moveTo(storagePos[0][0], storagePos[0][1], storagePos[0][2]);
 		pointerToE545->openShutter();
+		//B, C, D, A
+		for (int i = 1; i < moves; i++){
 
-	for (int i = 1; i < 4; i++){
+			pointerToE545->moveTo(storagePos[i][0], storagePos[i][1], storagePos[i][2]);
 
-		vec[0] = storagePos[i][0];
-		vec[1] = storagePos[i][1];
-		vec[2] = storagePos[i][2];
+		}
+		pointerToE545->closeShutter();
 
-		pointerToE545->moveTo(vec);
+		pointerToE545->moveTo(pos);
+
 	}
-	pointerToE545->closeShutter();
-
-	//Move Back to center
-	pointerToE545->moveTo(pos);
 }
 
 bool figures::rectangle::regMenuWindow(){
@@ -734,7 +790,7 @@ void figures::rectangle::openWindowSet3D(){
 
 	hwnd = CreateWindowExA(WS_EX_CLIENTEDGE, "rectangle", "",
 		(WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX),
-		CW_USEDEFAULT, CW_USEDEFAULT, 330, 350, NULL, NULL, hInstance, NULL);
+		CW_USEDEFAULT, CW_USEDEFAULT, 500, 350, NULL, NULL, hInstance, NULL);
 
 	//EDIT
 	int xE = 120;	//x pos
@@ -755,10 +811,15 @@ void figures::rectangle::openWindowSet3D(){
 	int xSC = 180;	//x pos
 	int bSC = 100;	//Breite
 
+	double rotAngleXInDeg = (rotAngleX / (2 * pi))*(360);
+	double rotAngleZInDeg = (rotAngleZ / (2 * pi))*(360);
+	double phi0InDeg = (phi0 / (2 * pi))*(360);
+
 	const string sA = use.doubleToString(a);
 	const string sB = use.doubleToString(b);
-	const string sRotAngleX = use.doubleToString(rotAngleX);
-	const string sRotAngleZ = use.doubleToString(rotAngleZ);
+	const string sPhi0 = use.doubleToString(phi0InDeg);
+	const string sRotAngleX = use.doubleToString(rotAngleXInDeg);
+	const string sRotAngleZ = use.doubleToString(rotAngleZInDeg);
 	const string sVelocity = use.doubleToString(velocity);
 
 
@@ -767,7 +828,14 @@ void figures::rectangle::openWindowSet3D(){
 		hwnd, NULL, hInstance, NULL);
 	top += deltaY;
 
-	CreateWindow("STATIC", "currently", WS_VISIBLE | WS_CHILD | SS_RIGHT, xSC, top, bSC, hEaS,
+	CreateWindow("STATIC", "currently", WS_VISIBLE | WS_CHILD | SS_CENTER, xSC, top, bSC, hEaS,
+		hwnd, NULL, hInstance, NULL);
+	CreateWindow("STATIC", 
+		
+		"For cutting in the x-y plane\nleave xRotAngle and zRotAngle = 0\n\nFor cutting perpendicular to the x - y plane\nleave phi0 = 0, \nand chose xRotAngle = 90"
+		
+		
+		, WS_VISIBLE | WS_CHILD | SS_LEFT, xSC+bSC+10, top, 180, 205,
 		hwnd, NULL, hInstance, NULL);
 	top += deltaY;
 
@@ -792,6 +860,15 @@ void figures::rectangle::openWindowSet3D(){
 	CreateWindow("STATIC", sB.c_str(), WS_VISIBLE | WS_CHILD | SS_RIGHT, xSC, top, bS, hEaS,
 		hwnd, NULL, hInstance, NULL);
 
+	top += deltaY;
+
+	//phi0
+	CreateWindow("STATIC", "phi0 = ", WS_VISIBLE | WS_CHILD | SS_RIGHT, xS, top, bS, hEaS,
+		hwnd, NULL, hInstance, NULL);
+	CreateWindow("EDIT", sPhi0.c_str(), WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP, xE, top, bE, hEaS,
+		hwnd, (HMENU)ID_TEXT_REC_phi0, hInstance, NULL);
+	CreateWindow("STATIC", sPhi0.c_str(), WS_VISIBLE | WS_CHILD | SS_RIGHT, xSC, top, bS, hEaS,
+		hwnd, NULL, hInstance, NULL);
 	top += deltaY;
 
 	//xRotAngle
@@ -872,34 +949,41 @@ void figures::rectangle::openWindowSet3D(){
 			//rotangleX
 			////////////////////////////////////////////////////
 			use.assignValueToMember(G_Text_Rec_xRotWinkel, rotAngleX, "rotanglex");
+			rotAngleX = (rotAngleX / 360)*(2 * pi);
 			//rotangleZ
 			////////////////////////////////////////////////////
 			use.assignValueToMember(G_Text_Rec_zRotWinkel, rotAngleZ, "rotAngleZ");
-
+			rotAngleZ = (rotAngleZ / 360)*(2 * pi);
 			//veclotiy
 			////////////////////////////////////////////////////
 			use.assignValueToMember(G_Text_Rec_velocity, velocity, "velocity");
+			//phi0
+			////////////////////////////////////////////////////
+			use.assignValueToMember(G_Text_Rec_phi0, phi0, "phi0");
+			phi0 = (phi0 / 360)*(2 * pi);
+			//Export Values s.t. they can be loaded the next time the program starts
+			string name = "recLastValues.txt";
+			fstream f;
+
+			f << fixed;
+			f << setprecision(3);
+			f.open(name, fstream::out | fstream::trunc);
+			f.close();
+			f.open(name, fstream::out | fstream::app);
+
+			f << a << endl;
+			f << b << endl;
+			f << phi0 << endl;
+			f << rotAngleX << endl;
+			f << rotAngleZ << endl;
+			f << velocity << endl;
+			f.close();
 
 			rec_BOOL=0;
 		}
 	}//while 
 
 
-	string name = "recLastValues.txt";
-	fstream f;
-
-	f << fixed;
-	f << setprecision(3);
-	f.open(name, fstream::out | fstream::trunc);
-	f.close();
-	f.open(name, fstream::out | fstream::app);
-
-	f << a << endl;
-	f << b << endl;
-	f << rotAngleX << endl;
-	f << rotAngleZ << endl;
-	f << velocity << endl;
-	f.close();
 
 
 }
@@ -924,12 +1008,19 @@ void figures::rectangle::loadStoredValues(){
 				cout << b << endl;
 				i++;
 			}
+
 			if (i == 2){
+				myReadFile >> phi0;
+				cout << phi0 << endl;
+				i++;
+			}
+
+			if (i == 3){
 				myReadFile >> rotAngleX;
 				cout << rotAngleX <<endl;
 				i++;
 			}
-			if (i == 3){
+			if (i == 4){
 				myReadFile >> rotAngleZ;
 				cout << rotAngleZ << endl;
 				i++;
@@ -944,6 +1035,32 @@ void figures::rectangle::loadStoredValues(){
 	myReadFile.close();
 
 }
+void figures::rectangle::printMemberVariables(){
+
+	cout << "a = " <<"\t"<< a << endl;
+	cout << "b = " << "\t" << a << endl;
+	cout << "xRot = " << "\t" << rotAngleX << endl;
+	cout << "xRot = " << "\t" << rotAngleZ << endl;
+	cout << "velocity = " << "\t" << rotAngleZ << endl;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //surfaceRectangle																									//
@@ -1064,9 +1181,23 @@ void figures::surfaceRectangle::cutAbs()
 
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //polygon																								//
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void figures::polygon::loadStoredValues(){
 
 	cout << "Old Values Poly" << endl;
@@ -1131,9 +1262,6 @@ void figures::polygon::set3D(double RIn, double phi0In, double rotAngleXIn, doub
 	double tempRotAngleX = rotAngleX*(2 * pi) / (360.0);
 	double tempRotAngleZ = rotAngleZ*(2 * pi) / (360.0);
 	steps = stepsIn;
-
-	use.setRotMatrices(xRotMat, zRotMat, tempRotAngleX, tempRotAngleZ);
-
 
 }
 
@@ -1318,7 +1446,7 @@ void figures::polygon::openWindowSet3D(){
 			//phi0
 			////////////////////////////////////////////////////
 			use.assignValueToMember(G_Text_Poly_phi0, phi0, "phi0");
-
+			phi0 = (phi0 / 360)*(2 * pi);
 			//steps
 			////////////////////////////////////////////////////
 			use.assignValueToMember(G_Text_Poly_steps, steps, "steps");
@@ -1326,35 +1454,40 @@ void figures::polygon::openWindowSet3D(){
 			//rotangleX
 			////////////////////////////////////////////////////
 			use.assignValueToMember(G_Text_Poly_xRotWinkel, rotAngleX, "rotanglex");
+			rotAngleX = (rotAngleX / 360)*(2 * pi);
 			//rotangleZ
 			////////////////////////////////////////////////////
 			use.assignValueToMember(G_Text_Poly_zRotWinkel, rotAngleZ, "rotAngleZ");
+			rotAngleZ = (rotAngleZ / 360)*(2 * pi);
 
 			//veclotiy
 			////////////////////////////////////////////////////
 			use.assignValueToMember(G_Text_Poly_velocity, velocity, "velocity");
+
+			//Export Values s.t. they can be loaded the next time the program starts
+			string name = "polyLastValues.txt";
+			fstream f;
+
+			f << fixed;
+			f << setprecision(3);
+			f.open(name, fstream::out | fstream::trunc);
+			f.close();
+			f.open(name, fstream::out | fstream::app);
+
+			f << R << endl;
+			f << phi0 << endl;
+			f << rotAngleX << endl;
+			f << rotAngleZ << endl;
+			f << steps << endl;
+			f << velocity << endl;
+			f.close();
 
 			poly_BOOL=0;
 		}
 	}//while 
 
 
-	string name = "polyLastValues.txt";
-	fstream f;
 
-	f << fixed;
-	f << setprecision(3);
-	f.open(name, fstream::out | fstream::trunc);
-	f.close();
-	f.open(name, fstream::out | fstream::app);
-
-	f << R << endl;
-	f << phi0 << endl;
-	f << rotAngleX << endl;
-	f << rotAngleZ << endl;
-	f << steps << endl;
-	f << velocity << endl;
-	f.close();
 
 
 }
@@ -1421,15 +1554,18 @@ void figures::polygon::cutAbs3D()
 	double xOld, yOld, zOld;
 	double deltaAlpha = (2 * pi) / steps;
 	double vec[3];
+	double xRotMat[3][3];
+	double zRotMat[3][3];
 
-	auto storagePos = vector<vector<double>>(steps, vector<double>(3));
+	use.setRotMatrices(xRotMat, zRotMat, rotAngleX, rotAngleZ);
+	auto storagePos = vector<vector<double>>(steps+1, vector<double>(3));
 
 	pointerToE545->getPositon(pos);
 
 	//////////////////////////////////////////
 	//		Generating the coordinates		//
 	//////////////////////////////////////////
-	for (int i = 0; i < steps; i++){
+	for (int i = 0; i <= steps; i++){
 
 		vec[0] = R*cos(phi0 + deltaAlpha*i);
 		vec[1] = R*sin(phi0 + deltaAlpha*i);
@@ -1443,23 +1579,26 @@ void figures::polygon::cutAbs3D()
 		storagePos[i][2] = vec[2] + pos[2];
 	}
 
+	//////////////////////////////////////////////////////
+	//		Write sequence to file for controle			//
+	//////////////////////////////////////////////////////
+
+	use.writeCoordToFile("poly3DAbs.txt", storagePos, steps+1);
+
 	//////////////////////////////////////////
 	//		Actual cutting procedure 		//
 	//////////////////////////////////////////
-		vec[0] = storagePos[0][0];
-		vec[1] = storagePos[0][1];
-		vec[2] = storagePos[0][2];
 
-		pointerToE545->moveTo(vec);
-		pointerToE545->openShutter();
-
-	for (int i = 1; i < steps; i++){
+	for (int i = 0; i < steps; i++){
 
 		vec[0] = storagePos[i][0];
 		vec[1] = storagePos[i][1];
 		vec[2] = storagePos[i][2];
-
 		pointerToE545->moveTo(vec);
+
+		if (i == 0){
+			pointerToE545->openShutter();
+		}
 	}
 	pointerToE545->closeShutter();
 

@@ -1,34 +1,38 @@
-﻿Build started 11.08.2014 09:07:10.
-     1>Project "C:\Users\Joachim\Desktop\stageControler\stageControl\stageControl.vcxproj" on node 2 (Build target(s)).
-       Project file contains ToolsVersion="12.0". This toolset may be unknown or missing, in which case you may be able to resolve this by installing the appropriate version of MSBuild, or the build may have been forced to a particular ToolsVersion for policy reasons. Treating the project as if it had ToolsVersion="4.0". For more information, please see http://go.microsoft.com/fwlink/?LinkId=291333.
-     1>ClCompile:
-         C:\ProgramsForProgramming\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt figures.cpp
+﻿Build started 12/08/2014 21:15:40.
+     1>Project "C:\Users\howardlab\Desktop\stageControler\stageControl\stageControl.vcxproj" on node 2 (Build target(s)).
+     1>InitializeBuildStatus:
+         Creating "Debug\stageControl.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt figures.cpp
          figures.cpp
-     1>c:\users\joachim\desktop\stagecontroler\stagecontrol\figures.cpp(11): warning C4101: 'x' : unreferenced local variable
-     1>c:\users\joachim\desktop\stagecontroler\stagecontrol\figures.cpp(546): warning C4101: 'dummy2' : unreferenced local variable
-     1>c:\users\joachim\desktop\stagecontroler\stagecontrol\figures.cpp(636): warning C4101: 'y' : unreferenced local variable
-     1>c:\users\joachim\desktop\stagecontroler\stagecontrol\figures.cpp(636): warning C4101: 'x' : unreferenced local variable
-     1>c:\users\joachim\desktop\stagecontroler\stagecontrol\figures.cpp(636): warning C4101: 'xOld' : unreferenced local variable
-     1>c:\users\joachim\desktop\stagecontroler\stagecontrol\figures.cpp(636): warning C4101: 'yOld' : unreferenced local variable
-     1>c:\users\joachim\desktop\stagecontroler\stagecontrol\figures.cpp(911): warning C4101: 'x' : unreferenced local variable
-     1>c:\users\joachim\desktop\stagecontroler\stagecontrol\figures.cpp(1075): warning C4101: 'x' : unreferenced local variable
-     1>c:\users\joachim\desktop\stagecontroler\stagecontrol\figures.cpp(1421): warning C4101: 'zOld' : unreferenced local variable
-     1>c:\users\joachim\desktop\stagecontroler\stagecontrol\figures.cpp(1421): warning C4101: 'xOld' : unreferenced local variable
-     1>c:\users\joachim\desktop\stagecontroler\stagecontrol\figures.cpp(1421): warning C4101: 'yOld' : unreferenced local variable
-     1>c:\users\joachim\desktop\stagecontroler\stagecontrol\figures.cpp(221): warning C4715: 'figures::line::regMenuWindow' : not all control paths return a value
-     1>c:\users\joachim\desktop\stagecontroler\stagecontrol\figures.cpp(727): warning C4715: 'figures::rectangle::regMenuWindow' : not all control paths return a value
-     1>c:\users\joachim\desktop\stagecontroler\stagecontrol\figures.cpp(1166): warning C4715: 'figures::polygon::regMenuWindow' : not all control paths return a value
+     1>c:\users\howardlab\desktop\stagecontroler\stagecontrol\figures.cpp(11): warning C4101: 'x' : unreferenced local variable
+     1>c:\users\howardlab\desktop\stagecontroler\stagecontrol\figures.cpp(586): warning C4101: 'dummy2' : unreferenced local variable
+     1>c:\users\howardlab\desktop\stagecontroler\stagecontrol\figures.cpp(687): warning C4101: 'y' : unreferenced local variable
+     1>c:\users\howardlab\desktop\stagecontroler\stagecontrol\figures.cpp(687): warning C4101: 'x' : unreferenced local variable
+     1>c:\users\howardlab\desktop\stagecontroler\stagecontrol\figures.cpp(687): warning C4101: 'xOld' : unreferenced local variable
+     1>c:\users\howardlab\desktop\stagecontroler\stagecontrol\figures.cpp(687): warning C4101: 'yOld' : unreferenced local variable
+     1>c:\users\howardlab\desktop\stagecontroler\stagecontrol\figures.cpp(1006): warning C4101: 'x' : unreferenced local variable
+     1>c:\users\howardlab\desktop\stagecontroler\stagecontrol\figures.cpp(1217): warning C4101: 'x' : unreferenced local variable
+     1>c:\users\howardlab\desktop\stagecontroler\stagecontrol\figures.cpp(1565): warning C4101: 'zOld' : unreferenced local variable
+     1>c:\users\howardlab\desktop\stagecontroler\stagecontrol\figures.cpp(1565): warning C4101: 'xOld' : unreferenced local variable
+     1>c:\users\howardlab\desktop\stagecontroler\stagecontrol\figures.cpp(1565): warning C4101: 'yOld' : unreferenced local variable
+     1>c:\users\howardlab\desktop\stagecontroler\stagecontrol\figures.cpp(258): warning C4715: 'figures::line::regMenuWindow' : not all control paths return a value
+     1>c:\users\howardlab\desktop\stagecontroler\stagecontrol\figures.cpp(794): warning C4715: 'figures::rectangle::regMenuWindow' : not all control paths return a value
+     1>c:\users\howardlab\desktop\stagecontroler\stagecontrol\figures.cpp(1305): warning C4715: 'figures::polygon::regMenuWindow' : not all control paths return a value
        Link:
-         C:\ProgramsForProgramming\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Joachim\Desktop\stageControler\stageControl\Debug\stageControl.exe" /INCREMENTAL /NOLOGO /LIBPATH:.\PI_stuff PI_GCS2_DLL.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Joachim\Desktop\stageControler\stageControl\Debug\stageControl.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Joachim\Desktop\stageControler\stageControl\Debug\stageControl.lib" /MACHINE:X86 Debug\figuresWriteCoordToFile.obj
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\howardlab\Desktop\stageControler\stageControl\Debug\stageControl.exe" /INCREMENTAL /NOLOGO /LIBPATH:.\PI_stuff PI_GCS2_DLL.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\howardlab\Desktop\stageControler\stageControl\Debug\stageControl.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\howardlab\Desktop\stageControler\stageControl\Debug\stageControl.lib" /MACHINE:X86 Debug\figuresWriteCoordToFile.obj
          Debug\main.obj
          Debug\figures.obj
          Debug\menu.obj
          Debug\WinProc.obj
          Debug\stageController.obj
          Debug\usefulFunctions.obj
-         stageControl.vcxproj -> C:\Users\Joachim\Desktop\stageControler\stageControl\Debug\stageControl.exe
-     1>Done Building Project "C:\Users\Joachim\Desktop\stageControler\stageControl\stageControl.vcxproj" (Build target(s)).
+         stageControl.vcxproj -> C:\Users\howardlab\Desktop\stageControler\stageControl\Debug\stageControl.exe
+       FinalizeBuildStatus:
+         Deleting file "Debug\stageControl.tlog\unsuccessfulbuild".
+         Touching "Debug\stageControl.tlog\stageControl.lastbuildstate".
+     1>Done Building Project "C:\Users\howardlab\Desktop\stageControler\stageControl\stageControl.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:03.58
+Time Elapsed 00:00:01.26
