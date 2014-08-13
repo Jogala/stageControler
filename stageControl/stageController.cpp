@@ -417,33 +417,84 @@ void stageController::printVelocity(){
 //////////////////////////////////////////////////////
 void stageController::setLimits(int whichAxis, double value1, double value2){
 
-	int piTriggerParameterArray[2];
-	int piTriggerOutputIdsArray[2] = { whichAxis, whichAxis };
+	double minNeu;
+	double maxNeu;
 
-	double pdValueArray[2] = { value1, value2};
-	bool success = 0;
+	double minAlt;
+	double maxAlt;
+
+	bool success1 = 0;
+	bool success2 = 0;
+
+	int axisAr[1];
+	axisAr[0] = whichAxis;
+	int triggerParAr[1];
+	double valueAr[1];
 	
 	
-		if (useful.qValuesInLimits(value1, value2))
+	//Wechsle Trigger Mode
+	setTriggerMode(1, 4);
+
+		//Make sure values are in range
+		if (!useful.qValuesInLimits(value1, value2))
+		{
+			std::cout << "ERROR:" << std::endl;
+			std::cout << "void stageController::setLimits(int whichAxis, double value1, double value2) says:\n No valid limit values" << std::endl;
+		}
+		else
 		{
 
 			if (value1 <= value2){
-				piTriggerParameterArray[0] = 5;
-				piTriggerParameterArray[1] = 6;
+				minNeu = value1;
+				maxNeu = value2;
 			}
 			else
 			{
-				piTriggerParameterArray[0] = 6;
-				piTriggerParameterArray[1] = 5;
+				minNeu = value2;
+				maxNeu = value1;
 			}
 
-			success = PI_CTO(ID, piTriggerOutputIdsArray, piTriggerParameterArray, pdValueArray, 2);
-			cout << success << endl;
-		}
-		else{
-			std::cout << "void stageController::setLimits(int whichAxis, double value1, double value2) says:\n No valid limit values" << std::endl;
+			
+			getLimits(whichAxis, minAlt, maxAlt);
+			
+			if (minNeu >= maxAlt){
+				//Zuerst maxAlt -> maxNeu
+				triggerParAr[0] = 6;
+				valueAr[0] = maxNeu;
+				success1 = PI_CTO(ID, axisAr, triggerParAr, valueAr, 1);
+				//cout << "axis " << whichAxis << " maxAlt -> maxNeu " <<success << endl;
+
+				//Dann minAlt -> minNeu
+				triggerParAr[0] = 5;
+				valueAr[0] = minNeu;
+				success2 = PI_CTO(ID, axisAr, triggerParAr, valueAr, 1);
+				//cout << "axis " << whichAxis << " minAlt -> minNeu " << success << endl;
+				
+			}
+			else{
+
+				//Zuerst minAlt -> minNeu
+				triggerParAr[0] = 5;
+				valueAr[0] = minNeu;
+				success1 = PI_CTO(ID, axisAr, triggerParAr, valueAr, 1);
+				//cout << "axis " << whichAxis << " minAlt -> minNeu " << success << endl;
+
+				//Dann maxAlt -> maxNeu
+				triggerParAr[0] = 6;
+				valueAr[0] = maxNeu;
+				success2 = PI_CTO(ID, axisAr, triggerParAr, valueAr, 1);
+				//cout << "axis " << whichAxis << " maxAlt -> maxNeu " << success << endl;
+			}
+
+			if (!success1 || !success2){
+				std::cout << "ERROR:" << std::endl;
+				std::cout << "PI_CTO(ID, axisAr, triggerParAr, valueAr, 1) in /n void stageController::setLimits(int whichAxis, double value1, double value2) /n returned 0 " << endl;
+			}
+
 		}
 	
+		//Wechsle Trigger Mode
+		setTriggerMode(1, 3);
 
 }
 
@@ -514,11 +565,13 @@ void stageController::setTriggerMode(int whichAxis, int mode){
 }
 void stageController::openShutter(){
 	setLimits(1, 0, 200);
+	cout << "open Shutter" << endl;
 }
 void stageController::closeShutter(){
 	setLimits(1, 0, 0);
 	setLimits(2, 0, 0);
 	setLimits(3, 0, 0);
+	cout << "close Shutter" << endl;
 }
 
 void stageController::getLimits(int whichAxis, double &min, double &max){

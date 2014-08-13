@@ -188,6 +188,7 @@ namespace figures{
 		void openWindowSet3D();
 		
 		polygon(stageController &E545){
+			pointerToE545 = &E545;
 		}
 		polygon(){
 			

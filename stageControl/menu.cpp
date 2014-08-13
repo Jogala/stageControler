@@ -157,17 +157,14 @@ void menu::cutNewFigureMenu(){
 	cin >> choice;
 
 	if (choice == "r"){
-		rectangle.regMenuWindow();
 		rectangle.openWindowSet3D();
 	}
 
 	if (choice == "p"){
-		polygon.regMenuWindow();
 		polygon.openWindowSet3D();
 	}
 
 	if (choice == "l"){
-		line.regMenuWindow();	
 		line.openWindowSet3D();
 	}
 
@@ -246,6 +243,7 @@ void menu::cutCutMenu(){
 	if (choice == "pAbs"){
 		polygon.cutAbs3D();
 	}
+
 
 }
 void menu::moveToMenu(){

@@ -82,6 +82,10 @@ public:
 		rectangle.loadStoredValues();
 		polygon.loadStoredValues();
 
+		rectangle.regMenuWindow();
+		polygon.regMenuWindow();
+		line.regMenuWindow();
+
 	}
 
 

@@ -8,7 +8,6 @@ void figures::line::loadStoredValues(){
 	cout << "Old Values Line" << endl;
 	fstream myReadFile;
 	myReadFile.open("lineLastValues.txt");
-	double x;
 	int i = 0;
 	if (myReadFile.is_open()) {
 		while (i<5) {
@@ -439,6 +438,22 @@ void figures::line::openWindowSet3D(){
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //rectangle																											//
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -679,7 +694,6 @@ void figures::rectangle::cutAbs3D(){
 		double pos[3];
 		double deltaPhi[2];
 		double R;
-		double x, y, xOld, yOld;
 		double storagePos[5][3];
 		double vec[3];
 		
@@ -1025,7 +1039,7 @@ void figures::rectangle::loadStoredValues(){
 				cout << rotAngleZ << endl;
 				i++;
 			}
-			if (i == 4){
+			if (i == 5){
 				myReadFile >> velocity;
 				cout << velocity << endl;
 				i++;
@@ -1322,11 +1336,14 @@ void figures::polygon::openWindowSet3D(){
 	int xSC = 180;	//x pos
 	int bSC = 100;	//Breite
 
+	double rotAngleXInDeg = (rotAngleX / (2 * pi))*(360);
+	double rotAngleZInDeg = (rotAngleZ / (2 * pi))*(360);
+
 	const string sR = use.doubleToString(R);
 	const string sPhi0 = use.doubleToString(phi0);
 	const string sSteps = use.doubleToString(steps);
-	const string sRotAngleX = use.doubleToString(rotAngleX);
-	const string sRotAngleZ = use.doubleToString(rotAngleZ);
+	const string sRotAngleX = use.doubleToString(rotAngleXInDeg);
+	const string sRotAngleZ = use.doubleToString(rotAngleZInDeg);
 	const string sVelocity = use.doubleToString(velocity);
 
 
@@ -1550,8 +1567,12 @@ void figures::polygon::cutAbs()
 }
 void figures::polygon::cutAbs3D()
 {
+
+	pointerToE545->setVelocity(velocity, velocity, velocity);
+	
 	double pos[3];
-	double xOld, yOld, zOld;
+	pointerToE545->getPositon(pos);
+
 	double deltaAlpha = (2 * pi) / steps;
 	double vec[3];
 	double xRotMat[3][3];
@@ -1560,7 +1581,8 @@ void figures::polygon::cutAbs3D()
 	use.setRotMatrices(xRotMat, zRotMat, rotAngleX, rotAngleZ);
 	auto storagePos = vector<vector<double>>(steps+1, vector<double>(3));
 
-	pointerToE545->getPositon(pos);
+	
+	
 
 	//////////////////////////////////////////
 	//		Generating the coordinates		//
