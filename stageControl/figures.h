@@ -24,16 +24,6 @@ namespace figures{
 		~figures(){}
 	};
 
-
-
-
-
-
-
-
-
-
-
 	//////////////////////////////
 	//		line				//
 	//////////////////////////////
@@ -43,12 +33,23 @@ namespace figures{
 		stageController * pointerToE545;
 		double l, phi, velocity, theta;
 		int repetitions;
+		string nameFile = "lineLastValues.txt";
 
 		//leaveOrSwap leaves a and b unchanged if -45<=phi<=45 or 135<=phi<=225
 		//and adjusts phi
 
 	public:
-		void loadStoredValues();
+		void printMemberValues(){
+		
+			cout << "l" << "\t\t\t" << l << endl;
+			cout << "phi" << "\t\t\t" << (phi/(2*pi))*360 << endl;
+			cout << "theta" << "\t\t\t" << (theta / (2 * pi)) * 360 << endl;
+			cout << "repetitions" << "\t\t" << repetitions << endl;
+			cout << "velocity" << "\t\t" << velocity << endl;
+
+		}
+		void loadValuesFromTextFile();
+		void writeVariablesToTextFile(double l, double phi, double theta, int repetitions, double velocity);
 
 		void set3D(double lIn, double phi0In, double thetaIn, double velocityIn, int repetionsIn);
 		void cutRel3D();
@@ -77,17 +78,6 @@ namespace figures{
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 	//////////////////////////////
 	//		rectangle			//
 	//////////////////////////////
@@ -106,12 +96,15 @@ namespace figures{
 		void set(double a, double b, double rotAngleZ, double velocity);
 		void cutRel();
 		void cutAbs();
-		void cutAbsLim();
+		void cutAbsLim2D();
 		void cutAbs3D();
+
+		void macroAbs3D();
+		void startMacroAbs3D();
 
 		void openWindowSet3D();
 		bool regMenuWindow();
-		void loadStoredValues();
+		void loadValuesFromTextFile();
 
 		void printMemberVariables();
 
@@ -125,16 +118,6 @@ namespace figures{
 		~rectangle(){}
 
 	};
-
-
-
-
-
-
-
-
-
-
 
 
 	//////////////////////////////////////
@@ -177,7 +160,7 @@ namespace figures{
 	
 	public:
 		bool regMenuWindow();
-		void loadStoredValues();
+		void loadValuesFromTextFile();
 		void set(double R, double phi0, int steps, double velocity);
 		void cutRel();
 		void cutAbs();

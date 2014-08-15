@@ -1,19 +1,17 @@
-﻿Build started 8/13/2014 12:14:51 PM.
+﻿Build started 8/15/2014 2:08:16 PM.
      1>Project "C:\Users\9G63Q02\Desktop\stageControler\stageControl\stageControl.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt figures.cpp
-         figures.cpp
-     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\figures.cpp(596): warning C4101: 'dummy2' : unreferenced local variable
-     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\figures.cpp(1009): warning C4101: 'x' : unreferenced local variable
-     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\figures.cpp(1220): warning C4101: 'x' : unreferenced local variable
-     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\figures.cpp(252): warning C4715: 'figures::line::regMenuWindow' : not all control paths return a value
-     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\figures.cpp(797): warning C4715: 'figures::rectangle::regMenuWindow' : not all control paths return a value
-     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\figures.cpp(1308): warning C4715: 'figures::polygon::regMenuWindow' : not all control paths return a value
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt polygon.cpp
+         polygon.cpp
+     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\polygon.cpp(10): warning C4101: 'x' : unreferenced local variable
+     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\polygon.cpp(98): warning C4715: 'figures::polygon::regMenuWindow' : not all control paths return a value
        Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\9G63Q02\Desktop\stageControler\stageControl\Debug\stageControl.exe" /INCREMENTAL /NOLOGO /LIBPATH:.\PI_stuff PI_GCS2_DLL.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\9G63Q02\Desktop\stageControler\stageControl\Debug\stageControl.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\9G63Q02\Desktop\stageControler\stageControl\Debug\stageControl.lib" /MACHINE:X86 Debug\figuresWriteCoordToFile.obj
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\9G63Q02\Desktop\stageControler\stageControl\Debug\stageControl.exe" /INCREMENTAL /NOLOGO /LIBPATH:.\PI_stuff PI_GCS2_DLL.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\9G63Q02\Desktop\stageControler\stageControl\Debug\stageControl.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\9G63Q02\Desktop\stageControler\stageControl\Debug\stageControl.lib" /MACHINE:X86 Debug\line.obj
          Debug\main.obj
-         Debug\figures.obj
          Debug\menu.obj
+         Debug\polygon.obj
+         Debug\rectangle.obj
+         Debug\surfaceRec.obj
          Debug\WinProc.obj
          Debug\stageController.obj
          Debug\usefulFunctions.obj
@@ -22,4 +20,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.04
+Time Elapsed 00:00:00.94

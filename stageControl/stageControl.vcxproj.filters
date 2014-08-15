@@ -13,54 +13,69 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\figures">
+      <UniqueIdentifier>{873a352f-0261-4e35-957f-0f0aee23f930}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\winProc">
+      <UniqueIdentifier>{59fe0993-01e8-44d9-87e5-2f836f039b6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\menu">
+      <UniqueIdentifier>{e8de6e59-2b3b-4956-bfb4-4d4762b5e9f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\stageController">
+      <UniqueIdentifier>{b37a1bd5-9e67-4535-9773-2ac3ac76e93d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\usefullFnctions">
+      <UniqueIdentifier>{1a8055b7-bc3f-450f-bf49-66db14e863be}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="stageController.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="line.cpp">
+      <Filter>Source Files\figures</Filter>
     </ClCompile>
-    <ClCompile Include="usefulFunctions.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="polygon.cpp">
+      <Filter>Source Files\figures</Filter>
     </ClCompile>
-    <ClCompile Include="figures.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="rectangle.cpp">
+      <Filter>Source Files\figures</Filter>
     </ClCompile>
-    <ClCompile Include="figuresWriteCoordToFile.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="menu.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="surfaceRec.cpp">
+      <Filter>Source Files\figures</Filter>
     </ClCompile>
     <ClCompile Include="WinProc.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Resource Files\winProc</Filter>
+    </ClCompile>
+    <ClCompile Include="menu.cpp">
+      <Filter>Source Files\menu</Filter>
+    </ClCompile>
+    <ClCompile Include="stageController.cpp">
+      <Filter>Source Files\stageController</Filter>
+    </ClCompile>
+    <ClCompile Include="usefulFunctions.cpp">
+      <Filter>Source Files\usefullFnctions</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="moveStageUsingKeyboard.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="stageController.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="usefulFunctions.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="WinProc.h">
+      <Filter>Resource Files\winProc</Filter>
     </ClInclude>
     <ClInclude Include="figures.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="figuresWriteCoordToFile.h">
-      <Filter>Header Files</Filter>
+      <Filter>Source Files\figures</Filter>
     </ClInclude>
     <ClInclude Include="menu.h">
-      <Filter>Header Files</Filter>
+      <Filter>Source Files\menu</Filter>
     </ClInclude>
-    <ClInclude Include="WinProc.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="stageController.h">
+      <Filter>Source Files\stageController</Filter>
+    </ClInclude>
+    <ClInclude Include="usefulFunctions.h">
+      <Filter>Source Files\usefullFnctions</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

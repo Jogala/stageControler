@@ -2,9 +2,7 @@
 // Include the defaut Win32 header, you need functions from it
 #include "Header.h"
 #include "./PI_stuff/PI_GCS2_DLL.h" 
-#include "moveStageUsingKeyboard.h"
 #include "figures.h"
-#include "figuresWriteCoordToFile.h"
 #include "menu.h"
 #include "WinProc.h"
 
@@ -25,8 +23,10 @@ int main(int argc, char* argv[])
 	E545.initialize();
 	
 	menu.mainMenu();
-	
+
 	E545.closeConnection();	
+
+
 
 }
 

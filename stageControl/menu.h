@@ -78,9 +78,9 @@ public:
 		minShutterClosedTime=100;
 		sleepValue=50;
 
-		line.loadStoredValues();
-		rectangle.loadStoredValues();
-		polygon.loadStoredValues();
+		line.loadValuesFromTextFile();
+		rectangle.loadValuesFromTextFile();
+		polygon.loadValuesFromTextFile();
 
 		rectangle.regMenuWindow();
 		polygon.regMenuWindow();

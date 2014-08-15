@@ -82,8 +82,8 @@ public:
 
 	}
 
-	const string doubleToString(double x){
-
+	template<class aNumber>
+	const string numberToString(aNumber x){
 		stringstream ss;
 		ss << x;
 		return ss.str();
@@ -106,6 +106,20 @@ public:
 		}
 		ss.str("");
 		ss.clear();
+
+	}
+
+	template<class aNumber>
+	void constCharToNumber(const char * charArray, aNumber & number){
+
+		string myString(charArray);
+		stringstream ss;
+
+		ss.str(myString);
+		if (!(ss >> number)){
+			cout << "ERROR:" << endl;
+			cout << "constCharToNumber failed" << endl;
+		}
 
 	}
 

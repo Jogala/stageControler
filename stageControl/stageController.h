@@ -113,10 +113,6 @@ public:
 	void openShutter();
 	void closeShutter();
 
-	template<int a, int b> void cutRel(double(&myarray)[a][b],double velo);
-	
-	void cutRel(double * pRelCoordArray);
-	
 	stageController();
 	~stageController();
 };

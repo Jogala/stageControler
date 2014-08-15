@@ -195,6 +195,7 @@ void menu::cutCutMenu(){
 	cout << "(rRel) \t\t 2D" << endl;
 	cout << "(rAbs) \t\t 3D"<< endl;
 	cout << "(rAbsLim) \t 2D"<<endl;
+	cout << "rm" << endl;
 	cout << "------------polygon------------" << endl;
 	cout << "(pAbs) \t\t 3D" << endl;
 	cout << "(pRel) \t\t 2D" << endl;
@@ -223,8 +224,10 @@ void menu::cutCutMenu(){
 	}
 
 	if (choice == "rAbsLim"){
-		rectangle.cutAbsLim();
+		rectangle.cutAbsLim2D();
 	}
+	
+
 
 	//surface
 	if (choice == "sRel"){
