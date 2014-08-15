@@ -54,6 +54,7 @@ namespace figures{
 		void set3D(double lIn, double phi0In, double thetaIn, double velocityIn, int repetionsIn);
 		void cutRel3D();
 		void cutAbs3D();
+		void cutAbsLim3D();
 
 		bool regMenuWindow();
 		void openWindowSet3D();

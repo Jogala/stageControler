@@ -289,6 +289,78 @@ void figures::line::cutAbs3D(){
 	}//else
 
 }
+void figures::line::cutAbsLim3D(){
+
+	if (repetitions < 1){
+
+		cout << endl;
+		cout << "ERROR:" << endl;
+		cout << "repetitions has to be >= 1" << endl;
+
+	}
+	else{
+
+		pointerToE545->setVelocity(velocity, velocity, velocity);
+
+		double vec[3];
+		double pos[3];
+		auto storagePos = vector<vector<double>>(repetitions, vector<double>(3));
+
+		pointerToE545->getPositon(pos);
+
+		vec[0] = l*cos(phi)*sin(theta);
+		vec[1] = l*sin(phi)*sin(theta);
+		vec[2] = l*cos(theta);
+
+		int limAxis = use.axisOfBiggestProjection(vec);
+		double c = 10;
+		double normOfVec = use.norm(vec);
+
+		//////////////////////////////////////////////////////////////////////////
+		//		Generating the sequence of coordinates that will be visited		//
+		//////////////////////////////////////////////////////////////////////////
+
+		for (int i = 0; i < repetitions; i++)
+		{
+			if (i % 2 == 1){
+				storagePos[i][0] = pos[0] + vec[0] + c*vec[0] / normOfVec;
+				storagePos[i][1] = pos[1] + vec[1] + c*vec[1] / normOfVec;
+				storagePos[i][2] = pos[2] + vec[2] + c*vec[2] / normOfVec;
+			}
+
+			if (i % 2 == 0){
+				storagePos[i][0] = pos[0] - c*vec[0] / normOfVec;
+				storagePos[i][1] = pos[1] - c*vec[1] / normOfVec;
+				storagePos[i][2] = pos[2] - c*vec[2] / normOfVec;
+			}
+		}
+
+		//////////////////////////////////////////////////////
+		//		Write sequence to file for controle			//
+		//////////////////////////////////////////////////////
+
+		use.writeCoordToFile("line3DAbs.txt", storagePos, repetitions);
+
+		//////////////////////////////////////////
+		//		Actual cutting procedure 		//
+		//////////////////////////////////////////
+
+		//A
+		pointerToE545->moveTo(storagePos[0][0], storagePos[0][1], storagePos[0][2]);
+		pointerToE545->setLimits(limAxis, pos[limAxis], pos[limAxis] + vec[limAxis]);
+
+		for (int i = 1; i <= repetitions; i++){
+
+			pointerToE545->moveTo(storagePos[i][0], storagePos[i][1], storagePos[i][2]);
+
+		}
+		pointerToE545->closeShutter();
+		pointerToE545->setVelocity(1000, 1000, 1000);
+		pointerToE545->moveTo(pos[0], pos[1], pos[2]);
+
+	}//else
+
+}
 
 bool figures::line::regMenuWindow(){
 

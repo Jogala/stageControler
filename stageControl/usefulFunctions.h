@@ -160,7 +160,32 @@ public:
 		f.close();
 	}
 
+	template<class aNumber>
+	aNumber norm(aNumber v[3]){
 
+		return sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
+
+	}
+
+	template<class aNumber>
+	int axisOfBiggestProjection(aNumber v[3]){
+		aNumber w[3];
+		w[0] = v[0] * v[0];
+		w[1] = v[1] * v[1];
+		w[2] = v[2] * v[2];
+
+		int j = 0;
+		for (int i = 1; i < 3; i++){
+			if (w[0] < w[i]){
+				j = i;
+				w[0] = w[i];
+			}
+		}
+
+		return j+1;
+		//1 for x etc...
+
+	}
 
 	usefulFunctions();
 	~usefulFunctions();

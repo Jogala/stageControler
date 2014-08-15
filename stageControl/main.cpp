@@ -26,8 +26,6 @@ int main(int argc, char* argv[])
 
 	E545.closeConnection();	
 
-
-
 }
 
 
