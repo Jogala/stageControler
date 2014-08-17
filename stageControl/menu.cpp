@@ -31,13 +31,24 @@ void menu::settingsMenu(){
 	cout << "                    - min(S)hutter(C)losed(T)ime\t(sct)" << endl;
 	cout << "                    - set both \t\t\t\t(st)" << endl;
 	cout << "-------------------------------------------------------------" << endl;
+	cout << "delayFactor (d)" << endl;
 	cin >> choice;
+
+	if (choice == "d"){
+		double delayFactor;
+		cout << "delayFactor = ";
+		cin >> delayFactor;
+		polygon.delayFactor = delayFactor;
+
+	}
 
 	//axis Step Size 
 	if (choice == "a"){
 		cout << "xStepSize = ";
 		useful.cinAndCheckForDoubleAndLimits(stepSize[0]);
+		cout << "yStepSize = ";
 		useful.cinAndCheckForDoubleAndLimits(stepSize[1]);
+		cout << "zStepSize = ";
 		useful.cinAndCheckForDoubleAndLimits(stepSize[2]);
 	}
 	if (choice == "x"){
@@ -195,13 +206,14 @@ void menu::cutCutMenu(){
 	cout << "(rRel) \t\t 2D" << endl;
 	cout << "(rAbs) \t\t 3D"<< endl;
 	cout << "(rAbsLim) \t 2D"<<endl;
-	cout << "rm" << endl;
 	cout << "------------polygon------------" << endl;
 	cout << "(pAbs) \t\t 3D" << endl;
 	cout << "(pRel) \t\t 2D" << endl;
+	cout << "(c)ircle \t\t 3D" << endl;
 	cout << "------------area------------" << endl;
 	cout << "(sRel) \t\t 2D" << endl;
 	cout << "(sAbs) \t\t 2D" << endl;
+
 
 	cin >> choice;
 
@@ -213,7 +225,7 @@ void menu::cutCutMenu(){
 	if (choice == "lRel"){
 		line.cutRel3D();
 	}
-
+	
 	//rectangle
 	if (choice == "rRel"){
 		rectangle.cutRel();
@@ -245,6 +257,11 @@ void menu::cutCutMenu(){
 
 	if (choice == "pAbs"){
 		polygon.cutAbs3D();
+	}
+
+	if (choice == "c"){
+		cout << "circle" << endl;
+		polygon.cutCircleViaMacro();
 	}
 
 

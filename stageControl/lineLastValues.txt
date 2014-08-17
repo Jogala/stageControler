@@ -1,5 +1,5 @@
-l	10.000
-phi	0.000
-theta	0.000
+l	50.000
+phi	1.571
+theta	1.571
 repetitions	1
-velocity	0.000
+velocity	100.000

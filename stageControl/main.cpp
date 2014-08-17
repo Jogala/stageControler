@@ -5,6 +5,7 @@
 #include "figures.h"
 #include "menu.h"
 #include "WinProc.h"
+#include <Eigen/Core>
 
 using namespace std;
 

@@ -7,7 +7,12 @@ void figures::rectangle::leaveOrSwapAndAdjustPhi(double &phi, double &a, double 
 		phi = phi + 2*pi;
 	}
 
-	phi = fmod(phi, 2 * pi);
+	while (phi >2 * pi){
+
+		phi = phi - 2 * pi;
+
+	}
+
 
 	if (
 		(

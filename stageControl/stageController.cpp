@@ -297,6 +297,17 @@ void stageController::getPositon(double position[3]){
 		PI_CloseConnection(ID);
 	}
 }
+void stageController::getPositon(Eigen::Vector3d & position){
+
+	double pos[3];
+	getPositon(pos);
+
+	for (int i = 0; i < 3; i++){
+		cout << "pos " << i<<" " << pos[i] << endl;
+		position[i] = pos[i];
+
+	}
+}
 
 //////////////////////////////////////////////////////
 //					Velocity						//
@@ -433,7 +444,7 @@ void stageController::setLimits(int whichAxis, double value1, double value2){
 	
 	
 	//Wechsle Trigger Mode
-	setTriggerMode(1, 4);
+	setTriggerMode(whichAxis, 4);
 
 		//Make sure values are in range
 		if (!useful.qValuesInLimits(value1, value2))
@@ -494,7 +505,7 @@ void stageController::setLimits(int whichAxis, double value1, double value2){
 		}
 	
 		//Wechsle Trigger Mode
-		setTriggerMode(1, 3);
+		setTriggerMode(whichAxis, 3);
 
 }
 
@@ -549,6 +560,87 @@ void stageController::setLimitsMax(int whichAxis, double max){
 		std::cout << "no valid limit values" << std::endl;
 	}
 
+}
+
+string stageController::setLimitsMacro(int whichAxis, double value1, double value2, double altValue1, double altValue2){
+
+
+	double minNeu;
+	double maxNeu;
+
+	double minAlt;
+	double maxAlt;
+
+	bool success1 = 0;
+	bool success2 = 0;
+
+	int axisAr[1];
+	axisAr[0] = whichAxis;
+	int triggerParAr[1];
+	double valueAr[1];
+
+	stringstream f;
+
+	if (altValue1 <= altValue2){
+		minAlt = altValue1;
+		maxAlt = altValue2;
+	}
+	else
+	{
+		minAlt = altValue2;
+		maxAlt = altValue1;
+	}
+
+
+	//Make sure values are in range
+	if (!useful.qValuesInLimits(value1, value2))
+	{
+		std::cout << "ERROR:" << std::endl;
+		std::cout << "void stageController::setLimits(int whichAxis, double value1, double value2) says:\n No valid limit values" << std::endl;
+	}
+	else
+	{
+
+		if (value1 <= value2){
+			minNeu = value1;
+			maxNeu = value2;
+		}
+		else
+		{
+			minNeu = value2;
+			maxNeu = value1;
+		}
+
+		f << "CTO " << whichAxis << " 3 4 " << endl; 
+
+		if (minNeu >= maxAlt){
+
+			//Zuerst maxAlt -> maxNeu
+			f <<"CTO " << whichAxis << " 6 " << maxNeu << endl;
+			//cout << "axis " << whichAxis << " maxAlt -> maxNeu " <<success << endl;
+
+			//Dann minAlt -> minNeu
+			f << "CTO " << whichAxis << " 5 " << minNeu << endl;
+			//cout << "axis " << whichAxis << " minAlt -> minNeu " << success << endl;
+
+		}
+		else{
+
+			//Zuerst minAlt -> minNeu
+			f << "CTO " << whichAxis << " 5 " << minNeu << endl;
+			//cout << "axis " << whichAxis << " minAlt -> minNeu " << success << endl;
+
+			//Dann maxAlt -> maxNeu
+			f << "CTO " << whichAxis << " 6 " << maxNeu << endl;
+			//cout << "axis " << whichAxis << " maxAlt -> maxNeu " << success << endl;
+		}
+
+		f << "CTO " << whichAxis << " 3 3 " << endl;
+
+		return f.str();
+
+	}
+	
 }
 
 void stageController::setTriggerMode(int whichAxis, int mode){
@@ -647,6 +739,28 @@ bool stageController::checkIfAnyLimit(){
 	{
 		return 0;
 	}
+}
+
+void stageController::sendMacros(string nameOfFile){
+
+	stringstream ss;
+	fstream f;
+	f.open(nameOfFile);
+
+	if (f.is_open()) {
+
+		ss << f.rdbuf();
+		
+	}
+	f.close();
+	
+	string temp = ss.str();
+	PI_GcsCommandset(ID, temp.c_str());
+}
+void stageController::startMacro(string nameOfmacro){
+
+	string command = "MAC START " + nameOfmacro;
+	PI_GcsCommandset(ID, command.c_str());
 }
 
 //////////////////////////////////////////////////////

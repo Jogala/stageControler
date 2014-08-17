@@ -4,6 +4,7 @@
 
 //./ because I do not add the header to the project as I will not modify it, hence I have to give the relative path to the header.
 #include "./PI_stuff/Pi_GCS2_DLL.h" 
+#include <Eigen/Core>
 
 class stageController
 {
@@ -70,6 +71,7 @@ public:
 
 	void printPosition();
 	void getPositon(double position[3]);
+	void getPositon(Eigen::Vector3d & position);
 
 	///////////////////////////////////////////
 	//// set velocity			(closed-loop)//
@@ -102,6 +104,8 @@ public:
 	void setLimitsMin(int whichAxis, double min);
 	void setLimitsMax(int whichAxis, double max);
 
+	string setLimitsMacro(int whichAxis, double value1, double value2, double altValue1, double altValue2);
+
 	void getLimits(int whichAxis, double &min, double &max);
 	void getLimits(double &xMin, double &xMax, double &yMin, double &yMax, double &zMin, double &zMax);
 	void printLimits();
@@ -109,6 +113,8 @@ public:
 	bool checkIfAnyLimit();
 	void getConfigOfTriggerOutput();
 
+	void sendMacros(string nameOfFile);
+	void startMacro(string nameOfmacro);
 	
 	void openShutter();
 	void closeShutter();
