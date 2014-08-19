@@ -57,6 +57,9 @@
     <ClCompile Include="usefulFunctions.cpp">
       <Filter>Source Files\usefullFnctions</Filter>
     </ClCompile>
+    <ClCompile Include="spiral.cpp">
+      <Filter>Source Files\figures</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header.h">

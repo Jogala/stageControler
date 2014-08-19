@@ -27,6 +27,16 @@ int main(int argc, char* argv[])
 
 	E545.closeConnection();	
 
+	//figures::spiral spiral(E545);
+
+	//while (1){
+	//	spiral.regMenuWindow();
+	//	spiral.openWindowSet3D();
+	//	spiral.cutAbsMacroSpiral3D();
+	//}
+
+	
+
 }
 
 

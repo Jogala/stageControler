@@ -157,11 +157,9 @@ namespace figures{
 	class polygon : public figures{
 	private:
 		stageController * pointerToE545;
-		double R, phi0,velocity;
+		double itsR, phi0, velocity;
 		int steps;
-		double rotAngleX, rotAngleZ;
-		string circleMacroName = "macroCircle";
-		
+		double rotAngleX, rotAngleZ;		
 	
 	public:
 		double delayFactor = 1;
@@ -171,12 +169,16 @@ namespace figures{
 		void cutRel();
 		void cutAbs();
 		void cutAbs3D();
+		void cutAbsMacro3D();
+		void cutAbsMacroSpiral3D();
+		
 		void set3D(double RIn, double phi0In, double rotAngleXIn, double rotAngleZIn, int stepsIn, double velocityIn);
 	
 		//set Values using Window
 		void openWindowSet3D();
 		
-		void cutCircleViaMacro();
+
+		//void cutCircleViaMacro();
 
 		polygon(stageController &E545){
 			pointerToE545 = &E545;
@@ -187,6 +189,59 @@ namespace figures{
 		}
 
 		~polygon(){
+
+		}
+
+	};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	//////////////////////////////
+	//			spiral			//
+	//////////////////////////////
+	class spiral : public figures{
+	private:
+		stageController * pointerToE545;
+		double itsR, phi0, velocity;
+		int steps;
+		double rotAngleX, rotAngleZ;
+		int sectors;
+		double radiusRatio;
+
+	public:
+		double delayFactor = 1;
+		bool regMenuWindow();
+		void loadValuesFromTextFile();
+		void cutAbsMacroSpiral3D();
+
+		void set3D(double RIn, double phi0In, double rotAngleXIn, double rotAngleZIn, int stepsIn, double velocityIn);
+
+		//set Values using Window
+		void openWindowSet3D();
+
+
+		//void cutCircleViaMacro();
+
+		spiral(stageController &E545){
+			pointerToE545 = &E545;
+		}
+		spiral(){
+
+
+		}
+
+		~spiral(){
 
 		}
 

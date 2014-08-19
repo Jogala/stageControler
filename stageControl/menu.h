@@ -20,6 +20,7 @@ private:
 	figures::rectangle rectangle;
 	figures::surfaceRectangle surfaceRectangle;
 	figures::polygon polygon;
+	figures::spiral spiral;
 
 	double stepSize[3];
 	double velStepSize[3];
@@ -66,6 +67,9 @@ public:
 		figures::polygon newPolygon(E545);
 		polygon = newPolygon;
 
+		figures::spiral newSpiral(E545);
+		spiral = newSpiral;
+
 		stepSize[0] = 1;
 		stepSize[1] = 1;
 		stepSize[2] = 1;
@@ -81,10 +85,12 @@ public:
 		line.loadValuesFromTextFile();
 		rectangle.loadValuesFromTextFile();
 		polygon.loadValuesFromTextFile();
+		spiral.loadValuesFromTextFile();
 
 		rectangle.regMenuWindow();
 		polygon.regMenuWindow();
 		line.regMenuWindow();
+		spiral.regMenuWindow();
 
 	}
 

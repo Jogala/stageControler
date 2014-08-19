@@ -16,6 +16,7 @@
     <ClCompile Include="menu.cpp" />
     <ClCompile Include="polygon.cpp" />
     <ClCompile Include="rectangle.cpp" />
+    <ClCompile Include="spiral.cpp" />
     <ClCompile Include="surfaceRec.cpp" />
     <ClCompile Include="WinProc.cpp" />
     <ClCompile Include="stageController.cpp" />

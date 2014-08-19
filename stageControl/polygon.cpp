@@ -10,11 +10,11 @@ void figures::polygon::loadValuesFromTextFile(){
 
 	int i = 0;
 	if (myReadFile.is_open()) {
-		while (i<6) {
+		while (i < 6) {
 
 			if (i == 0){
-				myReadFile >> R;
-				cout << R << endl;
+				myReadFile >> itsR;
+				cout << itsR << endl;
 				i++;
 			}
 
@@ -51,7 +51,7 @@ void figures::polygon::loadValuesFromTextFile(){
 void figures::polygon::set(double RIn, double phi0In, int stepsIn, double velocityIn){
 
 	velocity = velocityIn;
-	R = RIn;
+	itsR = RIn;
 	phi0 = phi0In*(2 * pi) / (360.0);
 	steps = stepsIn;
 }
@@ -61,7 +61,7 @@ void figures::polygon::set3D(double RIn, double phi0In, double rotAngleXIn, doub
 	rotAngleZ = rotAngleZIn;
 
 	velocity = velocityIn;
-	R = RIn;
+	itsR = RIn;
 	phi0 = phi0In*(2 * pi) / (360.0);
 	double tempRotAngleX = rotAngleX*(2 * pi) / (360.0);
 	double tempRotAngleZ = rotAngleZ*(2 * pi) / (360.0);
@@ -133,7 +133,7 @@ void figures::polygon::openWindowSet3D(){
 	double rotAngleZInDeg = (rotAngleZ / (2 * pi))*(360);
 	double phi0InDeg = (rotAngleZ / (2 * pi))*(360);
 
-	const string sR = use.numberToString(R);
+	const string sR = use.numberToString(itsR);
 	const string sPhi0 = use.numberToString(phi0InDeg);
 	const string sSteps = use.numberToString(steps);
 	const string sRotAngleX = use.numberToString(rotAngleXInDeg);
@@ -252,7 +252,7 @@ void figures::polygon::openWindowSet3D(){
 		{
 			//R
 			////////////////////////////////////////////////////
-			use.assignValueToMember(G_Text_Poly_R, R, "R");
+			use.assignValueToMember(G_Text_Poly_R, itsR, "R");
 
 			//phi0
 			////////////////////////////////////////////////////
@@ -265,17 +265,17 @@ void figures::polygon::openWindowSet3D(){
 			//rotangleX
 			////////////////////////////////////////////////////
 			use.assignValueToMember(G_Text_Poly_xRotWinkel, rotAngleX, "rotanglex");
-			
+
 			while (rotAngleX < 0){
 				rotAngleX = rotAngleX + 360;
 			}
 
 			while (rotAngleX> 360){
-				rotAngleX = rotAngleX -360;
+				rotAngleX = rotAngleX - 360;
 			}
 
 			rotAngleX = (rotAngleX / 360)*(2 * pi);
-			
+
 			use.assignValueToMember(G_Text_Poly_zRotWinkel, rotAngleZ, "rotAngleZ");
 
 			while (rotAngleX < 0){
@@ -302,7 +302,7 @@ void figures::polygon::openWindowSet3D(){
 			f.close();
 			f.open(name, fstream::out | fstream::app);
 
-			f << R << endl;
+			f << itsR << endl;
 			f << phi0 << endl;
 			f << rotAngleX << endl;
 			f << rotAngleZ << endl;
@@ -322,6 +322,7 @@ void figures::polygon::openWindowSet3D(){
 
 void figures::polygon::cutRel()
 {
+	double R = itsR;
 	pointerToE545->setVelocity(velocity, velocity, 10);
 	double x, y, xOld, yOld;
 	double deltaPhi = (2 * pi) / steps;
@@ -350,6 +351,7 @@ void figures::polygon::cutRel()
 }
 void figures::polygon::cutAbs()
 {
+	double R = itsR;
 	pointerToE545->setVelocity(velocity, velocity, 10);
 
 	double pos[3];
@@ -379,6 +381,7 @@ void figures::polygon::cutAbs()
 void figures::polygon::cutAbs3D()
 {
 
+	double R = itsR;
 	pointerToE545->setVelocity(velocity, velocity, velocity);
 
 	double pos[3];
@@ -439,31 +442,66 @@ void figures::polygon::cutAbs3D()
 	pointerToE545->moveTo(pos);
 }
 
-void figures::polygon::cutCircleViaMacro(){
-	
-	auto allPos = vector<vector<double>>(steps + 3, vector<double>(3));
-	Eigen::Vector3d pos;
-	pointerToE545->getPositon(pos);
-	cout << "pos:" << endl;
-	cout << pos << endl;
+void figures::polygon::cutAbsMacro3D(){
 
-	Eigen::Vector3d x1_Orts;
-	Eigen::Vector3d x2_Orts;
-	double l[3];
-	double y[3];
+	double R = itsR;
+	double pos[3];
+	pointerToE545->getPositon(pos);
 
 	double deltaAlpha = (2 * pi) / steps;
 	double vec[3];
 	auto storPos = vector<vector<double>>(steps + 1, vector<double>(3));
 
-	double cX = 1;
-	double x1_1 = 30;
-	double x1_2 = 30;
+	double delay = 1000 * (sin(deltaAlpha / 2) * 2 * R*delayFactor) / velocity;
+	double delayGoingBackToPos;
 
-	double delay = 1000*(sin(deltaAlpha / 2) * 2 * R*delayFactor)/velocity;
+	string macroName = "macroPoly";
+	string nameFile = "macroPoly.txt";
 
-	string macroName = "macroCircle";
-	string nameFile = "macroCircle.txt";
+	double xRotMat[3][3];
+	double zRotMat[3][3];
+	use.setRotMatrices(xRotMat, zRotMat, rotAngleX, rotAngleZ);
+
+	//////////////////////////////////////////
+	//		Generating the coordinates		//
+	//////////////////////////////////////////
+	for (int i = 0; i < steps+1; i++){
+
+		vec[0] = R*cos(deltaAlpha*i + pi / 2);
+		vec[1] = R*sin(deltaAlpha*i + pi / 2);
+		vec[2] = 0;
+
+		use.matrixTimesVec(xRotMat, vec);
+		use.matrixTimesVec(zRotMat, vec);
+
+		storPos[i][0] = vec[0] + pos[0];
+		storPos[i][1] = vec[1] + pos[1];
+		storPos[i][2] = vec[2] + pos[2];
+	}
+
+	fstream fc;
+	fc << fixed;
+	fc << setprecision(5);
+	fc.open(nameFile, fstream::out | fstream::trunc);
+	fc.close();
+	fc.open(nameFile, fstream::out | fstream::app);
+	//Write sequence to file for controle			
+	//###################################################################
+	for (int i = 0; i < steps + 1; i++){
+		for (int j = 0; j < 3; j++){
+
+			fc << storPos[i][j] << endl;
+
+		}
+	}
+	use.writeCoordToFile("cutAbsMacro3D_Coord.txt", storPos, steps + 1);
+	//#####################################################################
+	fc.close();
+	cout << "coordinates written to file:" << "cutAbsMacro3D_Coord.txt" << endl;
+
+	//////////////////////////////////////////
+	//		Actual cutting procedure 		//
+	//////////////////////////////////////////
 
 	fstream f;
 	f << fixed;
@@ -472,187 +510,400 @@ void figures::polygon::cutCircleViaMacro(){
 	f.close();
 	f.open(nameFile, fstream::out | fstream::app);
 
-//phi wird vernachlässigt
-
-	//Schneiden in x-y Ebenen xRotW = 0, zRotW wird vernachlässigt
-	if (rotAngleX == 0)
-	{
-
-		cout << "xy" << endl;
-
-		//////////////////////////////////////////
-		//		Generating the coordinates		//
-		//////////////////////////////////////////
-		for (int i = 0; i <= steps; i++){
-
-			vec[0] = R*cos(deltaAlpha*i);
-			vec[1] = R*sin(deltaAlpha*i);
-			vec[2] = 0;
-
-			storPos[i][0] = vec[0] + pos[0];
-			storPos[i][1] = vec[1] + pos[1];
-			storPos[i][2] = vec[2] + pos[2];
-		}
-
-		for (int i = 0; i < 3; i++){
-			y[i] = storPos[0][i] - pos[i];
-		}
-
-		l[0] = 0;
-		l[1] = x1_2;
-		l[2] = 0;
-
-		for (int i = 0; i < 3; i++){
-			x1_Orts[i] = storPos[0][i] + (y[i] / (use.norm(y))) * x1_1 - l[i];
-			x2_Orts[i] = storPos[0][i] + (y[i] / (use.norm(y))) * x1_1 + l[i];
-		}
-
-		//////////////////////////////////////////
-		//		Actual cutting procedure 		//
-		//////////////////////////////////////////
-
-		Eigen::Vector3d x1 = x1_Orts - pos;
-		double delayX = 1000*(x1.norm() / velocity)*cX;
+	f << "MAC BEG " << macroName << endl;
+	f << "VEL A " << velocity << " B " << velocity << " C " << velocity << endl;
+	//Open Shutter
+	for (int i = 0; i < steps+1; i++){
+		f << "MOV A " << storPos[i][0] << " B " << storPos[i][1] << " C " << storPos[i][2] << endl;
 		
 
-		f << "MAC BEG " <<macroName << endl;
-		f << "VEL A " << velocity << " B " << velocity << " C " << velocity << endl;
-		//geh zu x1_Orts
-		f << "MOV A " << x1_Orts[0] << " B " << x1_Orts[1] << " C " << x1_Orts[2] << endl;
-		f << "DEL " << delayX << endl;
-		//setze limits
-		f << pointerToE545->setLimitsMacro(1, pos[0] - R, pos[0] + R,0,0);
-		for (int i = 0; i <= steps; i++){
-			f << "MOV A " << storPos[i][0] << " B " << storPos[i][1] << " C " << storPos[i][2] << endl;
+		if (i == 0){
+			f << "DEL " << (R / velocity) * 1000 * 2 << endl;
+			f << pointerToE545->setLimitsMacro(1, 0, 200, 0, 0);
+		}
+		else{
 			f << "DEL " << delay << endl;
 		}
-		f << "VEL A " << 50 << " B " << 50 << " C " << 50 << endl;
-		f << "MOV A " << x2_Orts[0] << " B " << x2_Orts[1] << " C " << x2_Orts[2] << endl;
-		f << "DEL " << delayX << endl;
-		//Limits auf 0 0 0 setzen
-		f << pointerToE545->setLimitsMacro(1, 0, 0, pos[0] - R, pos[0] + R);
-		f << pointerToE545->setLimitsMacro(2, 0, 0, 0, 0);
-		f << pointerToE545->setLimitsMacro(3, 0, 0,0,0);
-		//Geh zurück
-		f << "MOV A " << pos[0] << " B " << pos[1] << " C " << pos[2] << endl;
-		f << "DEL " << delayX << endl;
-		f << "MAC END" << endl;
-
 	}
-
-	//Schneiden perpendicular zu xy-Ebene
-
-	if ((round((rotAngleX / (2 * pi)) * 360) == 270) || (round((rotAngleX / (2 * pi)) * 360) == 90))
-	{
-		cout << "pxy" << endl;
-		double xRotMat[3][3];
-		double zRotMat[3][3];
-		use.setRotMatrices(xRotMat, zRotMat, pi/2, rotAngleZ);
-
-		//////////////////////////////////////////
-		//		Generating the coordinates		//
-		//////////////////////////////////////////
-		for (int i = 0; i <= steps; i++){
-
-			vec[0] = R*cos(deltaAlpha*i+pi/2);
-			vec[1] = R*sin(deltaAlpha*i+pi/2);
-			vec[2] = 0;
-
-			use.matrixTimesVec(xRotMat, vec);
-			use.matrixTimesVec(zRotMat, vec);
-
-			storPos[i][0] = vec[0] + pos[0];
-			storPos[i][1] = vec[1] + pos[1];
-			storPos[i][2] = vec[2] + pos[2];
-		}
-
-		for (int i = 0; i < 3; i++){
-			y[i] = storPos[0][i] - pos[i];
-		}
-
-		l[0] = x1_2;
-		l[1] = 0;
-		l[2] = 0;
-
-		use.matrixTimesVec(zRotMat, l);
-
-		for (int i = 0; i < 3; i++){
-			x1_Orts[i] = storPos[0][i] + (y[i] / (use.norm(y))) * x1_1 + l[i];
-			x2_Orts[i] = storPos[0][i] + (y[i] / (use.norm(y))) * x1_1 - l[i];
-		}
-		
-
-		//////////////////////////////////////////
-		//		Actual cutting procedure 		//
-		//////////////////////////////////////////
-
-		Eigen::Vector3d x1 = x1_Orts - pos;
-		double delayX = 1000*ceil((x1.norm() / velocity)*cX);
-
-		f << "MAC BEG " << macroName << endl;
-		f << "VEL A " << velocity << " B " << velocity << " C " << velocity << endl;
-		//geh zu x1_Orts
-		f << "MOV A " << x1_Orts[0] << " B " << x1_Orts[1] << " C " << x1_Orts[2] << endl;
-		f << "DEL " << delayX << endl;
-		//setze limits
-		f << pointerToE545->setLimitsMacro(3, pos[2] - R, pos[2] + R,0,0);
-		for (int i = 0; i <= steps; i++){
-			f << "MOV A " << storPos[i][0] << " B " << storPos[i][1] << " C " << storPos[i][2] << endl;
-			f << "DEL " << delay << endl;
-		}
-		f << "MOV A " << x2_Orts[0] << " B " << x2_Orts[1] << " C " << x2_Orts[2] << endl;
-		f << "DEL " << delayX << endl;
-		//Limits auf 0 0 0 setzen
-		f << pointerToE545->setLimitsMacro(1, 0, 0,0,0);
-		f << pointerToE545->setLimitsMacro(2, 0, 0,0,0);
-		f << pointerToE545->setLimitsMacro(3, 0, 0, pos[2] - R, pos[2] + R);
-		//Geh zurück
-		f << "MOV A " << pos[0] << " B " << pos[1] << " C " << pos[2] << endl;
-		f << "DEL " << delayX << endl;
-		f << "MAC END" << endl;
-		
-	}
-
+	//Close Shutter
+	f << pointerToE545->setLimitsMacro(1, 0, 0, 0, 200);
+	//Geh zurück
+	f << "DEL " << endl;
+	f << "MAC END" << endl;
 	f.close();
+
+	cout << "Macro written to file:" << nameFile << endl;
+
 	pointerToE545->sendMacros(nameFile);
-
 	cout << "START MACRO" << endl;
-	getchar();
 	pointerToE545->closeShutter();
-	pointerToE545->startMacro(macroName);
+	pointerToE545->startMacroAndWaitWhileRunning(macroName);
+	pointerToE545->moveTo(pos);
 
+}
+void figures::polygon::cutAbsMacroSpiral3D(){
+
+	int nOld = 0;
+	double R = itsR;
+	int sectors = 4;
+	double factorR = 0.5;
+	double deltaR = (R*factorR) / sectors;
+	cout << "deltaR = "<<deltaR << endl;
+	int stepsPerSector = steps / sectors;
+	cout << "stepsPerSector = " << stepsPerSector << endl;
+	double pos[3];
+
+	pos[0] = 0;
+	pos[1] = 0;
+	pos[2] = 0;
+
+	//pointerToE545->getPositon(pos);
+
+	double deltaAlpha = (2 * pi) / steps;
+	double vec[3];
+	auto storPos = vector<vector<double>>(steps + 1, vector<double>(3));
+
+	double delay = 1000 * (sin(deltaAlpha / 2) * 2 * R*delayFactor) / velocity;
+	double delayGoingBackToPos;
+
+	string macroName = "macroSpiral";
+	string nameFile = "macroSpiral.txt";
+
+	double xRotMat[3][3];
+	double zRotMat[3][3];
+	use.setRotMatrices(xRotMat, zRotMat, rotAngleX, rotAngleZ);
+
+	//////////////////////////////////////////
+	//		Generating the coordinates		//
+	//////////////////////////////////////////
+	int n = 0;
+	for (int i = 0; i < steps + 1; i++){
+
+
+		vec[0] = R*cos(deltaAlpha*i + pi / 2);
+		vec[1] = R*sin(deltaAlpha*i + pi / 2);
+		vec[2] = 0;
+
+		use.matrixTimesVec(xRotMat, vec);
+		use.matrixTimesVec(zRotMat, vec);
+
+		storPos[i][0] = vec[0] + pos[0];
+		storPos[i][1] = vec[1] + pos[1];
+		storPos[i][2] = vec[2] + pos[2];
+
+		n = i/stepsPerSector;
+		cout << "n = " <<n << endl;
+		if (nOld!=n){
+			R = R - deltaR;
+		}
+		nOld = n;
+	}
+	
+	int color=1;
+	fstream fc;
+	fc << fixed;
+	fc << setprecision(5);
+	fc.open("cutAbsMacroSpiral3D_Coord.txt", fstream::out | fstream::trunc);
+	fc.close();
+	fc.open("cutAbsMacroSpiral3D_Coord.txt", fstream::out | fstream::app);
 	//Write sequence to file for controle			
 	//###################################################################
-	for (int i = 0; i < steps + 3; i++){
+	n = 0;
+	nOld = 0;
+	for (int i = 0; i < steps + 1; i++){
+		
+		n = i/stepsPerSector;
+		
+		if (nOld!=n){
+			//Close Shutter
+			color = 0;
+		}
 		for (int j = 0; j < 3; j++){
+			
+			fc << storPos[i][j]<<"\t";
+		}
+		
+		fc << color << endl;
+		if (nOld != n){
+			//Open Shutter
+			color = 1;
+		}
+		nOld = n;
+	}
+	//#####################################################################
+	fc.close();
 
 
-			if (i == 0){
+	//////////////////////////////////////////
+	//		Actual cutting procedure 		//
+	//////////////////////////////////////////
 
-				allPos[0][j] = x1_Orts[j];
-				
-			}
+	fstream f;
+	f << fixed;
+	f << setprecision(5);
+	f.open(nameFile, fstream::out | fstream::trunc);
+	f.close();
+	f.open(nameFile, fstream::out | fstream::app);
 
-			if (i == steps + 2){
-
-				allPos[steps + 2][j] = x2_Orts[j];
-
-			}
-
-			if ((i != steps + 2) && (i != 0)){
-				allPos[i][j] = storPos[i - 1][j];
-			}
-
+	f << "MAC BEG " << macroName << endl;
+	f << "VEL A " << velocity << " B " << velocity << " C " << velocity << endl;
+	//Open Shutter
+	n = 0;
+	nOld = 0;
+	for (int i = 0; i < steps + 1; i++){
+		
+		n = i/stepsPerSector;
+		if (nOld!=n){
+			//Close Shutter
+			f << pointerToE545->setLimitsMacro(1, 0, 0, 0, 200);
 		}
 
-		
-	}
-	use.writeCoordToFile("circleCoordViamacro.txt", allPos, steps + 3);
+		f << "MOV A " << storPos[i][0] << " B " << storPos[i][1] << " C " << storPos[i][2] << endl;
 
-	//#####################################################################
+		if (i == 0){
+			f << "DEL " << (R / velocity) * 1000 * 2 << endl;
+			f << pointerToE545->setLimitsMacro(1, 0, 200, 0, 0);
+		}
+		else{
+			f << "DEL " << delay << endl;
+		}
 
-	if ((rotAngleX != 0) && !((round((rotAngleX / (2 * pi)) * 360) == 270) || (round((rotAngleX / (2 * pi)) * 360) == 90))){
-		cout << "For using circleMacroCut rotAngleX has to be equal to 0 or 90" << endl;
-		cout << "-> No cut done" << endl;
+		if ((nOld != n)){
+			//Open Shutter
+			f << pointerToE545->setLimitsMacro(1, 0, 200, 0, 0);
+		}
+
 	}
+	//Close Shutter
+	f << pointerToE545->setLimitsMacro(1, 0, 0, 0, 200);
+	//Geh zurück
+	f << "DEL " << endl;
+	f << "MAC END" << endl;
+	f.close();
+
+	cout << "Macro written to file:" << nameFile << endl;
+
+	pointerToE545->sendMacros(nameFile);
+	cout << "START MACRO" << endl;
+	pointerToE545->closeShutter();
+	pointerToE545->startMacro(macroName);
+	pointerToE545->moveTo(pos);
+
 }
+
+//void figures::polygon::cutCircleViaMacro(){	
+//	auto allPos = vector<vector<double>>(steps + 3, vector<double>(3));
+//	Eigen::Vector3d pos;
+//	pointerToE545->getPositon(pos);
+//	cout << "pos:" << endl;
+//	cout << pos << endl;
+//
+//	Eigen::Vector3d x1_Orts;
+//	Eigen::Vector3d x2_Orts;
+//	double l[3];
+//	double y[3];
+//
+//	double deltaAlpha = (2 * pi) / steps;
+//	double vec[3];
+//	auto storPos = vector<vector<double>>(steps + 1, vector<double>(3));
+//
+//	double cX = 1;
+//	double x1_1 = 30;
+//	double x1_2 = 30;
+//
+//	double delay = 1000*(sin(deltaAlpha / 2) * 2 * R*delayFactor)/velocity;
+//
+//	string macroName = "macroCircle";
+//	string nameFile = "macroCircle.txt";
+//
+//	fstream f;
+//	f << fixed;
+//	f << setprecision(5);
+//	f.open(nameFile, fstream::out | fstream::trunc);
+//	f.close();
+//	f.open(nameFile, fstream::out | fstream::app);
+//
+////phi wird vernachlässigt
+//
+//	//Schneiden in x-y Ebenen xRotW = 0, zRotW wird vernachlässigt
+//	if (rotAngleX == 0)
+//	{
+//
+//		cout << "xy" << endl;
+//
+//		//////////////////////////////////////////
+//		//		Generating the coordinates		//
+//		//////////////////////////////////////////
+//		for (int i = 0; i <= steps; i++){
+//
+//			vec[0] = R*cos(deltaAlpha*i);
+//			vec[1] = R*sin(deltaAlpha*i);
+//			vec[2] = 0;
+//
+//			storPos[i][0] = vec[0] + pos[0];
+//			storPos[i][1] = vec[1] + pos[1];
+//			storPos[i][2] = vec[2] + pos[2];
+//		}
+//
+//		for (int i = 0; i < 3; i++){
+//			y[i] = storPos[0][i] - pos[i];
+//		}
+//
+//		l[0] = 0;
+//		l[1] = x1_2;
+//		l[2] = 0;
+//
+//		for (int i = 0; i < 3; i++){
+//			x1_Orts[i] = storPos[0][i] + (y[i] / (use.norm(y))) * x1_1 - l[i];
+//			x2_Orts[i] = storPos[0][i] + (y[i] / (use.norm(y))) * x1_1 + l[i];
+//		}
+//
+//		//////////////////////////////////////////
+//		//		Actual cutting procedure 		//
+//		//////////////////////////////////////////
+//
+//		Eigen::Vector3d x1 = x1_Orts - pos;
+//		double delayX = 1000*(x1.norm() / velocity)*cX;
+//		
+//
+//		f << "MAC BEG " <<macroName << endl;
+//		f << "VEL A " << velocity << " B " << velocity << " C " << velocity << endl;
+//		//geh zu x1_Orts
+//		f << "MOV A " << x1_Orts[0] << " B " << x1_Orts[1] << " C " << x1_Orts[2] << endl;
+//		f << "DEL " << delayX << endl;
+//		//setze limits
+//		f << pointerToE545->setLimitsMacro(1, pos[0] - R, pos[0] + R,0,0);
+//		for (int i = 0; i <= steps; i++){
+//			f << "MOV A " << storPos[i][0] << " B " << storPos[i][1] << " C " << storPos[i][2] << endl;
+//			f << "DEL " << delay << endl;
+//		}
+//		f << "VEL A " << 50 << " B " << 50 << " C " << 50 << endl;
+//		f << "MOV A " << x2_Orts[0] << " B " << x2_Orts[1] << " C " << x2_Orts[2] << endl;
+//		f << "DEL " << delayX << endl;
+//		//Limits auf 0 0 0 setzen
+//		f << pointerToE545->setLimitsMacro(1, 0, 0, pos[0] - R, pos[0] + R);
+//		f << pointerToE545->setLimitsMacro(2, 0, 0, 0, 0);
+//		f << pointerToE545->setLimitsMacro(3, 0, 0,0,0);
+//		//Geh zurück
+//		f << "MOV A " << pos[0] << " B " << pos[1] << " C " << pos[2] << endl;
+//		f << "DEL " << delayX << endl;
+//		f << "MAC END" << endl;
+//
+//	}
+//
+//	//Schneiden perpendicular zu xy-Ebene
+//
+//	if ((round((rotAngleX / (2 * pi)) * 360) == 270) || (round((rotAngleX / (2 * pi)) * 360) == 90))
+//	{
+//		cout << "pxy" << endl;
+//		double xRotMat[3][3];
+//		double zRotMat[3][3];
+//		use.setRotMatrices(xRotMat, zRotMat, pi/2, rotAngleZ);
+//
+//		//////////////////////////////////////////
+//		//		Generating the coordinates		//
+//		//////////////////////////////////////////
+//		for (int i = 0; i <= steps; i++){
+//
+//			vec[0] = R*cos(deltaAlpha*i+pi/2);
+//			vec[1] = R*sin(deltaAlpha*i+pi/2);
+//			vec[2] = 0;
+//
+//			use.matrixTimesVec(xRotMat, vec);
+//			use.matrixTimesVec(zRotMat, vec);
+//
+//			storPos[i][0] = vec[0] + pos[0];
+//			storPos[i][1] = vec[1] + pos[1];
+//			storPos[i][2] = vec[2] + pos[2];
+//		}
+//
+//		for (int i = 0; i < 3; i++){
+//			y[i] = storPos[0][i] - pos[i];
+//		}
+//
+//		l[0] = x1_2;
+//		l[1] = 0;
+//		l[2] = 0;
+//
+//		use.matrixTimesVec(zRotMat, l);
+//
+//		for (int i = 0; i < 3; i++){
+//			x1_Orts[i] = storPos[0][i] + (y[i] / (use.norm(y))) * x1_1 + l[i];
+//			x2_Orts[i] = storPos[0][i] + (y[i] / (use.norm(y))) * x1_1 - l[i];
+//		}
+//		
+//
+//		//////////////////////////////////////////
+//		//		Actual cutting procedure 		//
+//		//////////////////////////////////////////
+//
+//		Eigen::Vector3d x1 = x1_Orts - pos;
+//		double delayX = 1000*ceil((x1.norm() / velocity)*cX);
+//
+//		f << "MAC BEG " << macroName << endl;
+//		f << "VEL A " << velocity << " B " << velocity << " C " << velocity << endl;
+//		//geh zu x1_Orts
+//		f << "MOV A " << x1_Orts[0] << " B " << x1_Orts[1] << " C " << x1_Orts[2] << endl;
+//		f << "DEL " << delayX << endl;
+//		//setze limits
+//		f << pointerToE545->setLimitsMacro(3, pos[2] - R, pos[2] + R,0,0);
+//		for (int i = 0; i <= steps; i++){
+//			f << "MOV A " << storPos[i][0] << " B " << storPos[i][1] << " C " << storPos[i][2] << endl;
+//			f << "DEL " << delay << endl;
+//		}
+//		f << "MOV A " << x2_Orts[0] << " B " << x2_Orts[1] << " C " << x2_Orts[2] << endl;
+//		f << "DEL " << delayX << endl;
+//		//Limits auf 0 0 0 setzen
+//		f << pointerToE545->setLimitsMacro(1, 0, 0,0,0);
+//		f << pointerToE545->setLimitsMacro(2, 0, 0,0,0);
+//		f << pointerToE545->setLimitsMacro(3, 0, 0, pos[2] - R, pos[2] + R);
+//		//Geh zurück
+//		f << "MOV A " << pos[0] << " B " << pos[1] << " C " << pos[2] << endl;
+//		f << "DEL " << delayX << endl;
+//		f << "MAC END" << endl;
+//		
+//	}
+//
+//	f.close();
+//	pointerToE545->sendMacros(nameFile);
+//
+//	cout << "START MACRO" << endl;
+//	getchar();
+//	pointerToE545->closeShutter();
+//	pointerToE545->startMacro(macroName);
+//
+//	//Write sequence to file for controle			
+//	//###################################################################
+//	for (int i = 0; i < steps + 3; i++){
+//		for (int j = 0; j < 3; j++){
+//
+//
+//			if (i == 0){
+//
+//				allPos[0][j] = x1_Orts[j];
+//				
+//			}
+//
+//			if (i == steps + 2){
+//
+//				allPos[steps + 2][j] = x2_Orts[j];
+//
+//			}
+//
+//			if ((i != steps + 2) && (i != 0)){
+//				allPos[i][j] = storPos[i - 1][j];
+//			}
+//
+//		}
+//
+//		
+//	}
+//	use.writeCoordToFile("circleCoordViamacro.txt", allPos, steps + 3);
+//
+//	//#####################################################################
+//
+//	if ((rotAngleX != 0) && !((round((rotAngleX / (2 * pi)) * 360) == 270) || (round((rotAngleX / (2 * pi)) * 360) == 90))){
+//		cout << "For using circleMacroCut rotAngleX has to be equal to 0 or 90" << endl;
+//		cout << "-> No cut done" << endl;
+//	}
+//}

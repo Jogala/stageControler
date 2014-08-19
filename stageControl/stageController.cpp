@@ -158,6 +158,7 @@ void stageController::moveTo(double xCoord, double yCoord, double zCoord){
 		std::cout << "void stageController::moveTo(double xCoord, double yCoord, double zCoord) says: Out of limits" << std::endl;
 	}
 }
+
 void stageController::moveTo(const double coord[3]){
 
 	if ((0 <= coord[0]) && (coord[0] <= 200) &&
@@ -183,6 +184,9 @@ void stageController::moveTo(const double coord[3]){
 		std::cout << "void stageController::moveTo(const double coord[3]) says: Out of limits" << std::endl;
 	}
 }
+
+
+
 void stageController::move(double xDelta, double yDelta, double zDelta){
 
 	double deltaArray[3];
@@ -759,8 +763,32 @@ void stageController::sendMacros(string nameOfFile){
 }
 void stageController::startMacro(string nameOfmacro){
 
+	cout << "START MACRO" << endl;
 	string command = "MAC START " + nameOfmacro;
 	PI_GcsCommandset(ID, command.c_str());
+
+}
+void stageController::startMacroAndWaitWhileRunning(string nameOfmacro){
+
+	cout << "START MACRO" << endl;
+
+	string command = "MAC START " + nameOfmacro;
+	PI_GcsCommandset(ID, command.c_str());
+
+	bool error=0;
+	BOOL macroRunning[1];
+	macroRunning[0] = 1;
+
+	Sleep(1000);
+	int i = 1;
+	while (macroRunning[0]){
+		error = PI_IsRunningMacro(ID, macroRunning);
+		cout << "macroRunning  "<<i<< endl;
+		Sleep(100);
+		i++;
+	}
+
+	cout << "MACRO EXECUTION FINISEHD" << endl;
 }
 
 //////////////////////////////////////////////////////

@@ -114,6 +114,7 @@ public:
 	void getConfigOfTriggerOutput();
 
 	void sendMacros(string nameOfFile);
+	void startMacroAndWaitWhileRunning(string nameOfmacro);
 	void startMacro(string nameOfmacro);
 	
 	void openShutter();

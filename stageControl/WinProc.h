@@ -3,6 +3,7 @@
 #define ID_OK_KNOPF_POLY		1000
 #define	ID_OK_KNOPF_LINE		1001
 #define	ID_OK_KNOPF_REC			1002
+#define	ID_OK_KNOPF_SPIRAL		1003
 
 //////////////////////////////////////////////////////
 //					polygon							//
@@ -83,3 +84,29 @@ LRESULT CALLBACK WndProcNewRectangle3D(HWND hwnd, UINT msg, WPARAM wParam, LPARA
 #endif
 
 
+//////////////////////////////////////////////////////
+//					spiral							//
+//////////////////////////////////////////////////////
+#define ID_TEXT_SPIRAL_R			31
+#define ID_TEXT_SPIRAL_phi0			32
+#define ID_TEXT_SPIRAL_steps		33
+#define ID_TEXT_SPIRAL_xRotWinkel	34
+#define ID_TEXT_SPIRAL_zRotWinkel	35
+#define ID_TEXT_SPIRAL_velocity		36
+#define ID_TEXT_SPIRAL_sectors		37
+#define ID_TEXT_SPIRAL_radiusRatio	38
+
+extern	BOOL spiral_BOOL;
+extern  char G_Text_Spiral_R[4];
+extern  char G_Text_Spiral_phi0[4];
+extern  char G_Text_Spiral_steps[5];
+extern  char G_Text_Spiral_xRotWinkel[5];
+extern  char G_Text_Spiral_zRotWinkel[5];
+extern  char G_Text_Spiral_velocity[5];
+extern  char G_Text_Spiral_sectors[5];
+extern  char G_Text_Spiral_radiusRatio[5];
+
+#ifndef Spiral_H 
+#define Spiral_H
+LRESULT CALLBACK WndProcNewSpiral(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+#endif

@@ -163,7 +163,7 @@ void menu::cutNewFigureMenu(){
 	cout << "(r)ectangle" << endl;
 	cout << "(p)olygon" << endl;
 	cout << "(s)urface Rectangle" << endl;
-	
+	cout << "(sp)iral" << endl;
 
 	cin >> choice;
 
@@ -177,6 +177,10 @@ void menu::cutNewFigureMenu(){
 
 	if (choice == "l"){
 		line.openWindowSet3D();
+	}
+
+	if (choice == "sp"){
+		spiral.openWindowSet3D();
 	}
 
 	if (choice == "s"){
@@ -209,7 +213,8 @@ void menu::cutCutMenu(){
 	cout << "------------polygon------------" << endl;
 	cout << "(pAbs) \t\t 3D" << endl;
 	cout << "(pRel) \t\t 2D" << endl;
-	cout << "(c)ircle \t\t 3D" << endl;
+	cout << "(pm)acro \t\t 3D" << endl;
+	cout << "(sp)iral \t\t 3D" << endl;
 	cout << "------------area------------" << endl;
 	cout << "(sRel) \t\t 2D" << endl;
 	cout << "(sAbs) \t\t 2D" << endl;
@@ -259,10 +264,15 @@ void menu::cutCutMenu(){
 		polygon.cutAbs3D();
 	}
 
-	if (choice == "c"){
-		cout << "circle" << endl;
-		polygon.cutCircleViaMacro();
+	if (choice == "pm"){
+		polygon.cutAbsMacro3D();
 	}
+
+	if (choice == "sp"){
+		spiral.cutAbsMacroSpiral3D();
+	}
+
+
 
 
 }
