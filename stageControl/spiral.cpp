@@ -10,7 +10,10 @@ void figures::spiral::cutAbsMacroSpiral3D(){
 	cout << "stepsPerSector = " << stepsPerSector << endl;
 	double pos[3];
 
-	pointerToE545->getPositon(pos);
+	//pointerToE545->getPositon(pos);
+	pos[0] = 0;
+	pos[1] = 0;
+	pos[2] = 0;
 
 	double deltaAlpha = (2 * pi) / steps;
 	double vec[3];
@@ -42,6 +45,7 @@ void figures::spiral::cutAbsMacroSpiral3D(){
 
 			if (nOld != n){
 
+				R = R - deltaR;
 				delay[(i - 1)] = (deltaR / velocity) * 1000;
 
 			}
@@ -52,10 +56,7 @@ void figures::spiral::cutAbsMacroSpiral3D(){
 			}
 		}
 
-
-
-
-		vec[0] = R*cos(deltaAlpha*(i-1) + pi / 2);
+		vec[0] = R*cos(deltaAlpha*(i - 1) + pi / 2);
 		vec[1] = R*sin(deltaAlpha*(i - 1) + pi / 2);
 		vec[2] = 0;
 
@@ -73,7 +74,7 @@ void figures::spiral::cutAbsMacroSpiral3D(){
 			n = n - 1;
 		}
 
-		R = R - n*deltaR;
+		
 		
 	}
 

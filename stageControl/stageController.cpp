@@ -775,14 +775,14 @@ void stageController::startMacroAndWaitWhileRunning(string nameOfmacro){
 	string command = "MAC START " + nameOfmacro;
 	PI_GcsCommandset(ID, command.c_str());
 
-	bool error=0;
 	BOOL macroRunning[1];
 	macroRunning[0] = 1;
 
 	Sleep(1000);
 	int i = 1;
-	while (macroRunning[0]){
-		error = PI_IsRunningMacro(ID, macroRunning);
+	bool ok = 0;
+	while (macroRunning[0]&&ok){
+		ok = PI_IsRunningMacro(ID, macroRunning);
 		cout << "macroRunning  "<<i<< endl;
 		Sleep(100);
 		i++;
