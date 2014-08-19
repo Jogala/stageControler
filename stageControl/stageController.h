@@ -12,6 +12,9 @@ class stageController
 private: double Position[3];
 		 usefulFunctions useful;
 		 double  veloLimit;
+
+		 string fileName_FocusValues = "focusValues.txt";
+		 double itsXFocus, itsYFocus, itsZFocus;
 		 
 public:
 	//Variables
@@ -27,7 +30,18 @@ public:
 	///////////////////
 	void initialize();
 
+	void setFocus_and_writeValuesToFile(double xFocus, double yFocus, double zFocus);
+	void loadFocusValuesFromFile();
+	void moveInFocus();
 	int getID();
+	void printMemberVariables(){
+
+		cout << "ID = " << "\t" << ID << endl;
+		cout << "itsXFocus = " << "\t" << itsXFocus << endl;
+		cout << "itsYFocus = " << "\t" << itsYFocus << endl;
+		cout << "itsZFocus = " << "\t" << itsZFocus << endl;
+
+	}
 	
 	////////////////////////////////////////////////////////////////////
 	// connect to the E-517 over RS-232 (COM port 1, baudrate 38400). //

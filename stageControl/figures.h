@@ -19,7 +19,13 @@ namespace figures{
 	{
 	private:
 
+	public:
+
+		//For macros 
+		double delayFactor = 1;
+
 	protected:
+
 		usefulFunctions use;
 		figures(){}
 		~figures(){}
@@ -162,7 +168,6 @@ namespace figures{
 		double rotAngleX, rotAngleZ;		
 	
 	public:
-		double delayFactor = 1;
 		bool regMenuWindow();
 		void loadValuesFromTextFile();
 		void set(double R, double phi0, int steps, double velocity);
@@ -207,44 +212,6 @@ namespace figures{
 
 
 
-	//////////////////////////////
-	//			spiral			//
-	//////////////////////////////
-	class spiral : public figures{
-	private:
-		stageController * pointerToE545;
-		double itsR, phi0, velocity;
-		int steps;
-		double rotAngleX, rotAngleZ;
-		int sectors;
-		double radiusRatio;
 
-	public:
-		double delayFactor = 1;
-		bool regMenuWindow();
-		void loadValuesFromTextFile();
-		void cutAbsMacroSpiral3D();
-
-		void set3D(double RIn, double phi0In, double rotAngleXIn, double rotAngleZIn, int stepsIn, double velocityIn);
-
-		//set Values using Window
-		void openWindowSet3D();
-
-
-		//void cutCircleViaMacro();
-
-		spiral(stageController &E545){
-			pointerToE545 = &E545;
-		}
-		spiral(){
-
-
-		}
-
-		~spiral(){
-
-		}
-
-	};
 
 }

@@ -3,6 +3,7 @@
 #include "usefulFunctions.h"
 #include "stageController.h"
 #include "figures.h"
+#include "spiral.h"
 
 using namespace std;
 

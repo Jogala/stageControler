@@ -80,5 +80,8 @@
     <ClInclude Include="usefulFunctions.h">
       <Filter>Source Files\usefullFnctions</Filter>
     </ClInclude>
+    <ClInclude Include="spiral.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

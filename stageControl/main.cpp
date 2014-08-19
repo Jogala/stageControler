@@ -6,6 +6,7 @@
 #include "menu.h"
 #include "WinProc.h"
 #include <Eigen/Core>
+#include "spiral.h"
 
 using namespace std;
 

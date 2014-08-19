@@ -26,6 +26,7 @@
     <ClInclude Include="Header.h" />
     <ClInclude Include="menu.h" />
     <ClInclude Include="figures.h" />
+    <ClInclude Include="spiral.h" />
     <ClInclude Include="stageController.h" />
     <ClInclude Include="usefulFunctions.h" />
     <ClInclude Include="WinProc.h" />

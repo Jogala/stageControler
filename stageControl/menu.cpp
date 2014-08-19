@@ -31,15 +31,38 @@ void menu::settingsMenu(){
 	cout << "                    - min(S)hutter(C)losed(T)ime\t(sct)" << endl;
 	cout << "                    - set both \t\t\t\t(st)" << endl;
 	cout << "-------------------------------------------------------------" << endl;
-	cout << "delayFactor (d)" << endl;
+	cout << "-------------------------------------------------------------" << endl;
+	cout << endl;
+	cout << "MACROS" << endl;
+	cout << "-------------------------------------------------------------" << endl;
+	cout << "(d)elayFactor" << endl;
+	cout << "-------------------------------------------------------------" << endl;
+	cout << endl;
+	cout << "-------------------------------------------------------------" << endl;
+	cout << "Bring cut into focus:" << endl;
+	cout << "-------------------------------------------------------------" << endl;
+	cout << "(f)ocus" << endl;
 	cin >> choice;
+
+	if (choice == "f"){
+		double deltaX, deltaY, deltaZ;
+		cout << "deltaX = ";
+		useful.cinAndCheckForDouble(deltaX);
+		cout << "deltaY = ";
+		useful.cinAndCheckForDouble(deltaY);
+		cout << "deltaZ = ";
+		useful.cinAndCheckForDouble(deltaZ);
+		pToE545->setFocus_and_writeValuesToFile(deltaX, deltaY, deltaZ);
+	}
 
 	if (choice == "d"){
 		double delayFactor;
 		cout << "delayFactor = ";
 		cin >> delayFactor;
 		polygon.delayFactor = delayFactor;
-
+		spiral.delayFactor = delayFactor;
+		rectangle.delayFactor = delayFactor;
+		line.delayFactor = delayFactor;
 	}
 
 	//axis Step Size 
@@ -102,14 +125,13 @@ void menu::settingsMenu(){
 void menu::printMenu(){
 
 	//p print current position or velocity or limits
-
 	//Just clearing the current command line
 	const int KEYEVENT_KEYUP = 0x02;
 	keybd_event(VK_ESCAPE, 0, 0, 0);              // press the Esc key
 	keybd_event(VK_ESCAPE, 0, KEYEVENT_KEYUP, 0); // let up the Esc key
 
 	string choice;
-	cout << "print current (p)position, (v)velocities, (l)imits, (puls)Duration" << endl;
+	cout << "print current (p)position, (v)velocities, (l)imits, (puls)Duration, \n (s)piral parameter,  (m)acro parameters, (E545) paramter" << endl;
 	cin >> choice;
 
 	if (choice == "p")
@@ -129,6 +151,24 @@ void menu::printMenu(){
 		cout << "shutterOpenTime = " << shutterOpenTime << endl;
 		cout << "minshutterClosedTime = " << minShutterClosedTime << endl;
 	}
+	if (choice == "s")
+	{
+		spiral.printMemberVariables();
+	}
+
+	if (choice == "m")
+	{
+		cout << "spiral.delayFactor = \t" << spiral.delayFactor << endl;
+		cout << "rectangle.delayFactor = " << rectangle.delayFactor << endl;
+		cout << "line.delayFactor = \t" << line.delayFactor << endl;
+		cout << "polygon.delayFactor = \t" << polygon.delayFactor << endl;
+	}
+
+	if (choice == "E545")
+	{
+		pToE545->printMemberVariables();
+	}
+	
 
 }
 void menu::cutMainMenu(){
@@ -162,8 +202,7 @@ void menu::cutNewFigureMenu(){
 	cout << "(l)ine" << endl;
 	cout << "(r)ectangle" << endl;
 	cout << "(p)olygon" << endl;
-	cout << "(s)urface Rectangle" << endl;
-	cout << "(sp)iral" << endl;
+	cout << "(s)piral" << endl;
 
 	cin >> choice;
 
@@ -179,24 +218,8 @@ void menu::cutNewFigureMenu(){
 		line.openWindowSet3D();
 	}
 
-	if (choice == "sp"){
-		spiral.openWindowSet3D();
-	}
-
 	if (choice == "s"){
-		double a, b, phi0, velo;
-		int resolution;
-		cout << "a = " << endl;
-		cin >> a;
-		cout << "b = " << endl;
-		cin >> b;
-		cout << "phi0 = " << endl;
-		cin >> phi0;
-		cout << "resolution = " << endl;
-		cin >> resolution;
-		cout << "velocity = " << endl;
-		cin >> velo;
-		surfaceRectangle.set(a, b, phi0, velo, resolution, 'l');
+		spiral.openWindowSet3D();
 	}
 }
 void menu::cutCutMenu(){
@@ -204,77 +227,47 @@ void menu::cutCutMenu(){
 	
 	cout << "Choose figure to cut:" << endl;
 	cout << "------------line------------" << endl;
-	cout << "(lAbs) \t\t 3D" << endl;
-	cout << "(lRel) \t\t 3D" << endl;
+	cout << "(l) \t\t 3D" << endl;
 	cout << "------------rectangle------------" << endl;
-	cout << "(rRel) \t\t 2D" << endl;
-	cout << "(rAbs) \t\t 3D"<< endl;
-	cout << "(rAbsLim) \t 2D"<<endl;
+	cout << "(r) \t\t 3D" << endl;
 	cout << "------------polygon------------" << endl;
-	cout << "(pAbs) \t\t 3D" << endl;
-	cout << "(pRel) \t\t 2D" << endl;
-	cout << "(pm)acro \t\t 3D" << endl;
-	cout << "(sp)iral \t\t 3D" << endl;
-	cout << "------------area------------" << endl;
-	cout << "(sRel) \t\t 2D" << endl;
-	cout << "(sAbs) \t\t 2D" << endl;
+	cout << "(p)acro \t\t 3D" << endl;
+	cout << "------------spiral------------" << endl;
+	cout << "(s)piral \t\t 3D" << endl;
 
 
 	cin >> choice;
+	bool focus = 1;
 
 	//line
-	if (choice == "lAbs"){
+	if (choice == "l"){
 		line.cutAbs3D();
-	}
-
-	if (choice == "lRel"){
-		line.cutRel3D();
+		focus = 0;
 	}
 	
 	//rectangle
-	if (choice == "rRel"){
-		rectangle.cutRel();
-	}
-
-	if (choice == "rAbs"){
+	if (choice == "r"){
 		rectangle.cutAbs3D();
 	}
 
-	if (choice == "rAbsLim"){
-		rectangle.cutAbsLim2D();
-	}
-	
-
-
-	//surface
-	if (choice == "sRel"){
-		surfaceRectangle.cutRel();
-	}
-
-	if (choice == "sAbs"){
-		surfaceRectangle.cutAbs();
-	}
-
 	//polygon
-	if (choice == "pRel"){
-		polygon.cutRel();
-	}
-
-	if (choice == "pAbs"){
-		polygon.cutAbs3D();
-	}
-
-	if (choice == "pm"){
+	if (choice == "p"){
 		polygon.cutAbsMacro3D();
 	}
 
-	if (choice == "sp"){
+	//spiral
+	if (choice == "s"){
 		spiral.cutAbsMacroSpiral3D();
+	
 	}
 
-
-
-
+	if (focus){
+		pToE545->moveInFocus();
+		cin.clear(); cin.ignore(INT_MAX, '\n');
+		cout << "press any key for getting back to 100, 100 ,100" << endl;
+		getchar();
+		pToE545->moveTo(100, 100, 100);
+	}
 }
 void menu::moveToMenu(){
 
@@ -509,7 +502,6 @@ void menu::setLimitsMenu(){
 
 		}	
 }
-
 void menu::mainMenu(){
 
 	//////////////////////////////////////////////////////////////////////////////////////////////

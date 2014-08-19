@@ -1,26 +1,20 @@
-#include "figures.h"
+#include "spiral.h"
 
 void figures::spiral::cutAbsMacroSpiral3D(){
 
 	double R = itsR;
-	int sectors = 4;
-	double deltaR = (R*radiusRatio) / sectors;
-	cout << "deltaR = " << deltaR << endl;
+	double deltaR = (R*radiusRatio) / (sectors-1);
 	int stepsPerSector = steps / sectors;
-	cout << "stepsPerSector = " << stepsPerSector << endl;
 	double pos[3];
-
-	//pointerToE545->getPositon(pos);
-	pos[0] = 0;
-	pos[1] = 0;
-	pos[2] = 0;
+	pointerToE545->getPositon(pos);
+	//pos[0] = 0;
+	//pos[1] = 0;
+	//pos[2] = 0;
 
 	double deltaAlpha = (2 * pi) / steps;
 	double vec[3];
 	auto storPos = vector<vector<double>>(steps + 1, vector<double>(3));
 	auto delay = vector<double>(steps + 1);
-	
-	double delayGoingBackToPos;
 
 	string macroName = "macroSpiral";
 	string nameFile = "macroSpiral.txt";
@@ -140,7 +134,6 @@ void figures::spiral::cutAbsMacroSpiral3D(){
 
 			f << "MOV A " << storPos[i][0] << " B " << storPos[i][1] << " C " << storPos[i][2] << endl;
 			f << "DEL " << delay[i] << endl;
-
 	}
 	//Close Shutter
 	f << pointerToE545->setLimitsMacro(1, 0, 0, 0, 200);
@@ -158,7 +151,6 @@ void figures::spiral::cutAbsMacroSpiral3D(){
 	pointerToE545->moveTo(pos);
 
 }
-
 bool figures::spiral::regMenuWindow(){
 
 	HINSTANCE hInstance = GetModuleHandle(0);

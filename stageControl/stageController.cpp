@@ -98,6 +98,72 @@ bool stageController::switchChannelsOn(){
 		return 1;
 	}
 }
+
+void stageController::setFocus_and_writeValuesToFile(double xFocus, double yFocus, double zFocus){
+
+	itsXFocus = xFocus;
+	itsYFocus = yFocus;
+	itsZFocus = zFocus;
+
+	fstream f;
+	f << fixed;
+	f << setprecision(5);
+	f.open(fileName_FocusValues, fstream::out | fstream::trunc);
+	f.close();
+	f.open(fileName_FocusValues, fstream::out | fstream::app);
+	
+	f << xFocus << endl;
+	f << yFocus << endl;
+	f << zFocus << endl;
+	
+	f.close();
+}
+void stageController::loadFocusValuesFromFile(){
+
+
+	cout << "Old Values Focus" << endl;
+	fstream myReadFile;
+	myReadFile.open(fileName_FocusValues);
+
+	int i = 0;
+	if (myReadFile.is_open()) {
+		
+
+				myReadFile >> itsXFocus;
+				cout << itsXFocus << endl;
+
+				myReadFile >> itsYFocus;
+				cout << itsYFocus << endl;
+			
+				myReadFile >> itsZFocus;
+				cout << itsZFocus << endl;
+				
+				myReadFile.close();
+	}
+	else{
+		cout << "ERROR:" << endl;
+		cout << "void stageController::loadFocusValuesFromFile()" << endl;
+		cout << "Could not load Old Values Focus" << endl;
+
+		itsXFocus = 0; 
+		itsYFocus = 0;
+		itsZFocus = 0;
+
+		cout << "Focus Values Set to: 0 0 0" << endl;
+	}
+
+	
+
+
+
+}
+void stageController::moveInFocus(){
+
+	setVelocity(5000, 5000, 5000);
+	move(itsXFocus, itsYFocus, itsZFocus);
+
+}
+
 //////////////////////////////////////////////////////
 //					Move							//
 //////////////////////////////////////////////////////
@@ -184,9 +250,6 @@ void stageController::moveTo(const double coord[3]){
 		std::cout << "void stageController::moveTo(const double coord[3]) says: Out of limits" << std::endl;
 	}
 }
-
-
-
 void stageController::move(double xDelta, double yDelta, double zDelta){
 
 	double deltaArray[3];
@@ -566,86 +629,7 @@ void stageController::setLimitsMax(int whichAxis, double max){
 
 }
 
-string stageController::setLimitsMacro(int whichAxis, double value1, double value2, double altValue1, double altValue2){
 
-
-	double minNeu;
-	double maxNeu;
-
-	double minAlt;
-	double maxAlt;
-
-	bool success1 = 0;
-	bool success2 = 0;
-
-	int axisAr[1];
-	axisAr[0] = whichAxis;
-	int triggerParAr[1];
-	double valueAr[1];
-
-	stringstream f;
-
-	if (altValue1 <= altValue2){
-		minAlt = altValue1;
-		maxAlt = altValue2;
-	}
-	else
-	{
-		minAlt = altValue2;
-		maxAlt = altValue1;
-	}
-
-
-	//Make sure values are in range
-	if (!useful.qValuesInLimits(value1, value2))
-	{
-		std::cout << "ERROR:" << std::endl;
-		std::cout << "void stageController::setLimits(int whichAxis, double value1, double value2) says:\n No valid limit values" << std::endl;
-	}
-	else
-	{
-
-		if (value1 <= value2){
-			minNeu = value1;
-			maxNeu = value2;
-		}
-		else
-		{
-			minNeu = value2;
-			maxNeu = value1;
-		}
-
-		f << "CTO " << whichAxis << " 3 4 " << endl; 
-
-		if (minNeu >= maxAlt){
-
-			//Zuerst maxAlt -> maxNeu
-			f <<"CTO " << whichAxis << " 6 " << maxNeu << endl;
-			//cout << "axis " << whichAxis << " maxAlt -> maxNeu " <<success << endl;
-
-			//Dann minAlt -> minNeu
-			f << "CTO " << whichAxis << " 5 " << minNeu << endl;
-			//cout << "axis " << whichAxis << " minAlt -> minNeu " << success << endl;
-
-		}
-		else{
-
-			//Zuerst minAlt -> minNeu
-			f << "CTO " << whichAxis << " 5 " << minNeu << endl;
-			//cout << "axis " << whichAxis << " minAlt -> minNeu " << success << endl;
-
-			//Dann maxAlt -> maxNeu
-			f << "CTO " << whichAxis << " 6 " << maxNeu << endl;
-			//cout << "axis " << whichAxis << " maxAlt -> maxNeu " << success << endl;
-		}
-
-		f << "CTO " << whichAxis << " 3 3 " << endl;
-
-		return f.str();
-
-	}
-	
-}
 
 void stageController::setTriggerMode(int whichAxis, int mode){
 
@@ -745,6 +729,7 @@ bool stageController::checkIfAnyLimit(){
 	}
 }
 
+//MACRO
 void stageController::sendMacros(string nameOfFile){
 
 	stringstream ss;
@@ -780,7 +765,7 @@ void stageController::startMacroAndWaitWhileRunning(string nameOfmacro){
 
 	Sleep(1000);
 	int i = 1;
-	bool ok = 0;
+	bool ok = 1;
 	while (macroRunning[0]&&ok){
 		ok = PI_IsRunningMacro(ID, macroRunning);
 		cout << "macroRunning  "<<i<< endl;
@@ -790,6 +775,86 @@ void stageController::startMacroAndWaitWhileRunning(string nameOfmacro){
 
 	cout << "MACRO EXECUTION FINISEHD" << endl;
 }
+string stageController::setLimitsMacro(int whichAxis, double value1, double value2, double altValue1, double altValue2){
+
+
+	double minNeu;
+	double maxNeu;
+
+	double minAlt;
+	double maxAlt;
+
+	bool success1 = 0;
+	bool success2 = 0;
+
+	int axisAr[1];
+	axisAr[0] = whichAxis;
+	int triggerParAr[1];
+	double valueAr[1];
+
+	stringstream f;
+
+	if (altValue1 <= altValue2){
+		minAlt = altValue1;
+		maxAlt = altValue2;
+	}
+	else
+	{
+		minAlt = altValue2;
+		maxAlt = altValue1;
+	}
+
+
+	//Make sure values are in range
+	if (!useful.qValuesInLimits(value1, value2))
+	{
+		std::cout << "ERROR:" << std::endl;
+		std::cout << "void stageController::setLimits(int whichAxis, double value1, double value2) says:\n No valid limit values" << std::endl;
+	}
+	else
+	{
+
+		if (value1 <= value2){
+			minNeu = value1;
+			maxNeu = value2;
+		}
+		else
+		{
+			minNeu = value2;
+			maxNeu = value1;
+		}
+
+		f << "CTO " << whichAxis << " 3 4 " << endl;
+
+		if (minNeu >= maxAlt){
+
+			//Zuerst maxAlt -> maxNeu
+			f << "CTO " << whichAxis << " 6 " << maxNeu << endl;
+			//cout << "axis " << whichAxis << " maxAlt -> maxNeu " <<success << endl;
+
+			//Dann minAlt -> minNeu
+			f << "CTO " << whichAxis << " 5 " << minNeu << endl;
+			//cout << "axis " << whichAxis << " minAlt -> minNeu " << success << endl;
+
+		}
+		else{
+
+			//Zuerst minAlt -> minNeu
+			f << "CTO " << whichAxis << " 5 " << minNeu << endl;
+			//cout << "axis " << whichAxis << " minAlt -> minNeu " << success << endl;
+
+			//Dann maxAlt -> maxNeu
+			f << "CTO " << whichAxis << " 6 " << maxNeu << endl;
+			//cout << "axis " << whichAxis << " maxAlt -> maxNeu " << success << endl;
+		}
+
+		f << "CTO " << whichAxis << " 3 3 " << endl;
+
+		return f.str();
+
+	}
+
+}
 
 //////////////////////////////////////////////////////
 //				Constructros						//
@@ -797,6 +862,7 @@ void stageController::startMacroAndWaitWhileRunning(string nameOfmacro){
 stageController::stageController()
 {
 	veloLimit=9900;
+	loadFocusValuesFromFile();
 }
 stageController::~stageController()
 {

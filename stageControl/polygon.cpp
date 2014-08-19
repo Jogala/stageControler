@@ -479,14 +479,15 @@ void figures::polygon::cutAbsMacro3D(){
 		storPos[i][2] = vec[2] + pos[2];
 	}
 
+	//Write sequence to file for controle			
+	//###################################################################
 	fstream fc;
 	fc << fixed;
 	fc << setprecision(5);
 	fc.open(nameFile, fstream::out | fstream::trunc);
 	fc.close();
 	fc.open(nameFile, fstream::out | fstream::app);
-	//Write sequence to file for controle			
-	//###################################################################
+
 	for (int i = 0; i < steps + 1; i++){
 		for (int j = 0; j < 3; j++){
 
@@ -494,10 +495,11 @@ void figures::polygon::cutAbsMacro3D(){
 
 		}
 	}
+
 	use.writeCoordToFile("cutAbsMacro3D_Coord.txt", storPos, steps + 1);
-	//#####################################################################
 	fc.close();
 	cout << "coordinates written to file:" << "cutAbsMacro3D_Coord.txt" << endl;
+	//#####################################################################
 
 	//////////////////////////////////////////
 	//		Actual cutting procedure 		//
