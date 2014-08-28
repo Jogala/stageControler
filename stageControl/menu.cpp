@@ -231,41 +231,57 @@ void menu::cutCutMenu(){
 	cout << "------------rectangle------------" << endl;
 	cout << "(r) \t\t 3D" << endl;
 	cout << "------------polygon------------" << endl;
-	cout << "(p)acro \t\t 3D" << endl;
+	cout << "(p)olygon \t\t 3D" << endl;
 	cout << "------------spiral------------" << endl;
 	cout << "(s)piral \t\t 3D" << endl;
 
-
 	cin >> choice;
-	bool focus = 1;
+	bool focus = 0;
 
 	//line
 	if (choice == "l"){
 		line.cutAbs3D();
-		focus = 0;
+		focus = 1;
 	}
 	
 	//rectangle
 	if (choice == "r"){
 		rectangle.cutAbs3D();
+		focus = 1;
 	}
 
 	//polygon
 	if (choice == "p"){
 		polygon.cutAbsMacro3D();
+		focus = 1;
+
+		pToE545->closeConnection();
+		pToE545->establishConnection();
 	}
 
 	//spiral
 	if (choice == "s"){
 		spiral.cutAbsMacroSpiral3D();
-	
+		focus = 1;
+
+		pToE545->closeConnection();
+		pToE545->establishConnection();
 	}
 
 	if (focus){
-		pToE545->moveInFocus();
-		cin.clear(); cin.ignore(INT_MAX, '\n');
-		cout << "press any key for getting back to 100, 100 ,100" << endl;
-		getchar();
+		cout << "press ENTER for getting back to 100, 100 ,100" << endl;
+		
+		// if enter is already pressed, wait for
+		// it to be released
+		while (GetAsyncKeyState(VK_RETURN) & 0x8000) {
+			Sleep(100);
+		}
+
+		// wait for enter to be pressed
+		while (!(GetAsyncKeyState(VK_RETURN) & 0x8000)) {
+			Sleep(100);
+		}
+		
 		pToE545->moveTo(100, 100, 100);
 	}
 }
@@ -596,6 +612,21 @@ void menu::mainMenu(){
 		if ((GetKeyState(0x43) & 0x8000) && (GetKeyState(0x30) & 0x8000) && windowActive)
 		{
 			cutMainMenu();
+			cout << "---------------Back in Main--------------" << endl;
+		}
+
+		//f focus 
+		if ((GetKeyState(0x46) & 0x8000) && (GetKeyState(0x30) & 0x8000) && windowActive)
+		{
+			//Just clearing the current command line
+			const int KEYEVENT_KEYUP = 0x02;
+			keybd_event(VK_ESCAPE, 0, 0, 0);              // press the Esc key
+			keybd_event(VK_ESCAPE, 0, KEYEVENT_KEYUP, 0); // let up the Esc key
+
+			pToE545->move(pToE545->itsXFocus, pToE545->itsYFocus, pToE545->itsZFocus);
+			cout << "press any key for getting back to 100, 100 ,100" << endl;
+			getchar();
+			pToE545->moveTo(100, 100, 100);
 			cout << "---------------Back in Main--------------" << endl;
 		}
 

@@ -103,13 +103,7 @@ namespace figures{
 
 	public:
 		void set(double a, double b, double rotAngleZ, double velocity);
-		void cutRel();
-		void cutAbs();
-		void cutAbsLim2D();
 		void cutAbs3D();
-
-		void macroAbs3D();
-		void startMacroAbs3D();
 
 		void openWindowSet3D();
 		bool regMenuWindow();

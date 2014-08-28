@@ -278,14 +278,13 @@ void figures::line::cutAbs3D(){
 
 		pointerToE545->openShutter();
 		for (int i = 0; i < repetitions; i++){
-
+			cout << " cut number " << i+1 << endl;
 			pointerToE545->moveTo(storagePos[i][0], storagePos[i][1], storagePos[i][2]);
 
 		}
 		pointerToE545->closeShutter();
-		pointerToE545->setVelocity(1000, 1000, 1000);
-		pointerToE545->moveTo(pos[0], pos[1], pos[2]);
-
+		pointerToE545->setVelocity(9000, 9000, 9000);
+		pointerToE545->moveTo(pos[0] + pointerToE545->itsXFocus + vec[0] / 2, pos[1] + pointerToE545->itsYFocus + vec[1] / 2, pos[2] + pointerToE545->itsZFocus + vec[2] / 2);
 	}//else
 
 }

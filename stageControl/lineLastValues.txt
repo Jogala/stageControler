@@ -1,5 +1,5 @@
-l	20.000
-phi	0.000
+l	30.000
+phi	1.571
 theta	1.571
 repetitions	1
 velocity	500.000

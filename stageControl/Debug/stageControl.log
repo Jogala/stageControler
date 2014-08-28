@@ -1,26 +1,16 @@
-﻿Build started 8/19/2014 4:51:46 PM.
+﻿Build started 8/21/2014 11:40:53 AM.
      1>Project "C:\Users\9G63Q02\Desktop\stageControler\stageControl\stageControl.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I./Eigen_Linear_Algebra_Library /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt menu.cpp
-         menu.cpp
-     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\menu.cpp(293): warning C4244: 'argument' : conversion from 'double' to 'DWORD', possible loss of data
-     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\menu.cpp(301): warning C4244: 'argument' : conversion from 'double' to 'DWORD', possible loss of data
-     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\menu.cpp(309): warning C4244: 'argument' : conversion from 'double' to 'DWORD', possible loss of data
-     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\menu.cpp(317): warning C4244: 'argument' : conversion from 'double' to 'DWORD', possible loss of data
-     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\menu.cpp(325): warning C4244: 'argument' : conversion from 'double' to 'DWORD', possible loss of data
-     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\menu.cpp(333): warning C4244: 'argument' : conversion from 'double' to 'DWORD', possible loss of data
-     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\menu.cpp(343): warning C4244: 'argument' : conversion from 'double' to 'DWORD', possible loss of data
-     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\menu.cpp(351): warning C4244: 'argument' : conversion from 'double' to 'DWORD', possible loss of data
-     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\menu.cpp(359): warning C4244: 'argument' : conversion from 'double' to 'DWORD', possible loss of data
-     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\menu.cpp(368): warning C4244: 'argument' : conversion from 'double' to 'DWORD', possible loss of data
-     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\menu.cpp(376): warning C4244: 'argument' : conversion from 'double' to 'DWORD', possible loss of data
-     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\menu.cpp(385): warning C4244: 'argument' : conversion from 'double' to 'DWORD', possible loss of data
-     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\menu.cpp(399): warning C4244: 'argument' : conversion from 'double' to 'DWORD', possible loss of data
-     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\menu.cpp(405): warning C4244: 'argument' : conversion from 'double' to 'DWORD', possible loss of data
-     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\menu.cpp(411): warning C4244: 'argument' : conversion from 'double' to 'DWORD', possible loss of data
-     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\menu.cpp(415): warning C4244: 'argument' : conversion from 'double' to 'DWORD', possible loss of data
-     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\menu.cpp(512): warning C4229: anachronism used : modifiers on data are ignored
-     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\menu.cpp(514): warning C4229: anachronism used : modifiers on data are ignored
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I./Eigen_Linear_Algebra_Library /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt stageController.cpp
+         stageController.cpp
+     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\stagecontroller.cpp(552): warning C4800: 'BOOL' : forcing value to bool 'true' or 'false' (performance warning)
+     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\stagecontroller.cpp(558): warning C4800: 'BOOL' : forcing value to bool 'true' or 'false' (performance warning)
+     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\stagecontroller.cpp(567): warning C4800: 'BOOL' : forcing value to bool 'true' or 'false' (performance warning)
+     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\stagecontroller.cpp(573): warning C4800: 'BOOL' : forcing value to bool 'true' or 'false' (performance warning)
+     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\stagecontroller.cpp(780): warning C4800: 'BOOL' : forcing value to bool 'true' or 'false' (performance warning)
+     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\stagecontroller.cpp(802): warning C4101: 'triggerParAr' : unreferenced local variable
+     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\stagecontroller.cpp(803): warning C4101: 'valueAr' : unreferenced local variable
+     1>c:\users\9g63q02\desktop\stagecontroler\stagecontrol\stagecontroller.cpp(867): warning C4715: 'stageController::setLimitsMacro' : not all control paths return a value
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\9G63Q02\Desktop\stageControler\stageControl\Debug\stageControl.exe" /INCREMENTAL /NOLOGO /LIBPATH:.\PI_stuff PI_GCS2_DLL.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\9G63Q02\Desktop\stageControler\stageControl\Debug\stageControl.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\9G63Q02\Desktop\stageControler\stageControl\Debug\stageControl.lib" /MACHINE:X86 Debug\line.obj
          Debug\main.obj
@@ -37,4 +27,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.26
+Time Elapsed 00:00:01.20

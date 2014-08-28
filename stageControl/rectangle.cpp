@@ -8,44 +8,7 @@ void figures::rectangle::set(double aIn, double bIn, double rotAngleZIn, double 
 	rotAngleZ = rotAngleZIn*(2 * pi) / (360.0);
 
 }
-void figures::rectangle::cutRel()
-{
 
-	pointerToE545->setVelocity(velocity, velocity, 10);
-	double deltaPhi[2];
-	double R;
-	double x, y, xOld, yOld;
-	double pos[3];
-
-	pointerToE545->getPositon(pos);
-
-	R = 0.5*sqrt(a*a + b*b);
-	deltaPhi[0] = 2 * atan(b / a);
-	deltaPhi[1] = 2 * atan(a / b);
-
-	double deltaPhiSum = phi0 - deltaPhi[0] / 2.0;
-
-	xOld = R*cos(deltaPhiSum);
-	yOld = R*sin(deltaPhiSum);
-
-	pointerToE545->move(xOld, yOld, 0);
-
-	pointerToE545->openShutter();
-	for (int i = 1; i <= 4; i++){
-
-		deltaPhiSum = deltaPhiSum + deltaPhi[(i % 2)];
-
-		x = R*cos(deltaPhiSum);
-		y = R*sin(deltaPhiSum);
-
-		pointerToE545->move(x - xOld, y - yOld, 0);
-
-		xOld = x;
-		yOld = y;
-	}
-	pointerToE545->closeShutter();
-	pointerToE545->moveTo(pos);
-}
 void figures::rectangle::cutAbs3D(){
 
 	if ((a <= 0) || (b <= 0)){
@@ -97,7 +60,7 @@ void figures::rectangle::cutAbs3D(){
 		//##################################
 
 		//B, C, D, A 
-		for (int i = 1; i < moves; i++){
+		for (int i = 1; i <moves; i++){
 
 			deltaPhiSum = deltaPhiSum + deltaPhi[((i + 1) % 2)];
 
@@ -108,7 +71,7 @@ void figures::rectangle::cutAbs3D(){
 			use.matrixTimesVec(xRotMat, vec);
 			use.matrixTimesVec(zRotMat, vec);
 
-			storagePos[i][0] = vec[0] + pos[0];
+			storagePos[i][0] = vec[0] + pos[0];	
 			storagePos[i][1] = vec[1] + pos[1];
 			storagePos[i][2] = vec[2] + pos[2];
 		}
@@ -126,16 +89,20 @@ void figures::rectangle::cutAbs3D(){
 
 		//A
 		pointerToE545->moveTo(storagePos[0][0], storagePos[0][1], storagePos[0][2]);
+		cout << "was target: "<<storagePos[0][0] << " " << storagePos[0][1] << " " << storagePos[0][2] << endl;
+		pointerToE545->printPosition();
 		pointerToE545->openShutter();
 		//B, C, D, A
 		for (int i = 1; i < moves; i++){
 
+			cout << "i " << i << endl;
 			pointerToE545->moveTo(storagePos[i][0], storagePos[i][1], storagePos[i][2]);
+			cout<<"was target: " << storagePos[i][0] << " " << storagePos[i][1] << " " << storagePos[i][2] << endl;
+			pointerToE545->printPosition();
 
 		}
 		pointerToE545->closeShutter();
-
-		pointerToE545->moveTo(pos);
+		pointerToE545->moveTo(pos[0] + pointerToE545->itsXFocus, pos[1] + pointerToE545->itsYFocus, pos[2] + pointerToE545->itsZFocus);
 
 	}
 }
@@ -425,6 +392,6 @@ void figures::rectangle::printMemberVariables(){
 	cout << "b = " << "\t" << a << endl;
 	cout << "xRot = " << "\t" << rotAngleX << endl;
 	cout << "xRot = " << "\t" << rotAngleZ << endl;
-	cout << "velocity = " << "\t" << rotAngleZ << endl;
+	cout << "velocity = " << "\t" << velocity << endl;
 
 }

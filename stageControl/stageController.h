@@ -14,10 +14,11 @@ private: double Position[3];
 		 double  veloLimit;
 
 		 string fileName_FocusValues = "focusValues.txt";
-		 double itsXFocus, itsYFocus, itsZFocus;
+		 
 		 
 public:
 	//Variables
+	double itsXFocus, itsYFocus, itsZFocus;
 	int ID;
 	char szErrorMesage[1024];
 	int	iError;

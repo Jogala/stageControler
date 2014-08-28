@@ -51,3 +51,5 @@ Power mW	Speed mum/s	Dye		Result
 350		2000		alexa 647	sharp bleaching area +cut with depolymerization in both side and bubbles both sides
 350		2500		alexa 647	nothing
 350		2000		alexa 647	sharp bleaching area +cut with depolymerization on both sides and no bubbles (workes quite nice as long as you are in the spindle and the spindle is quite dense, otherwise you will get bubbles)
+
+circles seem to work in dense asters with speed 2000 (power 350 mW)

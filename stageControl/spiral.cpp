@@ -101,6 +101,12 @@ void figures::spiral::cutAbsMacroSpiral3D(){
 	//		Actual cutting procedure 		//
 	//////////////////////////////////////////
 
+	double diff[3];
+	for (int i = 0; i < 3; i++){
+		diff[i] = storPos[steps][i];
+	}
+
+
 	fstream f;
 	f << fixed;
 	f << setprecision(5);
@@ -137,7 +143,9 @@ void figures::spiral::cutAbsMacroSpiral3D(){
 	}
 	//Close Shutter
 	f << pointerToE545->setLimitsMacro(1, 0, 0, 0, 200);
-	f << "DEL " << endl;
+	f << "VEL A " << "9000" << " B " << "9000" << " C " << "9000" << endl;
+	f << "MOV A " << pos[0] + pointerToE545->itsXFocus << " B " << pos[1] + pointerToE545->itsYFocus << " C " << pos[2] + pointerToE545->itsZFocus << endl;
+	f << "DEL 1000" << endl;
 	f << "MAC END" << endl;
 	f.close();
 
@@ -147,8 +155,6 @@ void figures::spiral::cutAbsMacroSpiral3D(){
 
 	pointerToE545->closeShutter();
 	pointerToE545->startMacroAndWaitWhileRunning(macroName);
-	pointerToE545->closeShutter();
-	pointerToE545->moveTo(pos);
 
 }
 bool figures::spiral::regMenuWindow(){

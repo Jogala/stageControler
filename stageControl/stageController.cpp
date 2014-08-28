@@ -195,11 +195,11 @@ bool stageController::switchAllServosOn(){
 }
 void stageController::moveTo(double xCoord, double yCoord, double zCoord){
 
-	double coordArray[3];
+	double coord[3];
 	// move all axes the corresponding position in 'Position'
-	coordArray[0] = xCoord;
-	coordArray[1] = yCoord;
-	coordArray[2] = zCoord;
+	coord[0] = xCoord;
+	coord[1] = yCoord;
+	coord[2] = zCoord;
 
 	if ((0 <= xCoord) && (xCoord <= 200) &&
 		(0 <= yCoord) && (yCoord <= 200) &&
@@ -207,7 +207,7 @@ void stageController::moveTo(double xCoord, double yCoord, double zCoord){
 	{
 
 		// call the MOV command (for closed servo loop).
-		if (PI_MOV(ID, szAxes, coordArray))
+		if (PI_MOV(ID, szAxes, coord))
 		{
 			waitUntilMoveFinished();
 		}
@@ -221,7 +221,7 @@ void stageController::moveTo(double xCoord, double yCoord, double zCoord){
 	}
 	else
 	{
-		std::cout << "void stageController::moveTo(double xCoord, double yCoord, double zCoord) says: Out of limits" << std::endl;
+		std::cout << "void stageController::moveTo(const double coord[3]) says: Out of limits" << std::endl;
 	}
 }
 
@@ -320,7 +320,10 @@ void stageController::move(double vec[3]){
 void stageController::waitUntilMoveFinished(){
 	BOOL bIsMoving[3];
 	bIsMoving[0] = TRUE;
-	while (bIsMoving[0] == TRUE)
+	bIsMoving[1] = TRUE;
+	bIsMoving[2] = TRUE;
+	int i = 0;
+	while ((bIsMoving[0] == TRUE) || (bIsMoving[1] == TRUE) || (bIsMoving[2] == TRUE))
 	{
 		////////////////////////////////////////
 		// Read the moving state of the axes. //
@@ -332,13 +335,20 @@ void stageController::waitUntilMoveFinished(){
 
 		// if 'axes != NULL and 'axis' is not empty the moving state of every axis in 'axes' is returned in
 		// the arry bIsMoving.
-		if (!PI_IsMoving(ID, NULL /*axes = NULL*/, bIsMoving))
+		if (!PI_IsMoving(ID, szAxes, bIsMoving))
 		{
 			iError = PI_GetError(ID);
 			PI_TranslateError(iError, szErrorMesage, 1024);
 			printf("IsMoving: ERROR %d: %s\n", iError, szErrorMesage);
 			PI_CloseConnection(ID);
 		}
+
+		/*if (!(i % 200)){
+			cout << "bIsMoving[0] " << bIsMoving[0] << endl;
+			cout << "bIsMoving[1] " << bIsMoving[1] << endl;
+			cout << "bIsMoving[2] " << bIsMoving[2] << endl;
+		}*/
+		i++;
 	}
 };
 void stageController::printPosition(){
